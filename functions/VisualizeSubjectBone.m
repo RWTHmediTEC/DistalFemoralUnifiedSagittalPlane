@@ -1,0 +1,28 @@
+function GD = VisualizeSubjectBone(GD)
+%% Plot the bone as patch object
+
+BoneProps.EdgeColor = 'none';
+BoneProps.FaceColor = [0.882, 0.831, 0.753];
+BoneProps.FaceAlpha = 0.7;
+BoneProps.HandleVisibility = 'Off';
+
+GD.Subject.PatchHandle = patch('Faces',GD.Subject.STL.Faces,...
+    'Vertices',GD.Subject.STL.V_C_tfm, BoneProps);
+
+%% Plot the Default Sagittal Plane (DSP)
+figure(GD.Figure.Handle); subplot(GD.Figure.LeftSpHandle);
+
+PlaneProps.FaceAlpha = 0.2;
+PlaneProps.EdgeColor = 'none';
+PlaneProps.HandleVisibility = 'Off';
+PlaneProps.FaceColor = 'k';
+
+GD.DSPlane.Handle = drawPlane3d(createPlane([0,0,0], [0,0,1]), PlaneProps);
+
+%% Set view to a unified camera position
+set(GD.Figure.LeftSpHandle,'CameraTarget',[0, 0, 0]);
+CamPos = [-0.6499, 0.4339, 0.6240] * norm(get(GD.Figure.LeftSpHandle,'CameraPosition'));
+set(GD.Figure.LeftSpHandle,'CameraPosition',CamPos);
+set(GD.Figure.LeftSpHandle,'CameraUpVector',[0, 1, 0]);
+
+end
