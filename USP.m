@@ -1,9 +1,9 @@
 function [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, varargin)
 
 % USP An optimization algorithm for establishing a Unified Sagittal Plane.
-%     USPTFM = USP(Vertices, Faces, Side, InitialRot) returns a 3D transform
-%     to move the distal femur from the coordinate system of the medical
-%     imaging system into the USP-system.
+%     USPTFM = USP(Vertices, Faces, Side, InitialRot) returns a 3D 
+%     transform to move the distal femur from the coordinate system of the 
+%     medical imaging system into the USP-system.
 %     
 %     [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot)
 %     additionally returns the Posterior Focal Elliptic Axis (PFEA) and the
@@ -14,41 +14,43 @@ function [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, varargin)
 %     Vertices - Double [Nx3]: A list of points of the mesh of the distal femur
 %     Faces - Integer [Mx3]: A list of triangle faces, indexing into the Vertices
 %     Side - Char: 'Left' or 'Right' distal femur
-%     InitalRot - Double [1x3]: 3 euler angles PHI THETA and PSI, given in ,
-%                 degrees using  the 'ZYX' convention (global basis). Values
-%                 between -180° and 180° are valid.
+%     InitalRot - Double [1x3]: Three Cardan angles aka Tait-Bryan angles,
+%                 given in degrees using the 'ZYX' convention (fixed basis
+%                 aka extrinsic rotations). Values between -180° and 180°
+%                 are valid.
 %                 The distal femur has to be rotated from the coordinate
 %                 system of the medical imaging system into the default
 %                 sagittal plane system, defined as:
-%                 ___________________________________________________________
-%                 Axes         |      X      |      Y      | Z dep. on Side |
-%                     Positive |   Anterior  |   Proximal  | Medial/Lateral |
-%                     Negative |  Posterior  |    Distal   | medial/lateral |
+%                 _________________________________________________________
+%                 Axes       |      X      |      Y      | Z dep. on Side |
+%                   Positive |   Anterior  |   Proximal  | Medial/Lateral |
+%                   Negative |  Posterior  |    Distal   | medial/lateral |
 % 
 %   - ADDITIONAL
 %     'Subject' - Char: Identification of the subject. Default is 'unnamed'.
 %     'PlaneVariationRange' - Integer [1x1]: Defines the size of the search
-%                             field of the rough iterations. Default value is
-%                             4° resulting in a quadratic search field of
-%                             -/+ 4°. Values between 0° and 16° are valid.
-%                             4° seems to be a proper value for the tested
-%                             meshes. Higher values increase the number of
-%                             plane variations and the running time. Lower
-%                             values may miss the global disperion minimum.
+%                             field of the rough iterations. Default value 
+%                             is 4° resulting in a quadratic search field 
+%                             of -/+ 4°. Values between 0° and 16° are 
+%                             valid. 4° seems to be a proper value for the 
+%                             tested meshes. Higher values increase the 
+%                             number of plane variations and the running 
+%                             time. Lower values may miss the global 
+%                             disperion minimum. 
 %                             Set to 0° the Algorithm is executed only once
 %                             and no results will be produced.
 %     'StepSize' - Integer [1x1]: Defines the step size during the rough
-%                  iterations. Default value is 2°. Values between 1° and 4°
-%                  are valid. E.g. with a PlaneVariationRange of 4° it
+%                  iterations. Default value is 2°. Values between 1° and 
+%                  4° are valid. E.g. with a PlaneVariationRange of 4° it
 %                  results in a search field of:
 %                  ((4° x 2 / 2°) + 1)² = 25 plane variations
 %     'Visualization' - Logical: Figure output. Default is true.
 %     'Verbose' - Logical: Command window output. Default is true.
 % 
 % OUTPUT:
-%     USPTFM - Double [4x4]: A transformation matrix to move the mesh of the
-%              distal femur from the coordinate system of the medical imaging
-%              system into the USP-system.
+%     USPTFM - Double [4x4]: A transformation matrix to move the mesh of 
+%              the distal femur from the coordinate system of the medical 
+%              imaging system into the USP-system.
 %     PFEA - Double [1x6]: A line fitted through the posterior foci of the
 %            ellipses with minimum dispersion.
 %     CEA - Double [1x6]: A line fitted through the centers of the ellipses
