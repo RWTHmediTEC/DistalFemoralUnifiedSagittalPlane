@@ -2,20 +2,25 @@ clearvars; close all; clc; opengl hardware;
 % [List.f, List.p] = matlab.codetools.requiredFilesAndProducts('USP_GUI.m');
 % List.f = List.f'; List.p = List.p';
 
+% Current Path
+CTP = pwd; 
+
+% USP path
+GD.ToolPath = [fileparts([mfilename('fullpath'), '.m']) '\'];
+
 % Add path for external functions
-addpath(genpath('extern'));
+addpath(genpath([GD.ToolPath 'extern']));
 % Add path fur subfunctions
-addpath('functions');
+addpath([GD.ToolPath 'functions']);
 % Add path for GUI functions
-addpath('gui');
+addpath([GD.ToolPath 'gui']);
 
 % Compile mex file if not exist
-CTP = pwd; cd('extern/intersectPlaneSurf')
+cd([GD.ToolPath 'extern\intersectPlaneSurf'])
 if ~exist('IntersectPlaneTriangle.mexw64','file')
     mex('IntersectPlaneTriangle.cpp','-v');
-end; cd(CTP);
-
-GD.ToolPath = [fileparts([mfilename('fullpath'), '.m']) '\'];
+end; 
+cd(CTP);
 
 %% Number of cutting planes per cuting box
 GD.Cond.NoPpC = 8;

@@ -79,18 +79,24 @@ if sum(strcmp(Side, {'Left','Right'})) == 0
     error('Invalid side indicator. Only ''Left'' or ''Right'' are valid.')
 end
 
+% Current Path
+CTP = pwd; 
+
+% USP path
+GD.ToolPath = [fileparts([mfilename('fullpath'), '.m']) '\'];
+
 % Add path for external functions
-addpath(genpath('extern'));
+addpath(genpath([GD.ToolPath 'extern']));
 % Add path fur subfunctions
-addpath('functions');
+addpath([GD.ToolPath 'functions']);
 
 % Compile mex file if not exist
-CTP = pwd; cd('extern/intersectPlaneSurf')
+cd([GD.ToolPath 'extern\intersectPlaneSurf'])
 if ~exist('IntersectPlaneTriangle.mexw64','file')
     mex('IntersectPlaneTriangle.cpp','-v');
-end; cd(CTP);
+end; 
+cd(CTP);
 
-GD.ToolPath = [fileparts([mfilename('fullpath'), '.m']) '\'];
 if GD.Visualization == 1
     %% Figure
     GD.Figure.Color = [1 1 1];
