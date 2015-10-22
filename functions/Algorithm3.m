@@ -1,12 +1,12 @@
 function GD = Algorithm3(GD)
 
 if GD.Visualization == 1
-    % Close all figures except Main figure and Dispersion plot
-    set(GD.Figure.Handle, 'HandleVisibility', 'off');
-    if ishandle(GD.Results.FigHandle); set(GD.Results.FigHandle, 'HandleVisibility', 'off'); end;
-    close all;
-    set(GD.Figure.Handle, 'HandleVisibility', 'on');
-    if ishandle(GD.Results.FigHandle); set(GD.Results.FigHandle, 'HandleVisibility', 'on'); end;
+%     % Close all figures except Main figure and Dispersion plot
+%     set(GD.Figure.Handle, 'HandleVisibility', 'off');
+%     if ishandle(GD.Results.FigHandle); set(GD.Results.FigHandle, 'HandleVisibility', 'off'); end;
+%     close all;
+%     set(GD.Figure.Handle, 'HandleVisibility', 'on');
+%     if ishandle(GD.Results.FigHandle); set(GD.Results.FigHandle, 'HandleVisibility', 'on'); end;
     
     % Figure & subplot handles
     H.Fig = GD.Figure.Handle;
