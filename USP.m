@@ -80,7 +80,7 @@ if sum(strcmp(Side, {'Left','Right'})) == 0
 end
 
 % Current Path
-CTP = pwd; 
+CTP = pwd;
 
 % USP path
 GD.ToolPath = [fileparts([mfilename('fullpath'), '.m']) '\'];
