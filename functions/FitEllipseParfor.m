@@ -10,6 +10,10 @@ end
 
 function Ell = TryFitEllipse(ContourPart)
     try
+        % TEST: Try the function fitellipse. If it is not
+        % successful catch the error and create a fake ellipse.
+        % Could be improved by replacing the fake ellipse against
+        % a robust fitting algorithm ;-)
         [z, a, b, g] = fitellipse(ContourPart);
         % Check if a and b are positive scalars
         if a <= 0 || b <= 0

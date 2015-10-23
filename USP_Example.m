@@ -36,8 +36,9 @@ GD.Subject.PatchHandle = patch('Faces',Faces,'Vertices',Vertices, BoneProps);
 %% PFEA
 GA_TFM = transformPointsForward(affine3d(USPTFM'), PFEA(1:3));
 GA_TFM = [GA_TFM, PFEA(4:6)/(USPTFM(1:3,1:3))];
-drawLine3d(GA_TFM,'LineWidth', 3, 'LineStyle', '-', 'Color', 'k');
+drawLine3d(GA_TFM,'LineWidth', 3, 'LineStyle', '-', 'Color', 'g');
 
+%% CEA
 GA_TFM = transformPointsForward(affine3d(USPTFM'), CEA(1:3));
 GA_TFM = [GA_TFM, CEA(4:6)/(USPTFM(1:3,1:3))];
-drawLine3d(GA_TFM,'LineWidth', 3, 'LineStyle', '-', 'Color', 'k');
+drawLine3d(GA_TFM,'LineWidth', 3, 'LineStyle', '-', 'Color', 'b');

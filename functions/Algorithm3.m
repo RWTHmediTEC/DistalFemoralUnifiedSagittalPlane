@@ -1,13 +1,6 @@
 function GD = Algorithm3(GD)
 
 if GD.Visualization == 1
-%     % Close all figures except Main figure and Dispersion plot
-%     set(GD.Figure.Handle, 'HandleVisibility', 'off');
-%     if ishandle(GD.Results.FigHandle); set(GD.Results.FigHandle, 'HandleVisibility', 'off'); end;
-%     close all;
-%     set(GD.Figure.Handle, 'HandleVisibility', 'on');
-%     if ishandle(GD.Results.FigHandle); set(GD.Results.FigHandle, 'HandleVisibility', 'on'); end;
-    
     % Figure & subplot handles
     H.Fig = GD.Figure.Handle;
     H.lSP = GD.Figure.LeftSpHandle;
@@ -204,35 +197,13 @@ for I_a = 1:RangeLength_a
                 % Part of the contour, that is used for fitting
                 PartCont{c} = SC(s).P(c).xyz(SC(s).P(c).ExPts.A:SC(s).P(c).ExPts.B,1:2)';
             end
-            Ell2D_TEST{s} = FitEllipseParfor(PartCont);
-        end
-        
-        % Parametric least-squares fitting and analysis of cross-sectional profiles
-        for s=1:2
+            % Parametric least-squares fitting and analysis of cross-sectional profiles
+            T_Ell2D{s} = FitEllipseParfor(PartCont);
             for c=1:NoPpC
-%                 % Part of the contour, that is used for fitting
-%                 ContPart.Pts = SC(s).P(c).xyz(SC(s).P(c).ExPts.A:SC(s).P(c).ExPts.B,1:2)';
-%                 % TEST: Try the function fitellipse. If it is not  
-%                 % successful catch the error and create a fake ellipse.
-%                 % Could be improved by replacing the fake ellipse against 
-%                 % a robust fitting algorithm ;-)
-%                 try 
-%                     [Ell2D.z, Ell2D.a, Ell2D.b, Ell2D.g] = fitellipse(ContPart.Pts);
-%                     % Check if a and b are positive scalars
-%                     if Ell2D.a <= 0 || Ell2D.b <= 0
-%                         warning('Ellipse fit was not successful: a <= 0 || b <= 0! Creating fake ellipse ;).')
-%                         Ell2D.z = c*[1.1;-1.1]; Ell2D.a = 2*c; Ell2D.b = 1*c; Ell2D.g = 1*c;
-%                     end
-%                 catch
-%                     warning('Ellipse fit was not successful:  Error in fitellipse! Creating fake ellipse ;).')
-%                     Ell2D.z = c*[1.1;-1.1]; Ell2D.a = 2*c; Ell2D.b = 1*c; Ell2D.g = 1*c;
-%                 end
-                
-                %TEST
-                Ell2D.z = Ell2D_TEST{s}(1:2,c);
-                Ell2D.a = Ell2D_TEST{s}(3,c);
-                Ell2D.b = Ell2D_TEST{s}(4,c);
-                Ell2D.g = Ell2D_TEST{s}(5,c);
+                Ell2D.z = T_Ell2D{s}(1:2,c);
+                Ell2D.a = T_Ell2D{s}(3,c);
+                Ell2D.b = T_Ell2D{s}(4,c);
+                Ell2D.g = T_Ell2D{s}(5,c);
                 
                 SC(s).P(c).Ell.z = Ell2D.z';
                 % Unify the orientation of the ellipses
