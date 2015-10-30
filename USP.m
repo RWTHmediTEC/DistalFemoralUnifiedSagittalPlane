@@ -24,7 +24,7 @@ function [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, varargin)
 %                 _________________________________________________________
 %                 Axes       |      X      |      Y      | Z dep. on Side |
 %                   Positive |   Anterior  |   Proximal  | Medial/Lateral |
-%                   Negative |  Posterior  |    Distal   | medial/lateral |
+%                   Negative |  Posterior  |    Distal   | Medial/Lateral |
 % 
 %   - ADDITIONAL
 %     'Subject' - Char: Identification of the subject. Default is 'unnamed'.
