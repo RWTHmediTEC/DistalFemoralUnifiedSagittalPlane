@@ -31,7 +31,7 @@ BoneProps.EdgeColor = 'none';
 BoneProps.FaceColor = [0.882, 0.831, 0.753];
 BoneProps.FaceAlpha = 0.7;
 
-GD.Subject.PatchHandle = patch('Faces',Faces,'Vertices',Vertices, BoneProps);
+patch('Faces',Faces,'Vertices',Vertices, BoneProps);
 
 %% PFEA
 GA_TFM = transformPointsForward(affine3d(USPTFM'), PFEA(1:3));
