@@ -21,24 +21,25 @@ figure('Units','pixels','Color','w','ToolBar','figure',...
 'WindowScrollWheelFcn',@M_CB_Zoom,'WindowButtonDownFcn',@M_CB_RotateWithLeftMouse,...
     'renderer','opengl');
 axes('Color','w'); axis on; xlabel('X [mm]'); ylabel('Y [mm]'); zlabel('Z [mm]');
-light1 = light; light('Position', -1*(get(light1,'Position')));
-% lighting phong
 daspect([1 1 1])
 cameratoolbar('SetCoordSys','none')
 
-%% Bone
+% Bone
 BoneProps.EdgeColor = 'none';
 BoneProps.FaceColor = [0.882, 0.831, 0.753];
 BoneProps.FaceAlpha = 0.7;
-
 patch('Faces',Faces,'Vertices',Vertices, BoneProps);
 
-%% PFEA
+% PFEA
 GA_TFM = transformPointsForward(affine3d(USPTFM'), PFEA(1:3));
 GA_TFM = [GA_TFM, PFEA(4:6)/(USPTFM(1:3,1:3))];
 drawLine3d(GA_TFM,'LineWidth', 3, 'LineStyle', '-', 'Color', 'g');
 
-%% CEA
+% CEA
 GA_TFM = transformPointsForward(affine3d(USPTFM'), CEA(1:3));
 GA_TFM = [GA_TFM, CEA(4:6)/(USPTFM(1:3,1:3))];
 drawLine3d(GA_TFM,'LineWidth', 3, 'LineStyle', '-', 'Color', 'b');
+
+% Light
+light1 = light; light('Position', -1*(get(light1,'Position')));
+lighting phong

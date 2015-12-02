@@ -1,2 +1,4 @@
 Algorithm 2: Bei Ellipse Fitting Error andere Fitting Methode nutzen oder Toleranz erhöhen?
              -> Zu prüfen: Was für Contouren erzeugen Fehler?
+
+Algorithm 3: Complete header section

@@ -1,4 +1,21 @@
 function GD = Algorithm3(GD)
+%ALGORITHM3
+%    - An optimization algorithm for establishing a Unified Sagittal Plane (USP)
+%   
+%   REFERENCE:
+%       Li et al. - Automating Analyses of the Distal Femur Articular 
+%       Geometry Basedon Three-Dimensional Surface Data
+%       Annals of Biomedical Engineering, Vol. 38, No. 9, September 2010 
+%       pp. 2928–2936                                    
+%
+%   INPUT:
+%       ToDo
+%
+%   OUTPUT:
+%       ToDo
+% 
+%   AUTHOR: MCMF
+%
 
 if GD.Visualization == 1
     % Figure & subplot handles

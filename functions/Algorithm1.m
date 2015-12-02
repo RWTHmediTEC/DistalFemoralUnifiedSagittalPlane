@@ -1,15 +1,12 @@
 function [pExA, amExB, alExB, cpfh] = Algorithm1(Contour, sigmastart, sigmadelta, sigma, vis)
-
-%%  Algorithm1
+%ALGORITHM1
 %    - A Pattern-Recognition Algorithm for Identifying the Articulating Surface
 %   
 %   REFERENCE:
 %       Li et al. - Automating Analyses of the Distal Femur Articular 
 %       Geometry Basedon Three-Dimensional Surface Data
 %       Annals of Biomedical Engineering, Vol. 38, No. 9, September 2010 
-%       pp. 2928–2936
-%   
-%   HELP:                                       
+%       pp. 2928–2936                                     
 %
 %   INPUT:
 %       Contour    - nx2 double: X- & Y-coordinates of the contour
@@ -31,13 +28,9 @@ function [pExA, amExB, alExB, cpfh] = Algorithm1(Contour, sigmastart, sigmadelta
 %       alExB(2)   - scatter handle of alExB(1)
 %       alExB(3)   - text handle of alExB(1)
 %       cpfh       - figure handle: empty if vis == 0 
-%
-%   USAGE:
 % 
 %   AUTHOR: MCMF
 %
-%   VERSION:
-%       
 
 %% Calculations
 % Calculate the multi-scale curvature & the curvature scale-space image
@@ -94,8 +87,8 @@ end
 [~, amExB] = max(K{sigma}(IYMin:IXMax));
 amExB = IYMin-1+amExB;
 
-% % % Find the anterior lateral extremity B (alExB) defined as:
-% % % - local maximum curvature point closest to the most anterior point of the contour.
+% Find the anterior lateral extremity B (alExB) defined as:
+% - local maximum curvature point closest to the most anterior point of the contour.
 alExB = Local_Maxima_Indcs(knnsearch(Local_Maxima_Indcs, IXMax));
 
 
