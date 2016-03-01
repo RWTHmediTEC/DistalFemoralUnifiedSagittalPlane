@@ -49,7 +49,6 @@ cla reset;
 axis on; xlabel('X [mm]'); ylabel('Y [mm]'); zlabel('Z [mm]');
 set(GD.Figure.LeftSpHandle,'Color',GD.Figure.Color);
 light1 = light; light('Position', -1*(get(light1,'Position')));
-lighting phong
 daspect([1 1 1])
 cameratoolbar('SetCoordSys','none')
 

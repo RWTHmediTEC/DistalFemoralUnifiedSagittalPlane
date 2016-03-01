@@ -4,10 +4,13 @@ function GD = VisualizeSubjectBone(GD)
 BoneProps.EdgeColor = 'none';
 BoneProps.FaceColor = [0.882, 0.831, 0.753];
 BoneProps.FaceAlpha = 0.7;
+BoneProps.EdgeLighting = 'none';
+BoneProps.FaceLighting = 'gouraud';
 BoneProps.HandleVisibility = 'Off';
 
 GD.Subject.PatchHandle = patch('Faces',GD.Subject.STL.Faces,...
     'Vertices',GD.Subject.STL.V_C_tfm, BoneProps);
+
 
 %% Plot the Default Sagittal Plane (DSP)
 figure(GD.Figure.Handle); subplot(GD.Figure.LeftSpHandle);

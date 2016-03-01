@@ -8,9 +8,9 @@ cd('..')
 %% Select different options by commenting 
 
 % Default mode
-% [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'Subject', Subject);
+[USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'Subject', Subject);
 % Silent mode
-[USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'Subject', Subject, 'Visualization', false, 'Verbose', true);
+% [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'Subject', Subject, 'Visualization', false, 'Verbose', true);
 % The other options
 % [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'PlaneVariationRange', 12, 'StepSize', 3);
 % Special case: 'PlaneVariationRange', 0 -> 48 additional figures!
@@ -28,6 +28,8 @@ cameratoolbar('SetCoordSys','none')
 BoneProps.EdgeColor = 'none';
 BoneProps.FaceColor = [0.882, 0.831, 0.753];
 BoneProps.FaceAlpha = 0.7;
+BoneProps.EdgeLighting = 'none';
+BoneProps.FaceLighting = 'gouraud';
 patch('Faces',Faces,'Vertices',Vertices, BoneProps);
 
 % PFEA
@@ -42,4 +44,3 @@ drawLine3d(GA_TFM,'LineWidth', 3, 'LineStyle', '-', 'Color', 'b');
 
 % Light
 light1 = light; light('Position', -1*(get(light1,'Position')));
-lighting phong

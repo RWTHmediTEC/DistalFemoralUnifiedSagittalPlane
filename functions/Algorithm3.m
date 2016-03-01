@@ -459,13 +459,13 @@ if size(Results,1) > 3
         end; clear s
         
         % Plot foci & centers in 3D for minimum Dispersion
-        scatter3(EllpFoc3D(:,1),EllpFoc3D(:,2),EllpFoc3D(:,3),'g','filled')
-        scatter3(EllpCen3D(:,1),EllpCen3D(:,2),EllpCen3D(:,3),'b','filled')
+        scatter3(EllpFoc3D(:,1),EllpFoc3D(:,2),EllpFoc3D(:,3),'g','filled', 'tag', 'PFEA')
+        scatter3(EllpCen3D(:,1),EllpCen3D(:,2),EllpCen3D(:,3),'b','filled', 'tag', 'CEA')
         
         % Plot axis through the posterior foci for minimum Dispersion
-        drawLine3d(GD.Results.pFociLine,'g');
+        drawLine3d(GD.Results.pFociLine, 'color','g', 'tag','PFEA');
         % Plot axis through the centers for minimum Dispersion
-        drawLine3d(GD.Results.CenterLine,'b');
+        drawLine3d(GD.Results.CenterLine, 'color','b', 'tag','CEA');
         
         % Enable the Save button
         if isfield(GD.Results, 'B_H_SaveResults')
