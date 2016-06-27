@@ -88,7 +88,7 @@ GD.ToolPath = [fileparts([mfilename('fullpath'), '.m']) '\'];
 % Add path for external functions
 addpath(genpath([GD.ToolPath 'extern']));
 % Add path fur subfunctions
-addpath([GD.ToolPath 'functions']);
+addpath(genpath([GD.ToolPath 'functions']));
 
 % Compile mex file if not exist
 cd([GD.ToolPath 'extern\intersectPlaneSurf'])

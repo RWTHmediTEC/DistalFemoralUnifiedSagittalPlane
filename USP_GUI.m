@@ -11,7 +11,7 @@ GD.ToolPath = [fileparts([mfilename('fullpath'), '.m']) '\'];
 % Add path for external functions
 addpath(genpath([GD.ToolPath 'extern']));
 % Add path fur subfunctions
-addpath([GD.ToolPath 'functions']);
+addpath(genpath([GD.ToolPath 'functions']));
 % Add path for GUI functions
 addpath([GD.ToolPath 'gui']);
 

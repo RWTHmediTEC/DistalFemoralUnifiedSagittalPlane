@@ -88,7 +88,8 @@ while flag == 1
     Ys = Ys(cop+1:length(X)+cop);
     kappa = kappa(cop+1:length(X)+cop);
     %% Zero-Crossing points
-    zc = crossing(kappa);
+%     zc = crossing(kappa);
+    zc = crossing_adapted(kappa);
     %% Outputs
     if ~isempty(zc)
         K{i} = kappa;
