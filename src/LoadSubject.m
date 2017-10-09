@@ -16,7 +16,7 @@ TFM = eulerAnglesToRotation3d(IR(1), IR(2), IR(3));
 % Set Centroid of the bone as Point of Origin
 TFM(1:3,4) = GD.Subject.STL.Centroid;
 if GD.Verbose == 1
-    display(['Subject ' GD.Subject.Name ' loaded.']);
+    disp(['Subject ' GD.Subject.Name ' loaded.']);
 end
 
 GD.Subject.STL.TFM = TFM;
