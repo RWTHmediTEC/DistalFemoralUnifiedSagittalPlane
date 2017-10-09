@@ -69,7 +69,7 @@ function [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, varargin)
 %     MCMF
 
 
-narginchk(5, 13);
+narginchk(5,13);
 
 % Validate inputs
 [Subject, PlaneVariationRange, StepSize, GD.Visualization, GD.Verbose] = ...
@@ -78,9 +78,6 @@ narginchk(5, 13);
 if sum(strcmp(Side, {'Left','Right'})) == 0
     error('Invalid side indicator. Only ''Left'' or ''Right'' are valid.')
 end
-
-% Current Path
-CTP = pwd;
 
 % USP path
 GD.ToolPath = [fileparts([mfilename('fullpath'), '.m']) '\'];
@@ -91,11 +88,10 @@ addpath(genpath([GD.ToolPath 'extern']));
 addpath(genpath([GD.ToolPath 'functions']));
 
 % Compile mex file if not exist
-cd([GD.ToolPath 'extern\intersectPlaneSurf'])
-if ~exist('IntersectPlaneTriangle.mexw64','file')
-    mex('IntersectPlaneTriangle.cpp','-v');
-end; 
-cd(CTP);
+mexPath = [GD.ToolPath 'extern\intersectPlaneSurf'];
+if ~exist([mexPath '\IntersectPlaneTriangle.mexw64'],'file')
+    mex([mexPath '\IntersectPlaneTriangle.cpp'],'-v','-outdir', mexPath);
+end
 
 if GD.Visualization == 1
     %% Figure

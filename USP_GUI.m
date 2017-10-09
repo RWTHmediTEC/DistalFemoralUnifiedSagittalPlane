@@ -1,9 +1,6 @@
-clearvars; close all; clc; opengl hardware;
+clearvars; close all; opengl hardware;
 [List.f, List.p] = matlab.codetools.requiredFilesAndProducts('USP_GUI.m');
 List.f = List.f'; List.p = List.p';
-
-% Current Path
-CTP = pwd; 
 
 % USP path
 GD.ToolPath = [fileparts([mfilename('fullpath'), '.m']) '\'];
@@ -16,11 +13,10 @@ addpath(genpath([GD.ToolPath 'functions']));
 addpath([GD.ToolPath 'gui']);
 
 % Compile mex file if not exist
-cd([GD.ToolPath 'extern\intersectPlaneSurf'])
-if ~exist('IntersectPlaneTriangle.mexw64','file')
-    mex('IntersectPlaneTriangle.cpp','-v');
-end; 
-cd(CTP);
+mexPath = [GD.ToolPath 'extern\intersectPlaneSurf'];
+if ~exist([mexPath '\IntersectPlaneTriangle.mexw64'],'file')
+    mex([mexPath '\IntersectPlaneTriangle.cpp'],'-v','-outdir', mexPath);
+end
 
 %% Number of cutting planes per cuting box
 GD.Cond.NoPpC = 8;
@@ -48,12 +44,10 @@ GD.Figure.LeftSpHandle = subplot('Position', [0.05, 0.1, 0.4, 0.8],...
 
 %% Get Subjects
 % GD.Subject.DataPath = '../#UprightMRIDatabase/';
-GD.Subject.DataPath = 'ExampleData/';
-cd(GD.Subject.DataPath)
+GD.Subject.DataPath = 'ExampleData\';
 % SearchString = 'A??.*';
 SearchString = '*.mat';
-MATFiles = struct2cell(dir(SearchString));
-cd(GD.ToolPath)
+MATFiles = struct2cell(dir([GD.ToolPath GD.Subject.DataPath SearchString]));
 MATFiles = MATFiles(1,:);
 [~,Subjects,~] = cellfun(@fileparts, MATFiles, 'UniformOutput', false);
 Subjects = Subjects';
@@ -77,12 +71,11 @@ FontPropsB.FontSize = 0.5;
 %% Controls on the Top of the GUI - LEFT SIDE
 % Entries of the dropdown menue as string
 GD.Subject.Name = Subjects{1};
-DD_String_Subjects = [sprintf('%s|', Subjects{1:end-1,1}), Subjects{end,1}];
 % Subject static text
 uicontrol('Style','text','String','Subject: ','HorizontalAlignment','Right',...
     'Units','normalized','Position',      [0.13-BSX 0.97 BSX/2 BSY],FontPropsA)
 % Subject dropdown menue
-uicontrol('Style', 'popup', 'String',DD_String_Subjects,...
+uicontrol('Style', 'popup', 'String',Subjects,...
     'Units','normalized','Position',      [0.13-BSX*1/2 0.97 BSX BSY],FontPropsB,...
     'Callback', {@DD_CB_Subject, Subjects});
 % Load button

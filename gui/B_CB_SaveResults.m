@@ -1,6 +1,5 @@
 function GD = B_CB_SaveResults(hObject, GD)
 if ishandle(hObject); GD = guidata(hObject); end
-cd(GD.ToolPath)
 
 if isfield(GD.Results, 'PlaneRotMat')
     
@@ -14,7 +13,7 @@ if isfield(GD.Results, 'PlaneRotMat')
     
     save(GD.Subject.PathMAT, 'USPTFM', 'PFEA', 'CEA', '-append')
 
-    display('Results saved.')
+    disp('Results saved.')
 else
     uiwait(errordlg('There are no results to save'));
 end
@@ -23,5 +22,5 @@ if isfield(GD.Results, 'B_H_SaveResults')
     set(GD.Results.B_H_SaveResults,'Enable','off')
 end
 
-if ishandle(hObject); guidata(hObject,GD); end;
+if ishandle(hObject); guidata(hObject,GD); end
 end

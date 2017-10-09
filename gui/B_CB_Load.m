@@ -1,11 +1,10 @@
 function GD = B_CB_Load(hObject, GD)
 if ishandle(hObject); GD = guidata(hObject); end
-cd(GD.ToolPath)
 
 %% Load Subject Bone
 
 % Subject STL path
-GD.Subject.PathMAT = [GD.Subject.DataPath, GD.Subject.Name '.mat'];
+GD.Subject.PathMAT = [GD.ToolPath GD.Subject.DataPath, GD.Subject.Name '.mat'];
 
 load(GD.Subject.PathMAT)
 

@@ -85,14 +85,14 @@ switch Side
         SC(2).Color = [255,   0, 255]/255; % Medial = Magenta
 end
 
-% Variable to save the results
-Results = [];
-
 % Plane variation loop counter
 PV_Counter = 0;
 
 RangeLength_a = length(Range_a);
 RangeLength_b = length(Range_b);
+
+% Variable to save the results
+R.Dispersion = nan(RangeLength_a,RangeLength_b);
 
 % Cell array to save the results of each plane variation
 CutVariations = cell(RangeLength_a,RangeLength_b);
@@ -139,14 +139,14 @@ for I_a = 1:RangeLength_a
             end; clear p;
         end; clear s;
         
-
+        tempContour=cell(1,2);
         for s=1:2
             % Create SC(s).NoC Saggital Contour Profiles (SC(s).P)
-            T_Contour{s} = IntersectMeshPlaneParfor(Bone, SC(s).PlaneOrigins, PlaneNormal);
+            tempContour{s} = IntersectMeshPlaneParfor(Bone, SC(s).PlaneOrigins, PlaneNormal);
             for c=1:NoPpC
                 % If there is more than one closed contour after the cut, use the longest one
-                [~, IobC] = max(cellfun(@length, T_Contour{s}{c}));
-                SC(s).P(c).xyz = T_Contour{s}{c}{IobC}';
+                [~, IobC] = max(cellfun(@length, tempContour{s}{c}));
+                SC(s).P(c).xyz = tempContour{s}{c}{IobC}';
                 % Close contour: Copy start value to the end, if needed
                 if ~isequal(SC(s).P(c).xyz(1,:),SC(s).P(c).xyz(end,:))
                     SC(s).P(c).xyz(end+1,:) = SC(s).P(c).xyz(1,:);
@@ -208,19 +208,20 @@ for I_a = 1:RangeLength_a
         
         %% Algorithm 2
         % A least-squares fitting algorithm for extracting geometric measures
-        % TEST
+        tempEll2D=cell(1,2);
         for s=1:2
+            PartCont=cell(NoPpC,1);
             for c=1:NoPpC
                 % Part of the contour, that is used for fitting
                 PartCont{c} = SC(s).P(c).xyz(SC(s).P(c).ExPts.A:SC(s).P(c).ExPts.B,1:2)';
             end
             % Parametric least-squares fitting and analysis of cross-sectional profiles
-            T_Ell2D{s} = FitEllipseParfor(PartCont);
+            tempEll2D{s} = FitEllipseParfor(PartCont);
             for c=1:NoPpC
-                Ell2D.z = T_Ell2D{s}(1:2,c);
-                Ell2D.a = T_Ell2D{s}(3,c);
-                Ell2D.b = T_Ell2D{s}(4,c);
-                Ell2D.g = T_Ell2D{s}(5,c);
+                Ell2D.z = tempEll2D{s}(1:2,c);
+                Ell2D.a = tempEll2D{s}(3,c);
+                Ell2D.b = tempEll2D{s}(4,c);
+                Ell2D.g = tempEll2D{s}(5,c);
                 
                 SC(s).P(c).Ell.z = Ell2D.z';
                 % Unify the orientation of the ellipses
@@ -246,7 +247,7 @@ for I_a = 1:RangeLength_a
         % An optimization algorithm for establishing the unified sagittal plane
         
         % Calculate the ellipse foci (Foci2D) and the major (A) & minor (B) axis points (AB)
-        PostFoci2D = [];
+        PostFoci2D = inf(2*NoPpC,2);
         for s=1:2
             for c=1:NoPpC
                 T_P = SC(s).P(c);
@@ -254,18 +255,14 @@ for I_a = 1:RangeLength_a
                     CalculateEllipseFoci2D(T_P.Ell.z', T_P.Ell.a, T_P.Ell.b, T_P.Ell.g);
                 % Posterior Focus (pf): Foci2D(1,1:2), Anterior Focus (af): Foci2D(2,1:2)
                 SC(s).P(c).Ell.pf = Foci2D(1,1:2);
-                PostFoci2D(end+1,:) = Foci2D(1,1:2);
+                PostFoci2D(c+(s-1)*NoPpC,:) = Foci2D(1,1:2);
             end; clear c
         end; clear s
         
         % Calculate the Dispersion as Eccentricity Measure
         Dispersion = CalculateDispersion(PostFoci2D);
         % Save the dispersion together with the plane variation info
-        Results(end+1,1) = Range_a(I_a);
-        Results(end,2)   = Range_b(I_b);
-        Results(end,3)   = Dispersion;
-        Results(end,4)   = I_a;
-        Results(end,5)   = I_b;
+        R.Dispersion(I_a,I_b) = Dispersion;
         
         if GD.Visualization == 1
             %% Visualization during Iteration
@@ -344,7 +341,7 @@ end
 
 
 %% Results
-if size(Results,1) > 3
+if sum(sum(~isnan(R.Dispersion)))>=4
     if GD.Visualization == 1
         %% Dispersion plot
         % A representative plot of the dispersion of focus locations
@@ -355,24 +352,25 @@ if size(Results,1) > 3
             hold on
         else
             GD.Results.FigHandle = figure('Name', GD.Subject.Name, 'Color', 'w');
+            GD.Results.AxHandle = axes;
         end
-        
-        Surf.x = Results(:,1) + GD.Results.OldDMin(1);
-        Surf.y = Results(:,2) + GD.Results.OldDMin(2);
-        Surf.z = Results(:,3);
-        trisurf(delaunay(Surf.x,Surf.y), Surf.x, Surf.y, Surf.z);
         xlabel('\alpha');ylabel('\beta');zlabel('Dispersion [mm]')
         title('Dispersion of focus locations as a function of \alpha & \beta')
+        [Surf2.X, Surf2.Y] = meshgrid(Range_a, Range_b);
+        Surf2.X = Surf2.X + GD.Results.OldDMin(1);
+        Surf2.Y = Surf2.Y + GD.Results.OldDMin(2);
+        surf(Surf2.X', Surf2.Y', R.Dispersion)
     end
     
     
     % Searching the cutting plane with minimum Dispersion
-    [DMin.Value, DMin.I] = min(Results(:,3));
-    DMin.a = Results(DMin.I, 1); DMin.b = Results(DMin.I, 2);
+    [DMin.Value, minDIdx] = min(R.Dispersion(:));
+    [DMin.I_a, DMin.I_b] = ind2sub(size(R.Dispersion),minDIdx);
+    DMin.a = Range_a(DMin.I_a); DMin.b = Range_b(DMin.I_b);
     if GD.Verbose == 1
-        display([char(10) ' Minimum Dispersion: ' num2str(DMin.Value) ' for ' ...
+        display([newline ' Minimum Dispersion: ' num2str(DMin.Value) ' for ' ...
             char(945) ' = ' num2str(DMin.a) '° & ' ...
-            char(946) ' = ' num2str(DMin.b) '°.' char(10)])
+            char(946) ' = ' num2str(DMin.b) '°.' newline])
     end
     
     GD.Results.OldDMin(1) = GD.Results.OldDMin(1)+DMin.a;
@@ -386,22 +384,21 @@ if size(Results,1) > 3
         GD.Iteration.Rough = 0;
     end
     
-    DMin.I_a = Results(DMin.I, 4);DMin.I_b = Results(DMin.I, 5);
     MinSC = CutVariations{DMin.I_a,DMin.I_b};
     
     % The rotation matrix for the plane variation with minimum Dispersion
     GD.Results.PlaneRotMat = MinSC(1).RotTFM.T;
     
     % Calculate foci & centers in 3D for minimum Dispersion
-    EllpFoc3D = [];
-    EllpCen3D = [];
+    EllpFoc3D = inf(2*NoPpC,3);
+    EllpCen3D = inf(2*NoPpC,3);
     for s=1:2
         for c=1:NoPpC
             % Save the 3D posterior Foci for the Line fit
-            EllpFoc3D(end+1,:) = CalculatePointInEllipseIn3D(...
+            EllpFoc3D(c+(s-1)*NoPpC,:) = CalculatePointInEllipseIn3D(...
                 MinSC(s).P(c).Ell.pf, MinSC(s).P(c).xyz(1,3), MinSC(s).RotTFM);
             % Save the ellipse center for the Line fit
-            EllpCen3D(end+1,:) = CalculatePointInEllipseIn3D(...
+            EllpCen3D(c+(s-1)*NoPpC,:) = CalculatePointInEllipseIn3D(...
                 MinSC(s).P(c).Ell.z, MinSC(s).P(c).xyz(1,3), MinSC(s).RotTFM);
         end; clear c
     end; clear s
@@ -421,14 +418,16 @@ if size(Results,1) > 3
     if GD.Visualization == 1
          % Results in the main figure
         % Plot the cutting plane with minimum Dispersion (Left subplot)
-        figure(H.Fig); subplot(H.lSP); ClearPlot(H.Fig, H.lSP, {'Patch','Scatter','Line'})
+        figure(H.Fig);
+        subplot(H.lSP); ClearPlot(H.Fig, H.lSP, {'Patch','Scatter','Line'})
         PlaneNormal = [0, 0, 1]*GD.Results.PlaneRotMat(1:3,1:3)';
         drawPlane3d(createPlane([0, 0, 0], PlaneNormal),'w','FaceAlpha', 0.5);
         
         % Plot the ellipses in 2D (Right subplot) for minimum Dispersion
-        figure(H.Fig); subplot(H.rSP); cla;
+        figure(H.Fig);
+        subplot(H.rSP); cla(H.rSP);
         title(['Minimum Dispersion of the posterior Foci: ' num2str(DMin.Value) ' mm'])
-        hold on;
+        hold(H.rSP,'on')
         % Plot the ellipses in 2D
         for s=1:2
             for c=1:NoPpC
@@ -440,12 +439,13 @@ if size(Results,1) > 3
                 end
             end; clear c
         end; clear s
-        hold off
+        hold(H.rSP,'off')
         
         % Delete old 3D ellipses & contours, if exist
-        figure(H.Fig); subplot(H.lSP);
+        figure(H.Fig);
+        subplot(H.lSP);
         title('Line fit through the posterior Foci for minimum Dispersion')
-        hold on
+        hold(H.lSP,'on')
         % Plot contour-parts, ellipses & foci in 3D for minimum Dispersion
         for s=1:2
             for c=1:NoPpC
