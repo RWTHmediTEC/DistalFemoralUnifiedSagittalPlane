@@ -1,10 +1,9 @@
 function Ells = FitEllipseParfor(ContourParts)
 
+Ells = nan(5, size(ContourParts,1));
 parfor p=1:length(ContourParts)
-    Ells{p} = TryFitEllipse(ContourParts{p})
+    Ells(:,p) = TryFitEllipse(ContourParts{p});
 end
-
-Ells = cell2mat(Ells);
 
 end
 

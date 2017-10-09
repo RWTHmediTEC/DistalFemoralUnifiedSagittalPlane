@@ -16,6 +16,7 @@ if size(PlaneNormals,1)==1
     PlaneNormals = repmat(PlaneNormals, size(PlaneOrigins,1),1);
 end
 
+Contours = cell(size(PlaneOrigins,1),1);
 parfor p=1:size(PlaneOrigins,1)
     % To speed things up, use only the faces in the cutting plane as input 
     % for intersectPlaneSurf

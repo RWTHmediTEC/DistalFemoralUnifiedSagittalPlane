@@ -193,13 +193,15 @@ for I_a = 1:RangeLength_a
                         SC(s).P(c).ExPts.B = ExPts.mB;
                         if length(ExPts.lB) > 1
                             figure(SC(s).P(c).ExPts.H)
-                            delete(ExPts.lB(2),ExPts.lB(3))
+                            if ishandle(ExPts.lB(2)); delete(ExPts.lB(2)); end
+                            if ishandle(ExPts.lB(3)); delete(ExPts.lB(3)); end
                         end
                     case 'PZ'
                         SC(s).P(c).ExPts.B = ExPts.lB;
                         if length(ExPts.mB) > 1
                             figure(SC(s).P(c).ExPts.H)
-                            delete(ExPts.mB(2),ExPts.mB(3))
+                            if ishandle(ExPts.mB(2)); delete(ExPts.mB(2)); end
+                            if ishandle(ExPts.mB(3)); delete(ExPts.mB(3)); end
                         end
                 end
             end; clear c
@@ -349,17 +351,20 @@ if sum(sum(~isnan(R.Dispersion)))>=4
         % The angles are varied in StepSize° increments within the definedrange.
         if ishandle(GD.Results.FigHandle)
             figure(GD.Results.FigHandle)
-            hold on
         else
             GD.Results.FigHandle = figure('Name', GD.Subject.Name, 'Color', 'w');
             GD.Results.AxHandle = axes;
+            xlabel(GD.Results.AxHandle, '\alpha');
+            ylabel(GD.Results.AxHandle, '\beta');
+            zlabel(GD.Results.AxHandle, 'Dispersion [mm]')
+            title(GD.Results.AxHandle, 'Dispersion of focus locations as a function of \alpha & \beta')
+            hold(GD.Results.AxHandle,'on')
+            view(GD.Results.AxHandle, 3)
         end
-        xlabel('\alpha');ylabel('\beta');zlabel('Dispersion [mm]')
-        title('Dispersion of focus locations as a function of \alpha & \beta')
         [Surf2.X, Surf2.Y] = meshgrid(Range_a, Range_b);
         Surf2.X = Surf2.X + GD.Results.OldDMin(1);
         Surf2.Y = Surf2.Y + GD.Results.OldDMin(2);
-        surf(Surf2.X', Surf2.Y', R.Dispersion)
+        surf(GD.Results.AxHandle, Surf2.X', Surf2.Y', R.Dispersion)
     end
     
     
