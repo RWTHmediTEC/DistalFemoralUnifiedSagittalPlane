@@ -1,6 +1,6 @@
 clearvars; close all; opengl hardware;
-[List.f, List.p] = matlab.codetools.requiredFilesAndProducts('USP_GUI.m');
-List.f = List.f'; List.p = List.p';
+% [List.f, List.p] = matlab.codetools.requiredFilesAndProducts('USP_GUI.m');
+% List.f = List.f'; List.p = List.p';
 
 % USP path
 GD.ToolPath = [fileparts([mfilename('fullpath'), '.m']) '\'];
