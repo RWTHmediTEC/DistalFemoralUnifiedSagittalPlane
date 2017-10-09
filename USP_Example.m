@@ -1,6 +1,6 @@
 clearvars; close all; opengl hardware;
 
-[fn,pn,~]=uigetfile('ExampleData\*.mat','Select mat file');
+[fn,pn,~]=uigetfile('data\*.mat','Select mat file');
 load([pn, fn]); 
  
 %% Select different options by commenting 

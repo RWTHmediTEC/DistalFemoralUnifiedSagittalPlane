@@ -5,15 +5,12 @@ List.f = List.f'; List.p = List.p';
 % USP path
 GD.ToolPath = [fileparts([mfilename('fullpath'), '.m']) '\'];
 
-% Add path for external functions
-addpath(genpath([GD.ToolPath 'extern']));
-% Add path fur subfunctions
-addpath(genpath([GD.ToolPath 'functions']));
-% Add path for GUI functions
-addpath([GD.ToolPath 'gui']);
+% Add src path
+addpath(genpath([GD.ToolPath 'src']));
+
 
 % Compile mex file if not exist
-mexPath = [GD.ToolPath 'extern\intersectPlaneSurf'];
+mexPath = [GD.ToolPath 'src\external\intersectPlaneSurf'];
 if ~exist([mexPath '\IntersectPlaneTriangle.mexw64'],'file')
     mex([mexPath '\IntersectPlaneTriangle.cpp'],'-v','-outdir', mexPath);
 end
@@ -44,7 +41,7 @@ GD.Figure.LeftSpHandle = subplot('Position', [0.05, 0.1, 0.4, 0.8],...
 
 %% Get Subjects
 % GD.Subject.DataPath = '../#UprightMRIDatabase/';
-GD.Subject.DataPath = 'ExampleData\';
+GD.Subject.DataPath = 'data\';
 % SearchString = 'A??.*';
 SearchString = '*.mat';
 MATFiles = struct2cell(dir([GD.ToolPath GD.Subject.DataPath SearchString]));
