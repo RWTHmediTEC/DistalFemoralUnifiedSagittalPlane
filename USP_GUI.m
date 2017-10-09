@@ -8,7 +8,6 @@ GD.ToolPath = [fileparts([mfilename('fullpath'), '.m']) '\'];
 % Add src path
 addpath(genpath([GD.ToolPath 'src']));
 
-
 % Compile mex file if not exist
 mexPath = [GD.ToolPath 'src\external\intersectPlaneSurf'];
 if ~exist([mexPath '\IntersectPlaneTriangle.mexw64'],'file')
@@ -40,15 +39,12 @@ GD.Figure.LeftSpHandle = subplot('Position', [0.05, 0.1, 0.4, 0.8],...
     'Visible', 'off','Color',GD.Figure.Color);
 
 %% Get Subjects
-% GD.Subject.DataPath = '../#UprightMRIDatabase/';
 GD.Subject.DataPath = 'data\';
-% SearchString = 'A??.*';
 SearchString = '*.mat';
 MATFiles = struct2cell(dir([GD.ToolPath GD.Subject.DataPath SearchString]));
 MATFiles = MATFiles(1,:);
 [~,Subjects,~] = cellfun(@fileparts, MATFiles, 'UniformOutput', false);
 Subjects = Subjects';
-
 
 %% Calculation subplot
 GD.Figure.RightSpHandle = subplot('Position', [0.55, 0.1, 0.4, 0.8],'Color',GD.Figure.Color);
