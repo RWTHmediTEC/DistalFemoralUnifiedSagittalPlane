@@ -1,9 +1,10 @@
 function GD = RoughFineIteration(hObject, GD)
 if ishandle(hObject); GD = guidata(hObject); end
 
+GD.Results.AxHandle = nan;
+
 % Variable to save the rotation values during the rough iterations
 GD.Results.OldDMin(1) = 0; GD.Results.OldDMin(2) = 0;
-GD.Results.FigHandle = [];
 
 % If the PlaneVariationRange is below 0, do not start the iteration process
 % and only execute Algorithm 3 once.
@@ -19,11 +20,12 @@ if GD.Algorithm3.PlaneVariationRange >= 1
         GD = Algorithm3(GD);
         GD.Subject.STL.TFM = GD.Results.PlaneRotMat*GD.Subject.STL.TFM;
         if GD.Visualization == 1
-            % Clear left subplot
-            figure(GD.Figure.Handle); subplot(GD.Figure.LeftSpHandle);
-            title(''); delete(GD.Subject.PatchHandle); delete(GD.DSPlane.Handle);
+            lSP = GD.Figure.LeftSpHandle;
+            title(lSP, '');
+            delete(GD.Subject.PatchHandle);
             % Plot bone with newest transformation
-            GD = VisualizeSubjectBone(GD); drawnow;
+            GD = VisualizeSubjectBone(GD);
+            drawnow;
         end
     end
     if GD.Verbose == 1

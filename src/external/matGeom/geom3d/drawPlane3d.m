@@ -18,10 +18,12 @@ function varargout = drawPlane3d(plane, varargin)
 %   drawLine3d([p0 v2])
 %   set(gcf, 'renderer', 'zbuffer');
 %
-%   ---------
-%   author : David Legland 
-%   INRA - TPV URPOI - BIA IMASTE
-%   created the 17/02/2005.
+
+% ------
+% Author: David Legland
+% e-mail: david.legland@inra.fr
+% INRA - TPV URPOI - BIA IMASTE
+% created the 17/02/2005.
 %
 
 %   HISTORY
@@ -30,23 +32,47 @@ function varargout = drawPlane3d(plane, varargin)
 %   2011-07-19 fix a bug for param by Xin KANG (Ben)
 % 
 
-param = {'m'};
-if ~isempty(varargin)
-  param = varargin;
+% Parse and check inputs
+if ishandle(plane)
+    hAx = plane;
+    plane = varargin{1};
+    varargin(1) = [];
+else
+    hAx = gca;
 end
 
-lim = get(gca, 'xlim');
+% parse input arguments if any
+if ~isempty(varargin)
+    if length(varargin) == 1
+        if isstruct(varargin{1})
+            % if options are specified as struct, need to convert to 
+            % parameter name-value pairs
+            varargin = [fieldnames(varargin{1}) struct2cell(varargin{1})]';
+            varargin = varargin(:)';
+        else
+            % if option is a single argument, assume it corresponds to 
+            % plane color
+            varargin = {'FaceColor', varargin{1}};
+        end
+    end
+else
+    % default face color
+    varargin = {'FaceColor', 'm'};
+end
+
+% extract axis bounds to crop plane
+lim = get(hAx, 'xlim');
 xmin = lim(1);
 xmax = lim(2);
-lim = get(gca, 'ylim');
+lim = get(hAx, 'ylim');
 ymin = lim(1);
 ymax = lim(2);
-lim = get(gca, 'zlim');
+lim = get(hAx, 'zlim');
 zmin = lim(1);
 zmax = lim(2);
 
 
-% line corresponding to cube edges
+% create lines corresponding to cube edges
 lineX00 = [xmin ymin zmin 1 0 0];
 lineX01 = [xmin ymin zmax 1 0 0];
 lineX10 = [xmin ymax zmin 1 0 0];
@@ -83,16 +109,16 @@ points = [...
     piY00;piY01;piY10;piY11; ...
     piZ00;piZ01;piZ10;piZ11;];
 
-% check validity: keep only points inside window
+% check validity: keep only points inside window (with tolerance)
 ac = 1e-14;
-vx = points(:,1)>=xmin-ac & points(:,1)<=xmax+ac;
-vy = points(:,2)>=ymin-ac & points(:,2)<=ymax+ac;
-vz = points(:,3)>=zmin-ac & points(:,3)<=zmax+ac;
-valid = vx & vy & vz;
+ivx = points(:,1) >= xmin-ac & points(:,1) <= xmax+ac;
+ivy = points(:,2) >= ymin-ac & points(:,2) <= ymax+ac;
+ivz = points(:,3) >= zmin-ac & points(:,3) <= zmax+ac;
+valid = ivx & ivy & ivz;
 pts = unique(points(valid, :), 'rows');
 
 % If there is no intersection point, escape.
-if size(pts, 1)<3
+if size(pts, 1) < 3
     disp('plane is outside the drawing window');
     return;
 end
@@ -110,9 +136,10 @@ ind = convhull(u1, u2);
 ind = ind(1:end-1);
 
 % draw the patch
-h = patch(pts(ind, 1), pts(ind, 2), pts(ind, 3), param{:});
+h = patch(hAx, 'XData', pts(ind, 1), 'YData', pts(ind, 2), 'ZData', pts(ind, 3));
+set(h, varargin{:});
 
 % return handle to plane if needed
-if nargout>0
-    varargout{1}=h;
+if nargout > 0
+    varargout = {h};
 end

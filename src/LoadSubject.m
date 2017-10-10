@@ -13,7 +13,6 @@ if ishandle(hObject)
     GD.Subject.Side = Side;
     GD.Subject.InitialRot = InitialRot;
     
-    
     %% Set Centroid of the bone as Point of Origin
     if exist('USPTFM','var')
         % Construct a questdlg with three options
@@ -24,8 +23,7 @@ if ishandle(hObject)
             case 'Yes'
                 % If exists, use transformation from a previous calculation
                 GD.Subject.STL.TFM = USPTFM;
-                disp(['Subject ' GD.Subject.Name ' loaded. ' ...
-                    'Data from a previous calculation is used for the initial alignment!']);
+                disp('Data from a previous calculation is used for the initial alignment!');
             case 'No'
                 GD = initialTFM(GD);
         end
@@ -38,32 +36,38 @@ end
 
 if GD.Visualization == 1
     %% Configure subplots
-    figure(GD.Figure.Handle);
     set(GD.Figure.Handle, 'Name', [GD.Subject.Side ' femur of subject: ' GD.Subject.Name]);
     % Clear right subplot
-    subplot(GD.Figure.RightSpHandle); cla reset;
-    axis on; axis equal; grid on; xlabel('X [mm]'); ylabel('Y [mm]');
-    set(GD.Figure.RightSpHandle, 'Color', GD.Figure.Color);
+    rSP=GD.Figure.RightSpHandle;
+    cla(rSP, 'reset');
+    axis(rSP,'on','equal');
+    grid(rSP,'on');
+    xlabel(rSP,'X [mm]'); ylabel(rSP,'Y [mm]');
+    set(rSP, 'Color', GD.Figure.Color);
     
     % Left subject subplot and properties
-    subplot(GD.Figure.LeftSpHandle);
-    cla reset;
-    axis on; xlabel('X [mm]'); ylabel('Y [mm]'); zlabel('Z [mm]');
-    set(GD.Figure.LeftSpHandle,'Color',GD.Figure.Color);
-    light1 = light; light('Position', -1*(get(light1,'Position')));
-    daspect([1 1 1])
+    lSP=GD.Figure.LeftSpHandle;
+    cla(lSP,'reset');
+    axis(lSP,'on','equal');
+    xlabel(lSP,'X [mm]'); ylabel(lSP,'Y [mm]'); zlabel(lSP,'Z [mm]');
+    set(lSP,'Color',GD.Figure.Color);
+    light1 = light(lSP); light(lSP, 'Position', -1*(get(light1,'Position')));
+    daspect(lSP, [1 1 1])
     cameratoolbar('SetCoordSys','none')
     
     %% Visualize Subject Bone with the Default Sagittal Plane (DSP)
     GD = VisualizeSubjectBone(GD);
-    hold on
+    hold(lSP,'on')
     % Plot a dot into the Point of Origin
-    scatter3(0,0,0,'k','filled')
-    
+    scatter3(lSP, 0,0,0,'k','filled')
 end
 
 %% Find most posterior points of the condyles (mpCPts) & plot the cutting boxes
 GD = SetStartSetup(GD);
+
+if GD.Verbose == 1
+    disp(['Subject ' GD.Subject.Name ' loaded.']);
+end
 
 if ishandle(hObject); guidata(hObject,GD); end
 
@@ -84,9 +88,5 @@ IR = GD.Subject.InitialRot;
 % Rotate around the Z Y X axis (global basis)
 ROT = eulerAnglesToRotation3d(IR(1), IR(2), IR(3));
 GD.Subject.STL.TFM = ROT*TRANS;
-if GD.Verbose == 1
-    disp(['Subject ' GD.Subject.Name ' loaded.']);
-end
-
 end
 

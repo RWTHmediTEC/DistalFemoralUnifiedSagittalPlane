@@ -3,7 +3,7 @@ GD = guidata(hObject);
 
 if isfield(GD.Subject,'PatchHandle')
     
-    ClearPlot(GD.Figure.Handle, GD.Figure.LeftSpHandle, {'Patch','Scatter','Line'})
+    ClearPlot(GD.Figure.LeftSpHandle, {'Patch','Scatter','Line'})
  
     rotate(GD.Subject.PatchHandle,Axis, Angle, [0,0,0])
     % Calculate the Rotation Matrix for the plane variation
