@@ -157,8 +157,8 @@ if GD.Algorithm3.PlaneVariationRange ~= 0
     USPTFM  = GD.Subject.STL.TFM * PRM;
     if nargout >= 2
         % Calculate the posterior focal elliptic axis (PFEA) in the USP system
-        PFEA = [GD.Results.pFociLine(1:3)*PRM(1:3,1:3), GD.Results.pFociLine(4:6)*PRM(1:3,1:3)];
-        CEA = [GD.Results.CenterLine(1:3)*PRM(1:3,1:3), GD.Results.CenterLine(4:6)*PRM(1:3,1:3)];
+        PFEA = transformLine3d(GD.Results.pFociLine, inv(PRM));
+        CEA = transformLine3d(GD.Results.CenterLine, inv(PRM));
     end
     
     % Check if the PFEA has 4 intersections with the bone:

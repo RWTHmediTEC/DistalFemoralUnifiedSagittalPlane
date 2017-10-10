@@ -9,9 +9,9 @@ load([pn, fn]);
 %% Select different options by commenting 
 
 % Default mode
-[USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'Subject', Subject);
+% [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'Subject', Subject);
 % Silent mode
-% [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'Subject', Subject, 'Visualization', false, 'Verbose', true);
+[USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'Subject', Subject, 'Visualization', false, 'Verbose', true);
 % The other options
 % [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'PlaneVariationRange', 12, 'StepSize', 3);
 % Special case: 'PlaneVariationRange', 0 -> 48 additional figures!
@@ -34,14 +34,15 @@ BoneProps.FaceLighting = 'gouraud';
 patch('Faces',Faces,'Vertices',Vertices, BoneProps);
 
 % PFEA
-GA_TFM = transformPointsForward(affine3d(USPTFM'), PFEA(1:3));
-GA_TFM = [GA_TFM, PFEA(4:6)/(USPTFM(1:3,1:3))];
-drawLine3d(GA_TFM,'LineWidth', 3, 'LineStyle', '-', 'Color', 'g');
+PFEA_TFM = transformLine3d(PFEA, USPTFM);
+drawLine3d(PFEA_TFM,'LineWidth', 3, 'LineStyle', '-', 'Color', 'g');
 
 % CEA
-GA_TFM = transformPointsForward(affine3d(USPTFM'), CEA(1:3));
-GA_TFM = [GA_TFM, CEA(4:6)/(USPTFM(1:3,1:3))];
-drawLine3d(GA_TFM,'LineWidth', 3, 'LineStyle', '-', 'Color', 'b');
+mesh.vertices=Vertices;
+mesh.faces=Faces;
+mesh=transformPoint3d(mesh, inv(USPTFM));
+patch(mesh, BoneProps);
+drawLine3d(CEA,'LineWidth', 3, 'LineStyle', '-', 'Color', 'b');
 
 % Light
 light1 = light; light('Position', -1*(get(light1,'Position')));
