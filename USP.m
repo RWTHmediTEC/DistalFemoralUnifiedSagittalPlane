@@ -68,7 +68,6 @@ function [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, varargin)
 % AUTHOR:
 %     MCMF
 
-
 narginchk(5,13);
 
 % Validate inputs
@@ -125,7 +124,7 @@ GD.Subject.Name = Subject; % Subject name
 % Number of cutting planes per cuting box
 GD.Cond.NoPpC = 8;
 
-GD = LoadSubject(GD);
+GD = LoadSubject('no handle', GD);
 
 %% Settings for the framework
 % Iteration settings
