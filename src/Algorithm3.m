@@ -17,7 +17,9 @@ function GD = Algorithm3(GD)
 %   AUTHOR: MCMF
 %
 
-if GD.Visualization == 1
+visu = GD.Visualization;
+
+if visu == 1
     % Figure & subplot handles
     H.Fig = GD.Figure.Handle;
     H.lSP = GD.Figure.LeftSpHandle;
@@ -114,21 +116,21 @@ for I_a = 1:RangeLength_a
         % Calculate the Rotation Matrix for the plane variation
         % (All rotations around the fixed axes / around the global basis) 
         %                                       (  Z-Axis      Y-Axis        X-Axis   )
-        PlaneRotMat =    eulerAnglesToRotation3d(    0    , Range_b(I_b), Range_a(I_a));
-        PlaneNormal = transformVector3d([0 0 1], PlaneRotMat);
-        invPRM = PlaneRotMat';
+        PRM =    eulerAnglesToRotation3d(    0    , Range_b(I_b), Range_a(I_a));
+        PlaneNormal = [0 0 1];
+        % The inverse PRM
+        invPRM = PRM';
         
         % Find most posterior points of the condyles (mpCPts) for the current plane variation 
-        RotTFM = affine3d(PlaneRotMat);
+        RotTFM = affine3d(eye(4));
         SC(1).RotTFM = RotTFM;
         SC(2).RotTFM = RotTFM;
-        % Rotate the bone vertices corresponding to the plane variation
-        TempVertices = transformPoint3d(Bone.vertices, invPRM);
+        % Rotate the bone  corresponding to the plane variation
+        tempBone = transformPoint3d(Bone, PRM);
         
         % Find the most posterior Points (mpCPts) of the rotated bone
-        [mpCPts.IXmax(1), mpCPts.IXmax(2)] = FindMostPosteriorPts(TempVertices);
-        % Rotate the mpCPts back into the reference system of the bone.
-        mpCPts.Origin_tfm_GUI = transformPoint3d(TempVertices(mpCPts.IXmax,:), PlaneRotMat);
+        [mpCPts.IXmax(1), mpCPts.IXmax(2)] = FindMostPosteriorPts(tempBone.vertices);
+        mpCPts.Origin_tfm_GUI = tempBone.vertices(mpCPts.IXmax,:);
         
         % Create cutting plane origins
         for s=1:2
@@ -143,7 +145,7 @@ for I_a = 1:RangeLength_a
         tempContour=cell(1,2);
         for s=1:2
             % Create SC(s).NoC Saggital Contour Profiles (SC(s).P)
-            tempContour{s} = IntersectMeshPlaneParfor(Bone, SC(s).PlaneOrigins, PlaneNormal);
+            tempContour{s} = IntersectMeshPlaneParfor(tempBone, SC(s).PlaneOrigins, PlaneNormal);
             for c=1:NoPpC
                 % If there is more than one closed contour after the cut, use the longest one
                 [~, IobC] = max(cellfun(@length, tempContour{s}{c}));
@@ -152,8 +154,6 @@ for I_a = 1:RangeLength_a
                 if ~isequal(SC(s).P(c).xyz(1,:),SC(s).P(c).xyz(end,:))
                     SC(s).P(c).xyz(end+1,:) = SC(s).P(c).xyz(1,:);
                 end
-                % Rotation back, parallel to X-Y-Plane (Default Sagittal Plane)
-                SC(s).P(c).xyz = transformPointsForward(SC(s).RotTFM, SC(s).P(c).xyz);
                 % If the contour is sorted clockwise
                 if varea(SC(s).P(c).xyz(:,1:2)') < 0 % The contour has to be closed
                     % Sort the contour counter-clockwise
@@ -267,7 +267,7 @@ for I_a = 1:RangeLength_a
         % Save the dispersion together with the plane variation info
         R.Dispersion(I_a,I_b) = Dispersion;
         
-        if GD.Visualization == 1
+        if visu == 1
             %% Visualization during Iteration
             % RIGHT subplot: Plot the ellipses in 2D in the XY-plane
             if EllipsePlot == 1
@@ -294,17 +294,15 @@ for I_a = 1:RangeLength_a
             figure(H.Fig); subplot(H.lSP);
             ClearPlot(H.Fig, H.lSP, {'Patch','Scatter','Line'})
             
-            % Plot the mpCPts
             if PlotPlaneVariation == 1
+                % Draw bone transformed by PRM
+                patch(tempBone, GD.BoneProps)
+                % Plot the mpCPts
                 scatter3(mpCPts.Origin_tfm_GUI(:,1),...
                     mpCPts.Origin_tfm_GUI(:,2),mpCPts.Origin_tfm_GUI(:,3),'g','filled');
-            end
-            
-            % Plot the plane variation
-            if PlotPlaneVariation == 1
+                % Plot the plane variation
                 title(['\alpha = ' num2str(Range_a(I_a)) '° & ' ...
                     '\beta = '  num2str(Range_b(I_b)) '°.'])
-                drawPlane3d(createPlane([0, 0, 0], PlaneNormal),'g','FaceAlpha', 0.5);
             end
             
             if EllipsePlot == 1
@@ -312,9 +310,9 @@ for I_a = 1:RangeLength_a
                     for c=1:NoPpC
                         switch SC(s).Zone
                             case 'NZ'
-                                VisualizeContEll3D(SC(s).P(c), SC(s).RotTFM, SC(s).Color);
+                                VisualizeContEll3D(SC(s).P(c), SC(s).Color);
                             case 'PZ'
-                                VisualizeContEll3D(SC(s).P(c), SC(s).RotTFM, SC(s).Color);
+                                VisualizeContEll3D(SC(s).P(c), SC(s).Color);
                         end
                     end; clear c
                 end; clear s
@@ -324,6 +322,8 @@ for I_a = 1:RangeLength_a
 
         % Save the calculations in one big cell array
         CutVariations{I_a,I_b} = SC;
+        % Save the PRMs in one big cell array
+        PRMs{I_a,I_b}=PRM;
         
         PV_Counter=PV_Counter+1;
         
@@ -345,7 +345,7 @@ end
 
 %% Results
 if sum(sum(~isnan(R.Dispersion)))>=4
-    if GD.Visualization == 1
+    if visu == 1
         %% Dispersion plot
         % A representative plot of the dispersion of focus locations
         % as a function of alpha (a) and beta (b).
@@ -394,7 +394,7 @@ if sum(sum(~isnan(R.Dispersion)))>=4
     MinSC = CutVariations{DMin.I_a,DMin.I_b};
     
     % The rotation matrix for the plane variation with minimum Dispersion
-    GD.Results.PlaneRotMat = inv(MinSC(1).RotTFM.T);
+    GD.Results.PlaneRotMat = PRMs{DMin.I_a,DMin.I_b};
     
     % Calculate foci & centers in 3D for minimum Dispersion
     EllpFoc3D = inf(2*NoPpC,3);
@@ -402,11 +402,11 @@ if sum(sum(~isnan(R.Dispersion)))>=4
     for s=1:2
         for c=1:NoPpC
             % Save the 3D posterior Foci for the Line fit
-            EllpFoc3D(c+(s-1)*NoPpC,:) = CalculatePointInEllipseIn3D(...
-                MinSC(s).P(c).Ell.pf, MinSC(s).P(c).xyz(1,3), MinSC(s).RotTFM);
+            EllpFoc3D(c+(s-1)*NoPpC,:) = ...
+                [MinSC(s).P(c).Ell.pf, MinSC(s).P(c).xyz(1,3)];
             % Save the ellipse center for the Line fit
-            EllpCen3D(c+(s-1)*NoPpC,:) = CalculatePointInEllipseIn3D(...
-                MinSC(s).P(c).Ell.z, MinSC(s).P(c).xyz(1,3), MinSC(s).RotTFM);
+            EllpCen3D(c+(s-1)*NoPpC,:) = ...
+                [MinSC(s).P(c).Ell.z, MinSC(s).P(c).xyz(1,3)];
         end; clear c
     end; clear s
     
@@ -422,13 +422,12 @@ if sum(sum(~isnan(R.Dispersion)))>=4
     GD.Results.Ell.Lat.b = EllResults(4,:);
     
     %% Visualization of Results
-    if GD.Visualization == 1
+    if visu == 1
          % Results in the main figure
         % Plot the cutting plane with minimum Dispersion (Left subplot)
         figure(H.Fig);
         subplot(H.lSP); ClearPlot(H.Fig, H.lSP, {'Patch','Scatter','Line'})
-        PlaneNormal = transformVector3d([0 0 1], GD.Results.PlaneRotMat);
-        drawPlane3d(createPlane([0, 0, 0], PlaneNormal),'w','FaceAlpha', 0.5);
+        patch(transformPoint3d(Bone, GD.Results.PlaneRotMat), GD.BoneProps)
         
         % Plot the ellipses in 2D (Right subplot) for minimum Dispersion
         figure(H.Fig);
@@ -458,9 +457,9 @@ if sum(sum(~isnan(R.Dispersion)))>=4
             for c=1:NoPpC
                 switch MinSC(s).Zone
                     case 'NZ'
-                        VisualizeContEll3D(MinSC(s).P(c), MinSC(s).RotTFM, MinSC(s).Color);
+                        VisualizeContEll3D(MinSC(s).P(c), MinSC(s).Color);
                     case 'PZ'
-                        VisualizeContEll3D(MinSC(s).P(c), MinSC(s).RotTFM, MinSC(s).Color);
+                        VisualizeContEll3D(MinSC(s).P(c), MinSC(s).Color);
                 end
             end; clear c
         end; clear s

@@ -8,8 +8,6 @@ GD.Results.FigHandle = [];
 % If the PlaneVariationRange is below 0, do not start the iteration process
 % and only execute Algorithm 3 once.
 if GD.Algorithm3.PlaneVariationRange >= 1
-    
-    
     %% Rough Iteration
     if GD.Verbose == 1
         disp('----- Starting Rough Iteration -----------------------------------');
@@ -33,7 +31,6 @@ if GD.Algorithm3.PlaneVariationRange >= 1
         disp(' ');
     end
     
-    
     %% Fine Iteration
     if GD.Verbose == 1
         disp('----- Starting Fine Iteration ------------------------------------');
@@ -54,9 +51,15 @@ if GD.Algorithm3.PlaneVariationRange >= 1
     end
     GD.Algorithm3.StepSize = FineStepSize;
     GD = Algorithm3(GD);
+    % Calculate the transformation (USPTFM) from the initial bone position into the USP
+    PRM = GD.Results.PlaneRotMat;
+    GD.Results.USPTFM  = PRM*GD.Subject.STL.TFM;
+    % Calculate the axes (PFEA & CEA) in the USP system
+    GD.Results.PFEA = transformLine3d(GD.Results.pFociLine, PRM);
+    GD.Results.CEA = transformLine3d(GD.Results.CenterLine, PRM);
     if GD.Verbose == 1
-        display('----- Finished Fine Iteration ------------------------------------');
-        display(' ');
+        disp('----- Finished Fine Iteration ------------------------------------');
+        disp(' ');
     end
     
     % Set Plane Variation Range & Step Size to the old GUI values
@@ -67,5 +70,5 @@ else
     GD = Algorithm3(GD);
 end
 
-if ishandle(hObject); guidata(hObject,GD); end;
+if ishandle(hObject); guidata(hObject,GD); end
 end
