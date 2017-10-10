@@ -23,8 +23,9 @@ if ishandle(hObject)
         switch choice
             case 'Yes'
                 % If exists, use transformation from a previous calculation
-                TFM = USPTFM;
-                display(['Subject ' GD.Subject.Name ' loaded. Data from a previous calculation is used for the initial alignment!']);
+                GD.Subject.STL.TFM = USPTFM;
+                disp(['Subject ' GD.Subject.Name ' loaded. ' ...
+                    'Data from a previous calculation is used for the initial alignment!']);
             case 'No'
                 GD = initialTFM(GD);
         end
