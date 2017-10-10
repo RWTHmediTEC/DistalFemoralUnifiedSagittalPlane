@@ -1,5 +1,4 @@
 function [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, varargin)
-
 % USP An optimization algorithm for establishing a Unified Sagittal Plane.
 %     USPTFM = USP(Vertices, Faces, Side, InitialRot) returns a 3D 
 %     transform to move the distal femur from the coordinate system of the 
@@ -116,9 +115,9 @@ if GD.Visualization == 1
 end
 
 %% Load Subject
-GD.Subject.STL.Vertices = Vertices;
-GD.Subject.STL.Faces = Faces;
-GD.Subject.STL.InitialRot = InitialRot;
+GD.Subject.Mesh.vertices = Vertices;
+GD.Subject.Mesh.faces = Faces;
+GD.Subject.InitialRot = InitialRot;
 GD.Subject.Side = Side; % Left or Right knee
 GD.Subject.Name = Subject; % Subject name
 % Number of cutting planes per cuting box
@@ -161,7 +160,9 @@ if GD.Algorithm3.PlaneVariationRange ~= 0
     % Check if the PFEA has 4 intersections with the bone:
     % 2 intersections with the medial condyle
     % 2 intersections with the lateral condyle
-    [~, ~, I_IntPFEABone] = intersectLineMesh3d(PFEA, GD.Subject.STL.V_C_tfm, GD.Subject.STL.Faces);
+    [~, ~, I_IntPFEABone] = intersectLineMesh3d(PFEA, ...
+        transformPoint3d(GD.Subject.Mesh.vertices, GD.Subject.STL.TFM),...
+        GD.Subject.Mesh.faces);
     if numel(I_IntPFEABone)~=4
         warning(['Posterior focal elliptic axis (PFEA) should have 4 intersection points with the bone surface', ...
             'But number of intersection points is: ' num2str(numel(I_IntPFEABone)) '!']);

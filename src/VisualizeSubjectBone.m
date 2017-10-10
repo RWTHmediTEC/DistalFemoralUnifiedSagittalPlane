@@ -9,8 +9,8 @@ BoneProps.FaceAlpha = 0.7;
 BoneProps.EdgeLighting = 'none';
 BoneProps.FaceLighting = 'gouraud';
 BoneProps.HandleVisibility = 'Off';
-GD.Subject.PatchHandle = patch('Faces',GD.Subject.STL.Faces,...
-    'Vertices',GD.Subject.STL.V_C_tfm, BoneProps);
+GD.Subject.PatchHandle = patch(...
+    transformPoint3d(GD.Subject.Mesh, GD.Subject.STL.TFM), BoneProps);
 
 %% Plot the Default Sagittal Plane (DSP)
 PlaneProps.FaceAlpha = 0.2;

@@ -8,10 +8,10 @@ if ishandle(hObject)
     load(GD.Subject.PathMAT)
     
     % Read subject surface data and store
-    GD.Subject.STL.Vertices = Vertices;
-    GD.Subject.STL.Faces = Faces;
+    GD.Subject.Mesh.vertices = Vertices;
+    GD.Subject.Mesh.faces = Faces;
     GD.Subject.Side = Side;
-    GD.Subject.STL.InitialRot = InitialRot;
+    GD.Subject.InitialRot = InitialRot;
     
     
     %% Set Centroid of the bone as Point of Origin
@@ -35,8 +35,6 @@ if ishandle(hObject)
 else
     GD = initialTFM(GD);
 end
-
-GD.Subject.STL.V_C_tfm = transformPoint3d(GD.Subject.STL.Vertices, GD.Subject.STL.TFM);
 
 if GD.Visualization == 1
     %% Configure subplots
@@ -74,15 +72,15 @@ end
 function GD = initialTFM(GD)
 % Move the bone to the centroid and rotate
 % Check if the surface is closed
-if isempty(surfedge(GD.Subject.STL.Faces))
-    [~, GD.Subject.STL.Centroid, ~] = VolumeIntegrate(GD.Subject.STL.Vertices, GD.Subject.STL.Faces);
+if isempty(surfedge(GD.Subject.Mesh.faces))
+    [~, GD.Subject.STL.Centroid, ~] = VolumeIntegrate(GD.Subject.Mesh.vertices, GD.Subject.Mesh.faces);
 else
-    GD.Subject.STL.Centroid = mean(GD.Subject.STL.Vertices)';
+    GD.Subject.STL.Centroid = mean(GD.Subject.Mesh.vertices)';
 end
 % Set Centroid of the bone as Point of Origin
 TRANS = createTranslation3d(-GD.Subject.STL.Centroid);
 % Negative sign because the following inital transformation is inverse
-IR = GD.Subject.STL.InitialRot;
+IR = GD.Subject.InitialRot;
 % Rotate around the Z Y X axis (global basis)
 ROT = eulerAnglesToRotation3d(IR(1), IR(2), IR(3));
 GD.Subject.STL.TFM = ROT*TRANS;

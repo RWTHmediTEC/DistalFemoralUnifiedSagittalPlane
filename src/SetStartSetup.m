@@ -1,19 +1,19 @@
 function GD = SetStartSetup(GD)
 
-
+tempVertices = transformPoint3d(GD.Subject.Mesh.vertices, GD.Subject.STL.TFM);
 %% Find most posterior points of the condyles (mpCPts)
 [GD.Cond.NZ.IXmax, GD.Cond.PZ.IXmax] = ...
-    FindMostPosteriorPts(GD.Subject.STL.V_C_tfm);
+    FindMostPosteriorPts(tempVertices);
 
 %% Create cutting boxes
 % Origin of the cutting boxes [0, 0, mpCPts(3)]
-GD.Cond.NZ.Origin = [0, 0, GD.Subject.STL.V_C_tfm(GD.Cond.NZ.IXmax,3)];
-GD.Cond.PZ.Origin = [0, 0, GD.Subject.STL.V_C_tfm(GD.Cond.PZ.IXmax,3)];
+GD.Cond.NZ.Origin = [0, 0, tempVertices(GD.Cond.NZ.IXmax,3)];
+GD.Cond.PZ.Origin = [0, 0, tempVertices(GD.Cond.PZ.IXmax,3)];
 
 % Calculate the size of the cutting boxes by the size of the bounding box 
 % of the bone vertices.
 Scale = 1.2;
-BBox = boundingBox3d(GD.Subject.STL.V_C_tfm);
+BBox = boundingBox3d(tempVertices);
 Xlength = (abs(BBox(1))+BBox(2))*Scale;
 Ylength = (abs(BBox(3))+BBox(4))*Scale;
 Zlength = GD.Cond.NoPpC-1;
@@ -34,8 +34,8 @@ if GD.Visualization == 1
     % Plot most posterior points of the condyles (mpCPts)
     % Indices of the Medial & Lateral point
     mpCP = [GD.Cond.NZ.IXmax, GD.Cond.PZ.IXmax];
-    GD.mpCPtsStartH(1) = scatter3(GD.Subject.STL.V_C_tfm(mpCP,1),...
-        GD.Subject.STL.V_C_tfm(mpCP,2),GD.Subject.STL.V_C_tfm(mpCP,3),'g','filled');
+    GD.mpCPtsStartH(1) = scatter3(...
+        tempVertices(mpCP,1),tempVertices(mpCP,2),tempVertices(mpCP,3),'g','filled');
 end
 
 end

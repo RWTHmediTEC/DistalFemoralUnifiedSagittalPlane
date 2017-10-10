@@ -20,8 +20,6 @@ if GD.Algorithm3.PlaneVariationRange >= 1
     while GD.Iteration.Rough == 1
         GD = Algorithm3(GD);
         GD.Subject.STL.TFM = GD.Results.PlaneRotMat*GD.Subject.STL.TFM;
-        GD.Subject.STL.V_C_tfm = ...
-            transformPoint3d(GD.Subject.STL.Vertices, GD.Subject.STL.TFM);
         if GD.Visualization == 1
             % Clear left subplot
             figure(GD.Figure.Handle); subplot(GD.Figure.LeftSpHandle);
