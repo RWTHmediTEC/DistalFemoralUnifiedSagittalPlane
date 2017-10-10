@@ -413,6 +413,9 @@ if sum(sum(~isnan(R.Dispersion)))>=4
     % Calculate axis through the posterior foci
     GD.Results.pFociLine  = fitLine3d(EllpFoc3D);
     GD.Results.CenterLine = fitLine3d(EllpCen3D);
+    % Safe nearest vertex indices of the intersection points with the mesh
+    GD.Results.pFociLineIdx = lineToVertexIndices(GD.Results.pFociLine,Bone);
+    GD.Results.CenterLineIdx = lineToVertexIndices(GD.Results.CenterLine,Bone);
     
     % Display info about the ellipses in the command window
     EllResults = CalcAndPrintEllipseResults(MinSC, NoPpC, GD.Verbose);
@@ -474,8 +477,6 @@ if sum(sum(~isnan(R.Dispersion)))>=4
             set(GD.Results.B_H_SaveResults,'Enable','on')
         end
     end
-    lineToVertexIndices(GD.Results.pFociLine,Bone)
-    lineToVertexIndices(GD.Results.CenterLine,Bone)
 end
 
 end

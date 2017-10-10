@@ -25,6 +25,6 @@ parfor p=1:size(PlaneOrigins,1)
     % Logical index to three vertices of each face
     FBP_LI = VBPl_LI(Mesh.faces);
     % Faces in the plane, 1 or 2 vertices == 0
-    FacesInPlane = CutFacesOffMesh(Mesh, (sum(FBP_LI, 2) > 0 & sum(FBP_LI, 2) < 3) );
+    FacesInPlane = removeMeshFaces(Mesh, ~(sum(FBP_LI, 2) > 0 & sum(FBP_LI, 2) < 3) );
     Contours{p} = intersectPlaneSurf(FacesInPlane, PlaneOrigins(p,:), PlaneNormals(p,:));
 end; clear p
