@@ -9,9 +9,9 @@ load([pn, fn]);
 %% Select different options by commenting 
 
 % Default mode
-% [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'Subject', Subject);
+[USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'Subject', Subject);
 % Silent mode
-[USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'Subject', Subject, 'Visualization', false, 'Verbose', true);
+% [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'Subject', Subject, 'Visualization', false, 'Verbose', true);
 % The other options
 % [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'PlaneVariationRange', 12, 'StepSize', 3);
 % Special case: 'PlaneVariationRange', 0 -> 48 additional figures!
@@ -24,25 +24,25 @@ figure('Units','pixels','Color','w','ToolBar','figure',...
 axes('Color','w'); axis on; xlabel('X [mm]'); ylabel('Y [mm]'); zlabel('Z [mm]');
 daspect([1 1 1])
 cameratoolbar('SetCoordSys','none')
+light1 = light; light('Position', -1*(get(light1,'Position')));
 
 % Bone
+Bone.vertices=Vertices;
+Bone.faces=Faces;
 BoneProps.EdgeColor = 'none';
 BoneProps.FaceColor = [0.882, 0.831, 0.753];
 BoneProps.FaceAlpha = 0.7;
 BoneProps.EdgeLighting = 'none';
 BoneProps.FaceLighting = 'gouraud';
-patch('Faces',Faces,'Vertices',Vertices, BoneProps);
+patch(Bone, BoneProps);
 
 % PFEA
-PFEA_TFM = transformLine3d(PFEA, USPTFM);
+PFEA_TFM = transformLine3d(PFEA, inv(USPTFM));
 drawLine3d(PFEA_TFM,'LineWidth', 3, 'LineStyle', '-', 'Color', 'g');
+% lineToVertexIndices(PFEA_TFM,Bone)
 
 % CEA
-mesh.vertices=Vertices;
-mesh.faces=Faces;
-mesh=transformPoint3d(mesh, inv(USPTFM));
-patch(mesh, BoneProps);
+patch(transformPoint3d(Bone, USPTFM), BoneProps);
 drawLine3d(CEA,'LineWidth', 3, 'LineStyle', '-', 'Color', 'b');
+% lineToVertexIndices(CEA,transformPoint3d(Bone, USPTFM))
 
-% Light
-light1 = light; light('Position', -1*(get(light1,'Position')));

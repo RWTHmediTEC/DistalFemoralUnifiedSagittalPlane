@@ -392,7 +392,7 @@ if sum(sum(~isnan(R.Dispersion)))>=4
     MinSC = CutVariations{DMin.I_a,DMin.I_b};
     
     % The rotation matrix for the plane variation with minimum Dispersion
-    GD.Results.PlaneRotMat = MinSC(1).RotTFM.T;
+    GD.Results.PlaneRotMat = inv(MinSC(1).RotTFM.T);
     
     % Calculate foci & centers in 3D for minimum Dispersion
     EllpFoc3D = inf(2*NoPpC,3);
@@ -477,6 +477,8 @@ if sum(sum(~isnan(R.Dispersion)))>=4
             set(GD.Results.B_H_SaveResults,'Enable','on')
         end
     end
+%     lineToVertexIndices(GD.Results.pFociLine,Bone)
+%     lineToVertexIndices(GD.Results.CenterLine,Bone)
 end
 
 end

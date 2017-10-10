@@ -36,7 +36,7 @@ else
     GD = initialTFM(GD);
 end
 
-GD.Subject.STL.V_C_tfm = transformPointsInverse(affine3d(GD.Subject.STL.TFM'), GD.Subject.STL.Vertices);
+GD.Subject.STL.V_C_tfm = transformPoint3d(GD.Subject.STL.Vertices, GD.Subject.STL.TFM);
 
 if GD.Visualization == 1
     %% Configure subplots
@@ -79,15 +79,16 @@ if isempty(surfedge(GD.Subject.STL.Faces))
 else
     GD.Subject.STL.Centroid = mean(GD.Subject.STL.Vertices)';
 end
-% Negative sign because the following inital transformation is inverse
-IR = -GD.Subject.STL.InitialRot;
-% Rotate around the Z Y X axis (global basis)
-TFM = eulerAnglesToRotation3d(IR(1), IR(2), IR(3));
 % Set Centroid of the bone as Point of Origin
-TFM(1:3,4) = GD.Subject.STL.Centroid;
+TRANS = createTranslation3d(-GD.Subject.STL.Centroid);
+% Negative sign because the following inital transformation is inverse
+IR = GD.Subject.STL.InitialRot;
+% Rotate around the Z Y X axis (global basis)
+ROT = eulerAnglesToRotation3d(IR(1), IR(2), IR(3));
+GD.Subject.STL.TFM = ROT*TRANS;
 if GD.Verbose == 1
     disp(['Subject ' GD.Subject.Name ' loaded.']);
 end
-GD.Subject.STL.TFM = TFM;
+
 end
 

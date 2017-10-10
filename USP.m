@@ -153,12 +153,10 @@ GD = RoughFineIteration('no handle', GD);
 if GD.Algorithm3.PlaneVariationRange ~= 0
     % Calculate the transformation (USPTFM) from the initial bone position into the USP
     PRM = GD.Results.PlaneRotMat;
-    USPTFM  = GD.Subject.STL.TFM * PRM;
-    if nargout >= 2
-        % Calculate the posterior focal elliptic axis (PFEA) in the USP system
-        PFEA = transformLine3d(GD.Results.pFociLine, inv(PRM));
-        CEA = transformLine3d(GD.Results.CenterLine, inv(PRM));
-    end
+    USPTFM  = PRM*GD.Subject.STL.TFM;
+    % Calculate the axes (PFEA & CEA) in the USP system
+    PFEA = transformLine3d(GD.Results.pFociLine, PRM);
+    CEA = transformLine3d(GD.Results.CenterLine, PRM);
     
     % Check if the PFEA has 4 intersections with the bone:
     % 2 intersections with the medial condyle

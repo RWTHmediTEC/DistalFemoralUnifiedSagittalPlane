@@ -12,16 +12,16 @@ if GD.Algorithm3.PlaneVariationRange >= 1
     
     %% Rough Iteration
     if GD.Verbose == 1
-        display('----- Starting Rough Iteration -----------------------------------');
+        disp('----- Starting Rough Iteration -----------------------------------');
     end
     GD.Iteration.Rough = 1;
     % Execute the Rough Iteration until the minimum dispersion lies inside 
     % the search space and not on the borders.
     while GD.Iteration.Rough == 1
         GD = Algorithm3(GD);
-        GD.Subject.STL.TFM = GD.Subject.STL.TFM*GD.Results.PlaneRotMat;
+        GD.Subject.STL.TFM = GD.Results.PlaneRotMat*GD.Subject.STL.TFM;
         GD.Subject.STL.V_C_tfm = ...
-            transformPointsInverse(affine3d(GD.Subject.STL.TFM'), GD.Subject.STL.Vertices);
+            transformPoint3d(GD.Subject.STL.Vertices, GD.Subject.STL.TFM);
         if GD.Visualization == 1
             % Clear left subplot
             figure(GD.Figure.Handle); subplot(GD.Figure.LeftSpHandle);
@@ -31,14 +31,14 @@ if GD.Algorithm3.PlaneVariationRange >= 1
         end
     end
     if GD.Verbose == 1
-        display('----- Finished Rough Iteration -----------------------------------');
-        display(' ');
+        disp('----- Finished Rough Iteration -----------------------------------');
+        disp(' ');
     end
     
     
     %% Fine Iteration
     if GD.Verbose == 1
-        display('----- Starting Fine Iteration ------------------------------------');
+        disp('----- Starting Fine Iteration ------------------------------------');
     end
     % Save the GUI values of Plane Variation Range & Step Size
     OldPVRange  = GD.Algorithm3.PlaneVariationRange;
