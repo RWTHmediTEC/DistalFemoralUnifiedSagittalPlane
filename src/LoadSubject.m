@@ -35,6 +35,10 @@ else
 end
 
 if GD.Visualization == 1
+    % Close all except the main window
+    GD.Figure.Handle.HandleVisibility='Off';
+    close all
+    GD.Figure.Handle.HandleVisibility='On';
     %% Configure subplots
     set(GD.Figure.Handle, 'Name', [GD.Subject.Side ' femur of subject: ' GD.Subject.Name]);
     % Clear right subplot

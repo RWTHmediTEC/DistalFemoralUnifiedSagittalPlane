@@ -23,7 +23,7 @@ function varargout = drawLine3d(lin, varargin)
 %
 
 % Parse and check inputs
-if ishandle(lin)
+if numel(lin) == 1 && ishandle(lin)
     hAx = lin;
     lin = varargin{1};
     varargin(1) = [];

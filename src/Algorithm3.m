@@ -117,29 +117,25 @@ for I_a = 1:RangeLength_a
         
         % Calculate the Rotation Matrix for the plane variation
         % (All rotations around the fixed axes / around the global basis) 
-        %                                       (  Z-Axis      Y-Axis        X-Axis   )
-        PRM =    eulerAnglesToRotation3d(    0    , Range_b(I_b), Range_a(I_a));
+        %                            (  Z-Axis      Y-Axis        X-Axis   )
+        PRM = eulerAnglesToRotation3d(    0    , Range_b(I_b), Range_a(I_a));
         PlaneNormal = [0 0 1];
         % The inverse PRM
-        invPRM = PRM';
+        % invPRM = PRM';
         
-        % Find most posterior points of the condyles (mpCPts) for the current plane variation 
-        RotTFM = affine3d(eye(4));
-        SC(1).RotTFM = RotTFM;
-        SC(2).RotTFM = RotTFM;
+        % Find most posterior points of the condyles (mpCPts) for the current plane variation
         % Rotate the bone  corresponding to the plane variation
         tempBone = transformPoint3d(Bone, PRM);
-        
         % Find the most posterior Points (mpCPts) of the rotated bone
         [mpCPts.IXmax(1), mpCPts.IXmax(2)] = FindMostPosteriorPts(tempBone.vertices);
-        mpCPts.Origin_tfm_GUI = tempBone.vertices(mpCPts.IXmax,:);
+        mpCPts.Origin = tempBone.vertices(mpCPts.IXmax,:);
         
         % Create cutting plane origins
         for s=1:2
-            SC(s).Origin = mpCPts.Origin_tfm_GUI(s,:);
+            SC(s).Origin = mpCPts.Origin(s,:);
             for p=1:NoPpC
                 % Distance between the plane origins has to be 1 mm in the direction of the plane normal
-                % e.g. for NoPpC = 8 ->  mpCPt     -3.5, -2,5, -1,5, -0.5, +0.5, +1.5, +2.5, +3.5
+                % e.g. for NoPpC = 8 ->  mpCPt  -3.5, -2,5, -1,5, -0.5, +0.5, +1.5, +2.5, +3.5
                 SC(s).PlaneOrigins(p,:) = SC(s).Origin+(-(0.5+NoPpC/2)+p)*PlaneNormal;
             end; clear p;
         end; clear s;
@@ -195,14 +191,12 @@ for I_a = 1:RangeLength_a
                     case 'NZ'
                         SC(s).P(c).ExPts.B = ExPts.mB;
                         if length(ExPts.lB) > 1
-                            figure(SC(s).P(c).ExPts.H)
                             if ishandle(ExPts.lB(2)); delete(ExPts.lB(2)); end
                             if ishandle(ExPts.lB(3)); delete(ExPts.lB(3)); end
                         end
                     case 'PZ'
                         SC(s).P(c).ExPts.B = ExPts.lB;
                         if length(ExPts.mB) > 1
-                            figure(SC(s).P(c).ExPts.H)
                             if ishandle(ExPts.mB(2)); delete(ExPts.mB(2)); end
                             if ishandle(ExPts.mB(3)); delete(ExPts.mB(3)); end
                         end
@@ -240,10 +234,10 @@ for I_a = 1:RangeLength_a
                     SC(s).P(c).Ell.g = Ell2D.g+pi/2;
                 end
                 % If a contour figure exists, plot the ellipse
-                if ~isempty(SC(s).P(c).ExPts.H)
-                    figure(SC(s).P(c).ExPts.H)
-                    plotellipse(Ell2D.z, Ell2D.a, Ell2D.b, Ell2D.g)
-                end
+                    if ishandle(SC(s).P(c).ExPts.H)
+                        plotellipse(SC(s).P(c).ExPts.H,...
+                            Ell2D.z, Ell2D.a, Ell2D.b, Ell2D.g)
+                    end
             end; clear c
         end; clear s 
         
@@ -298,9 +292,9 @@ for I_a = 1:RangeLength_a
                 patch(H.lSP, tempBone, GD.BoneProps)
                 % Plot the mpCPts
                 scatter3(H.lSP,...
-                    mpCPts.Origin_tfm_GUI(:,1),...
-                    mpCPts.Origin_tfm_GUI(:,2),...
-                    mpCPts.Origin_tfm_GUI(:,3),'g','filled');
+                    mpCPts.Origin(:,1),...
+                    mpCPts.Origin(:,2),...
+                    mpCPts.Origin(:,3),'g','filled');
                 % Plot the plane variation
                 title(H.lSP, [...
                     '\alpha = ' num2str(Range_a(I_a)) '° & ' ...
@@ -353,8 +347,8 @@ if sum(sum(~isnan(R.Dispersion)))>=4
         % function of alpha (a) and beta (b). The angles are varied in 
         % StepSize° increments within the defined range.
         if ~ishandle(GD.Results.AxHandle)
-            GD.Results.FigHandle = figure('Name', GD.Subject.Name, 'Color', 'w');
-            GD.Results.AxHandle = axes;
+            figH_Disp = figure('Name', GD.Subject.Name, 'Color', 'w');
+            GD.Results.AxHandle = axes(figH_Disp);
             hold(GD.Results.AxHandle,'on')
             xlabel(GD.Results.AxHandle,'\alpha');
             ylabel(GD.Results.AxHandle,'\beta');

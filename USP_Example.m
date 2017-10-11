@@ -15,7 +15,7 @@ load([pn, fn]);
 % The other options
 % [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'PlaneVariationRange', 12, 'StepSize', 3);
 % Special case: 'PlaneVariationRange', 0 -> 48 additional figures!
-% [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'PlaneVariationRange', 0, 'StepSize', 3);
+% [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'PlaneVariationRange', 0, 'StepSize', 2);
 
 %% Visualization
 figure('Units','pixels','Color','w','ToolBar','figure',...
@@ -39,10 +39,10 @@ patch(Bone, BoneProps);
 % PFEA
 PFEA_TFM = transformLine3d(PFEA, inv(USPTFM));
 drawLine3d(PFEA_TFM,'LineWidth', 3, 'LineStyle', '-', 'Color', 'g');
-lineToVertexIndices(PFEA_TFM,Bone)
+% lineToVertexIndices(PFEA_TFM,Bone)
 
 % CEA
 patch(transformPoint3d(Bone, USPTFM), BoneProps);
 drawLine3d(CEA,'LineWidth', 3, 'LineStyle', '-', 'Color', 'b');
-lineToVertexIndices(CEA,transformPoint3d(Bone, USPTFM))
+% lineToVertexIndices(CEA,transformPoint3d(Bone, USPTFM))
 

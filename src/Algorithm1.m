@@ -1,4 +1,4 @@
-function [pExA, amExB, alExB, cpfh] = Algorithm1(Contour, sigmastart, sigmadelta, sigma, vis)
+function [pExA, amExB, alExB, axH_C] = Algorithm1(Contour, sigmastart, sigmadelta, sigma, vis)
 %ALGORITHM1
 %    - A Pattern-Recognition Algorithm for Identifying the Articulating Surface
 %   
@@ -27,7 +27,7 @@ function [pExA, amExB, alExB, cpfh] = Algorithm1(Contour, sigmastart, sigmadelta
 %       alExB(1)   - integer: anterior lateral extremity B
 %       alExB(2)   - scatter handle of alExB(1)
 %       alExB(3)   - text handle of alExB(1)
-%       cpfh       - figure handle: empty if vis == 0 
+%       axH_C      - axes handle: nan if vis == 0 
 % 
 %   AUTHOR: MCMF
 %
@@ -93,30 +93,33 @@ alExB = Local_Maxima_Indcs(knnsearch(Local_Maxima_Indcs, IXMax));
 
 
 %% Visualization
-cpfh = [];
+axH_C = nan;
 if vis == 1 || vis == 2   
     %% Plot: Contour
-    cpfh = figure('name', 'Contour');
-    title('Contour');
-    plot(Contour(:,1),Contour(:,2),'k-','LineWidth',2);
-    hold on;
+    figH_C = figure('name','Contour', 'color','w');
+    axH_C = axes(figH_C);
+    title(axH_C, 'Contour');
+    plot(axH_C, Contour(:,1),Contour(:,2),'k-','LineWidth',2);
+    hold(axH_C,'on');
     for i=1:length(zcp)
         Xs = Xsm{i};
         Ys = Ysm{i};
         zc = zcp{i};
-        sch(1) = plot(Xs,Ys,'r-');
-        hold on;
-        sch(2) = plot(Xs(zc),Ys(zc),'go');
-        pause(0);
+        sch(1) = plot(axH_C, Xs,Ys,'r-');
+        hold(axH_C,'on');
+        sch(2) = plot(axH_C, Xs(zc),Ys(zc),'go');
+        % pause(0)
         delete(sch);
     end
     
     % Visualization of the Running direction: Arrow -> at YMax
     % Should be counter-clockwise
-    quiver(Contour(1,1),Contour(1,2),Contour(6,1)-Contour(1,1),Contour(6,2)-Contour(1,2),...
+    quiver(axH_C, ...
+        Contour(1,1),Contour(1,2),...
+        Contour(6,1)-Contour(1,1),Contour(6,2)-Contour(1,2),...
         'g','LineWidth',3,'AutoScale','off','MaxHeadSize',30);
-    scatter(Contour(zero_pExA,1),Contour(zero_pExA,2), 'filled');
-    text(Contour(zero_pExA,1),Contour(zero_pExA,2), 'Zerocrossing point',...
+    scatter(axH_C, Contour(zero_pExA,1),Contour(zero_pExA,2), 'filled');
+    text(axH_C, Contour(zero_pExA,1),Contour(zero_pExA,2), 'Zerocrossing point',...
         'VerticalAlignment','bottom');
     
     %% Normals of the contour
@@ -133,47 +136,51 @@ if vis == 1 || vis == 2
     ScalingFactor = max(abs([XMin,XMax,YMin,YMax]));
     % Multiply the normals with kappa (K), to visualize K on the contour
     Normals = repmat(K{sigma},1,2).*Normals*ScalingFactor;
-    quiver(Contour(:,1),Contour(:,2),Normals(:,1),Normals(:,2),...
+    quiver(axH_C, Contour(:,1),Contour(:,2),Normals(:,1),Normals(:,2),...
         'color','k','ShowArrowHead','off','AutoScale','off','LineStyle','--')
     % Connect the tips of the normals
     NormalEnds = Normals + Contour;
-    plot(NormalEnds(:,1),NormalEnds(:,2),'k-.','LineWidth',1.5)
+    plot(axH_C, NormalEnds(:,1),NormalEnds(:,2),'k-.','LineWidth',1.5)
     
     %% Plot extremity points of the articulating surface
     % Plot the posterior extremity A (pExA)
-    scatter(Contour(pExA,1),Contour(pExA,2), 'filled');
-    text(Contour(pExA,1),Contour(pExA,2), ['A for \sigma = ' num2str(sigma)],...
+    scatter(axH_C, Contour(pExA,1),Contour(pExA,2), 'filled');
+    text(axH_C, Contour(pExA,1),Contour(pExA,2), ['A for \sigma = ' num2str(sigma)],...
         'VerticalAlignment','top');
     
     % Plot the anterior medial extremity B (amExB)
-    amExB(2) = scatter(Contour(amExB,1),Contour(amExB,2), 'filled');
-    amExB(3) = text(Contour(amExB(1),1),Contour(amExB(1),2), ['medial B for \sigma = ' num2str(sigma)],...
+    amExB(2) = scatter(axH_C, Contour(amExB,1),Contour(amExB,2), 'filled');
+    amExB(3) = text(axH_C, Contour(amExB(1),1),Contour(amExB(1),2), ['medial B for \sigma = ' num2str(sigma)],...
         'HorizontalAlignment','right');
     
     % Plot the anterior lateral extremity B (alExB)
-    alExB(2) = scatter(Contour(alExB,1),Contour(alExB,2), 'filled');
-    alExB(3) = text(Contour(alExB(1),1),Contour(alExB(1),2), ['lateral B for \sigma = ' num2str(sigma)],...
+    alExB(2) = scatter(axH_C, Contour(alExB,1),Contour(alExB,2), 'filled');
+    alExB(3) = text(axH_C, Contour(alExB(1),1),Contour(alExB(1),2), ['lateral B for \sigma = ' num2str(sigma)],...
         'VerticalAlignment','top','HorizontalAlignment','right');
     
-    axis equal;
+    axis(axH_C, 'equal');
     
     if vis == 1 % <- Set this to 1 if Plots are needed
         %% Plot: Curvature Scale Space (CSS) Image
-        figure('name', 'Curvature Scale Space (CSS) Image'),
+        figH_CSS = figure('name', 'Curvature Scale Space (CSS) Image', 'color','w');
+        axH_CSS = axes(figH_CSS);
         for i=1:length(zcp)
             plot(zcp{i},S{i},'k.');%,'MarkerFaceColor',C(i,:),'MarkerEdgeColor',C(i,:));
-            hold on
+            hold(axH_CSS,'on')
         end
-        hold off
-        xlim([1 length(K{1})]);
-        title('Curvature Scale Space (CSS) Image');
+        hold(axH_CSS,'off')
+        xlim(axH_CSS, [1 length(K{1})]);
+        title(axH_CSS, 'Curvature Scale Space (CSS) Image');
         
         if length(K) > 1
             %% Plot: Curvature kappa
-            figure
-            surf(cell2mat(K))
-            xlabel('\sigma');ylabel('u');zlabel('\kappa(u,\sigma)');
-            title('Curvature of \Gamma_\sigma: \kappa(u,\sigma)');
+            figH_kappa = figure('name', 'Curvature kappa', 'color','w');
+            axH_kappa = axes(figH_kappa);
+            surf(axH_kappa, cell2mat(K))
+            xlabel(axH_kappa, '\sigma');
+            ylabel(axH_kappa, 'u');
+            zlabel(axH_kappa, '\kappa(u,\sigma)');
+            title(axH_kappa, 'Curvature of \Gamma_\sigma: \kappa(u,\sigma)');
         end
     end
 end

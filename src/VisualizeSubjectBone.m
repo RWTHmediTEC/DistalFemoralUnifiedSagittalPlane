@@ -2,6 +2,11 @@ function GD = VisualizeSubjectBone(GD)
 
 lSP = GD.Figure.LeftSpHandle;
 
+% Delete old XY-plane if exists
+if isfield(GD, 'PlaneHandle') && ishandle(GD.PlaneHandle)
+        delete(GD.PlaneHandle)
+end
+
 %% Plot the bone as patch object
 GD.BoneProps.EdgeColor = 'none';
 GD.BoneProps.FaceColor = [0.882, 0.831, 0.753];
@@ -16,7 +21,7 @@ planeProps.FaceAlpha = 0.2;
 planeProps.EdgeColor = 'none';
 planeProps.HandleVisibility = 'Off';
 planeProps.FaceColor = 'k';
-GD.DSPlane.Handle = drawPlane3d(lSP, createPlane([0,0,0], [0,0,1]), planeProps);
+GD.PlaneHandle = drawPlane3d(lSP, createPlane([0,0,0], [0,0,1]), planeProps);
 
 %% Set view to a unified camera position
 set(lSP,'CameraTarget',[0, 0, 0]);
