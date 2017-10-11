@@ -3,8 +3,8 @@ clearvars; close all
 addpath(genpath('extern'));
 
 % Settings
-Side = 'Left';
-InitialRot = [-90 0 -90];
+Side = 'Right';
+InitialRot = [0 -90 -90];
 
 [fn,pn,~] = uigetfile('*.stl','Select stl file');
 [pathstr,name,ext] = fileparts([pn, fn]); 

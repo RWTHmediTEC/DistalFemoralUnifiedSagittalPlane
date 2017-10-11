@@ -1,6 +1,6 @@
 clearvars; close all; opengl hardware;
-% [List.f, List.p] = matlab.codetools.requiredFilesAndProducts('USP_GUI.m');
-% List.f = List.f'; List.p = List.p';
+[List.f, List.p] = matlab.codetools.requiredFilesAndProducts('USP_GUI.m');
+List.f = List.f'; List.p = List.p';
 
 %% Select subject
 [fn,pn,~]=uigetfile('data\*.mat','Select mat file');
@@ -11,7 +11,7 @@ load([pn, fn]);
 % Default mode
 [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'Subject', Subject);
 % Silent mode
-% [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'Subject', Subject, 'Visualization', false, 'Verbose', true);
+% [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'Subject', Subject, 'Visualization', false, 'Verbose', false);
 % The other options
 % [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'PlaneVariationRange', 12, 'StepSize', 3);
 % Special case: 'PlaneVariationRange', 0 -> 48 additional figures!
