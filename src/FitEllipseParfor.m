@@ -1,6 +1,6 @@
 function Ells = FitEllipseParfor(ContourParts)
 
-Ells = nan(5, size(ContourParts,1));
+% Ells = nan(5, size(ContourParts,1));
 parfor p=1:length(ContourParts)
     Ells(:,p) = TryFitEllipse(ContourParts{p});
 end
@@ -13,7 +13,8 @@ function Ell = TryFitEllipse(ContourPart)
         % successful catch the error and create a fake ellipse.
         % Could be improved by replacing the fake ellipse against
         % a robust fitting algorithm ;-)
-        [z, a, b, g] = fitellipse(ContourPart);
+%         [z, a, b, g] = fitellipse(ContourPart);
+        [z(1,1), z(2,1), a, b, g] = ellipse_im2ex(ellipsefit_direct(ContourPart(1,:)',ContourPart(2,:)'));
         % Check if a and b are positive scalars
         if a <= 0 || b <= 0
             warning('Ellipse fit was not successful: a <= 0 || b <= 0! Creating fake ellipse ;).')
@@ -23,7 +24,6 @@ function Ell = TryFitEllipse(ContourPart)
         warning('Ellipse fit was not successful:  Error in fitellipse! Creating fake ellipse ;).')
         z = [1.1;-1.1]; a = 3; b = 2; g = 1;
     end
-    
     Ell = [z; a; b; g];
 end
 

@@ -20,18 +20,15 @@ function GD = Algorithm3(GD)
 visu = GD.Visualization;
 
 if visu == 1
-    % Figure & subplot handles
-    H.Fig = GD.Figure.Handle;
-    H.lSP = GD.Figure.LeftSpHandle;
-    H.rSP = GD.Figure.RightSpHandle;
+    % Subplot axes handles
+    lSP = GD.Figure.LeftSpHandle;
+    rSP = GD.Figure.RightSpHandle;
     
     % Clear subplots
     % Right
-    title(H.rSP,'');
-    cla(H.rSP)
+    title(rSP,''); cla(rSP)
     % Left
-    title(H.lSP,'');
-    ClearPlot(H.lSP, {'Patch','Scatter','Line'})
+    title(lSP,''); ClearPlot(lSP, {'Patch','Scatter','Line'})
 end
 
 %% Settings
@@ -98,7 +95,8 @@ RangeLength_b = length(Range_b);
 R.Dispersion = nan(RangeLength_a,RangeLength_b);
 
 % Cell array to save the results of each plane variation
-CutVariations = cell(RangeLength_a,RangeLength_b);
+% CutVariations = cell(RangeLength_a,RangeLength_b);
+% PRMs = cell(RangeLength_a,RangeLength_b);
 
 if GD.Verbose == 1
     % Start updated command window information
@@ -227,11 +225,11 @@ for I_a = 1:RangeLength_a
                 if Ell2D.a >= Ell2D.b
                     SC(s).P(c).Ell.a = Ell2D.a;
                     SC(s).P(c).Ell.b = Ell2D.b;
-                    SC(s).P(c).Ell.g = Ell2D.g;
+                    SC(s).P(c).Ell.g = Ell2D.g+pi;
                 elseif Ell2D.a < Ell2D.b
                     SC(s).P(c).Ell.a = Ell2D.b;
                     SC(s).P(c).Ell.b = Ell2D.a;
-                    SC(s).P(c).Ell.g = Ell2D.g+pi/2;
+                    SC(s).P(c).Ell.g = Ell2D.g+3/2*pi;
                 end
                 % If a contour figure exists, plot the ellipse
                     if ishandle(SC(s).P(c).ExPts.H)
@@ -268,35 +266,35 @@ for I_a = 1:RangeLength_a
             % RIGHT subplot: Plot the ellipses in 2D in the XY-plane
             if EllipsePlot == 1
                 % Clear right subplot
-                cla(H.rSP)
-                hold(H.rSP,'on');
+                cla(rSP)
+                hold(rSP,'on');
                 % Plot the ellipses in 2D
                 for s=1:2
                     for c=1:NoPpC
                         switch SC(s).Zone
                             case 'NZ'
-                                VisualizeEll2D(H.rSP, SC(s).P(c), SC(s).Color);
+                                VisualizeEll2D(rSP, SC(s).P(c), SC(s).Color);
                             case 'PZ'
-                                VisualizeEll2D(H.rSP, SC(s).P(c), SC(s).Color);
+                                VisualizeEll2D(rSP, SC(s).P(c), SC(s).Color);
                         end
                     end; clear c
                 end; clear s
-                hold off
+                hold(rSP,'off');
             end
             
             % LEFT Subplot: Plot most posterior Points (mpCPts), plane
             % variation, contour-parts, ellipses in 3D
-            ClearPlot(H.lSP, {'Patch','Scatter','Line'})
+            ClearPlot(lSP, {'Patch','Scatter','Line'})
             if PlotPlaneVariation == 1
                 % Draw bone transformed by PRM
-                patch(H.lSP, tempBone, GD.BoneProps)
+                patch(lSP, tempBone, GD.BoneProps)
                 % Plot the mpCPts
-                scatter3(H.lSP,...
+                scatter3(lSP,...
                     mpCPts.Origin(:,1),...
                     mpCPts.Origin(:,2),...
                     mpCPts.Origin(:,3),'g','filled');
                 % Plot the plane variation
-                title(H.lSP, [...
+                title(lSP, [...
                     '\alpha = ' num2str(Range_a(I_a)) '° & ' ...
                     '\beta = '  num2str(Range_b(I_b)) '°.'])
             end
@@ -306,9 +304,9 @@ for I_a = 1:RangeLength_a
                     for c=1:NoPpC
                         switch SC(s).Zone
                             case 'NZ'
-                                VisualizeContEll3D(H.lSP, SC(s).P(c), SC(s).Color);
+                                VisualizeContEll3D(lSP, SC(s).P(c), SC(s).Color);
                             case 'PZ'
-                                VisualizeContEll3D(H.lSP, SC(s).P(c), SC(s).Color);
+                                VisualizeContEll3D(lSP, SC(s).P(c), SC(s).Color);
                         end
                     end; clear c
                 end; clear s
@@ -422,49 +420,49 @@ if sum(sum(~isnan(R.Dispersion)))>=4
     if visu == 1
          % Results in the main figure
         % Plot the cutting plane with minimum Dispersion (Left subplot)
-        ClearPlot(H.lSP, {'Patch','Scatter','Line'})
-        patch(H.lSP, transformPoint3d(Bone, GD.Results.PlaneRotMat), GD.BoneProps)
+        ClearPlot(lSP, {'Patch','Scatter','Line'})
+        patch(lSP, transformPoint3d(Bone, GD.Results.PlaneRotMat), GD.BoneProps)
         
         % Plot the ellipses in 2D (Right subplot) for minimum Dispersion
-        cla(H.rSP);
-        title(H.rSP, ['Minimum Dispersion of the posterior Foci: ' num2str(DMin.Value) ' mm'])
-        hold(H.rSP,'on')
+        cla(rSP);
+        title(rSP, ['Minimum Dispersion of the posterior Foci: ' num2str(DMin.Value) ' mm'])
+        hold(rSP,'on')
         % Plot the ellipses in 2D
         for s=1:2
             for c=1:NoPpC
                 switch MinSC(s).Zone
                     case 'NZ'
-                        VisualizeEll2D(H.rSP, MinSC(s).P(c), MinSC(s).Color);
+                        VisualizeEll2D(rSP, MinSC(s).P(c), MinSC(s).Color);
                     case 'PZ'
-                        VisualizeEll2D(H.rSP, MinSC(s).P(c), MinSC(s).Color);
+                        VisualizeEll2D(rSP, MinSC(s).P(c), MinSC(s).Color);
                 end
             end; clear c
         end; clear s
-        hold(H.rSP,'off')
+        hold(rSP,'off')
         
         % Delete old 3D ellipses & contours, if exist
-        title(H.lSP, 'Line fit through the posterior Foci for minimum Dispersion')
-        hold(H.lSP,'on')
+        title(lSP, 'Line fit through the posterior Foci for minimum Dispersion')
+        hold(lSP,'on')
         % Plot contour-parts, ellipses & foci in 3D for minimum Dispersion
         for s=1:2
             for c=1:NoPpC
                 switch MinSC(s).Zone
                     case 'NZ'
-                        VisualizeContEll3D(H.lSP, MinSC(s).P(c), MinSC(s).Color);
+                        VisualizeContEll3D(lSP, MinSC(s).P(c), MinSC(s).Color);
                     case 'PZ'
-                        VisualizeContEll3D(H.lSP, MinSC(s).P(c), MinSC(s).Color);
+                        VisualizeContEll3D(lSP, MinSC(s).P(c), MinSC(s).Color);
                 end
             end; clear c
         end; clear s
         
         % Plot foci & centers in 3D for minimum Dispersion
-        scatter3(H.lSP, EllpFoc3D(:,1),EllpFoc3D(:,2),EllpFoc3D(:,3),'g','filled', 'tag', 'PFEA')
-        scatter3(H.lSP, EllpCen3D(:,1),EllpCen3D(:,2),EllpCen3D(:,3),'b','filled', 'tag', 'CEA')
+        scatter3(lSP, EllpFoc3D(:,1),EllpFoc3D(:,2),EllpFoc3D(:,3),'g','filled', 'tag', 'PFEA')
+        scatter3(lSP, EllpCen3D(:,1),EllpCen3D(:,2),EllpCen3D(:,3),'b','filled', 'tag', 'CEA')
         
         % Plot axis through the posterior foci for minimum Dispersion
-        drawLine3d(H.lSP, GD.Results.pFociLine, 'color','g', 'tag','PFEA');
+        drawLine3d(lSP, GD.Results.pFociLine, 'color','g', 'tag','PFEA');
         % Plot axis through the centers for minimum Dispersion
-        drawLine3d(H.lSP, GD.Results.CenterLine, 'color','b', 'tag','CEA');
+        drawLine3d(lSP, GD.Results.CenterLine, 'color','b', 'tag','CEA');
         
         % Enable the Save button
         if isfield(GD.Results, 'B_H_SaveResults')
