@@ -59,6 +59,14 @@ if GD.Algorithm3.PlaneVariationRange >= 1
     % Calculate the axes (PFEA & CEA) in the USP system
     GD.Results.PFEA = transformLine3d(GD.Results.pFociLine, PRM);
     GD.Results.CEA = transformLine3d(GD.Results.CenterLine, PRM);
+    % Sanity check
+    PFEA_Idx = lineToVertexIndices(transformLine3d(...
+        GD.Results.PFEA, inv(GD.Results.USPTFM)), GD.Subject.Mesh);
+    assert(isequal(GD.Results.pFociLineIdx, PFEA_Idx))
+    CEA_Idx = lineToVertexIndices(transformLine3d(...
+        GD.Results.CEA, inv(GD.Results.USPTFM)), GD.Subject.Mesh);
+    assert(isequal(GD.Results.CenterLineIdx, CEA_Idx))
+    
     if GD.Verbose == 1
         disp('----- Finished Fine Iteration ------------------------------------');
         disp(' ');

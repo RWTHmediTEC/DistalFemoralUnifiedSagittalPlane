@@ -11,7 +11,7 @@ load([pn, fn]);
 % Default mode
 [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'Subject', Subject);
 % Silent mode
-% [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'Subject', Subject, 'Visualization', false, 'Verbose', false);
+% [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'Subject', Subject, 'Visu', false, 'Verbose', false);
 % The other options
 % [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'PlaneVariationRange', 12, 'StepSize', 3);
 % Special case: 'PlaneVariationRange', 0 -> 48 additional figures!
