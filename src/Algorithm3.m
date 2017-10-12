@@ -95,8 +95,8 @@ RangeLength_b = length(Range_b);
 R.Dispersion = nan(RangeLength_a,RangeLength_b);
 
 % Cell array to save the results of each plane variation
-% CutVariations = cell(RangeLength_a,RangeLength_b);
-% PRMs = cell(RangeLength_a,RangeLength_b);
+CutVariations = cell(RangeLength_a,RangeLength_b);
+PRMs = cell(RangeLength_a,RangeLength_b);
 
 if GD.Verbose == 1
     % Start updated command window information
@@ -135,8 +135,8 @@ for I_a = 1:RangeLength_a
                 % Distance between the plane origins has to be 1 mm in the direction of the plane normal
                 % e.g. for NoPpC = 8 ->  mpCPt  -3.5, -2,5, -1,5, -0.5, +0.5, +1.5, +2.5, +3.5
                 SC(s).PlaneOrigins(p,:) = SC(s).Origin+(-(0.5+NoPpC/2)+p)*PlaneNormal;
-            end; clear p;
-        end; clear s;
+            end
+        end
         
         tempContour=cell(1,2);
         for s=1:2
@@ -168,8 +168,8 @@ for I_a = 1:RangeLength_a
                 if ~isequal(SC(s).P(c).xyz(1,:),SC(s).P(c).xyz(end,:))
                     SC(s).P(c).xyz(end+1,:) = SC(s).P(c).xyz(1,:);
                 end
-            end; clear c;
-        end; clear s;
+            end
+        end
         
         
         %% Algorithm 1
@@ -199,8 +199,8 @@ for I_a = 1:RangeLength_a
                             if ishandle(ExPts.mB(3)); delete(ExPts.mB(3)); end
                         end
                 end
-            end; clear c
-        end; clear s
+            end
+        end
         
         
         %% Algorithm 2
@@ -236,8 +236,8 @@ for I_a = 1:RangeLength_a
                         plotellipse(SC(s).P(c).ExPts.H,...
                             Ell2D.z, Ell2D.a, Ell2D.b, Ell2D.g)
                     end
-            end; clear c
-        end; clear s 
+            end
+        end
         
         
         %% Algorithm 3 - Part 2
@@ -253,8 +253,8 @@ for I_a = 1:RangeLength_a
                 % Posterior Focus (pf): Foci2D(1,1:2), Anterior Focus (af): Foci2D(2,1:2)
                 SC(s).P(c).Ell.pf = Foci2D(1,1:2);
                 PostFoci2D(c+(s-1)*NoPpC,:) = Foci2D(1,1:2);
-            end; clear c
-        end; clear s
+            end
+        end
         
         % Calculate the Dispersion as Eccentricity Measure
         Dispersion = CalculateDispersion(PostFoci2D);
@@ -277,8 +277,8 @@ for I_a = 1:RangeLength_a
                             case 'PZ'
                                 VisualizeEll2D(rSP, SC(s).P(c), SC(s).Color);
                         end
-                    end; clear c
-                end; clear s
+                    end
+                end
                 hold(rSP,'off');
             end
             
@@ -308,8 +308,8 @@ for I_a = 1:RangeLength_a
                             case 'PZ'
                                 VisualizeContEll3D(lSP, SC(s).P(c), SC(s).Color);
                         end
-                    end; clear c
-                end; clear s
+                    end
+                end
             end
             drawnow
         end
@@ -327,9 +327,8 @@ for I_a = 1:RangeLength_a
                 char(945) ' = ' num2str(Range_a(I_a)) '° & '...
                 char(946) ' = ' num2str(Range_b(I_b)) '°.'],'timestamp');
         end
-    end; clear I_b
-end; clear I_a
-clear SC
+    end
+end
 
 if GD.Verbose == 1
     % Stop updated command window information
@@ -346,14 +345,12 @@ if sum(sum(~isnan(R.Dispersion)))>=4
         % StepSize° increments within the defined range.
         if ~ishandle(GD.Results.AxHandle)
             figH_Disp = figure('Name', GD.Subject.Name, 'Color', 'w');
-            GD.Results.AxHandle = axes(figH_Disp);
-            hold(GD.Results.AxHandle,'on')
-            xlabel(GD.Results.AxHandle,'\alpha');
-            ylabel(GD.Results.AxHandle,'\beta');
-            zlabel(GD.Results.AxHandle,'Dispersion [mm]')
-            title(GD.Results.AxHandle, ...
-                'Dispersion of focus locations as a function of \alpha & \beta')
-            view(GD.Results.AxHandle, 3)
+            axH_Disp = axes(figH_Disp);
+            axis(axH_Disp,'equal','tight'); view(axH_Disp,3)
+            xlabel(axH_Disp,'\alpha'); ylabel(axH_Disp,'\beta');
+            zlabel(axH_Disp,'Dispersion [mm]')
+            title(axH_Disp, 'Dispersion of focus locations as a function of \alpha & \beta')
+            GD.Results.AxHandle=axH_Disp;
         end
         hold(GD.Results.AxHandle,'on')
         [Surf.X, Surf.Y] = meshgrid(Range_a, Range_b);
@@ -399,8 +396,8 @@ if sum(sum(~isnan(R.Dispersion)))>=4
             % Save the ellipse center for the Line fit
             EllpCen3D(c+(s-1)*NoPpC,:) = ...
                 [MinSC(s).P(c).Ell.z, MinSC(s).P(c).xyz(1,3)];
-        end; clear c
-    end; clear s
+        end
+    end
     
     % Calculate axis through the posterior foci
     GD.Results.pFociLine  = fitLine3d(EllpFoc3D);
@@ -436,8 +433,8 @@ if sum(sum(~isnan(R.Dispersion)))>=4
                     case 'PZ'
                         VisualizeEll2D(rSP, MinSC(s).P(c), MinSC(s).Color);
                 end
-            end; clear c
-        end; clear s
+            end
+        end
         hold(rSP,'off')
         
         % Delete old 3D ellipses & contours, if exist
@@ -452,8 +449,8 @@ if sum(sum(~isnan(R.Dispersion)))>=4
                     case 'PZ'
                         VisualizeContEll3D(lSP, MinSC(s).P(c), MinSC(s).Color);
                 end
-            end; clear c
-        end; clear s
+            end
+        end
         
         % Plot foci & centers in 3D for minimum Dispersion
         scatter3(lSP, EllpFoc3D(:,1),EllpFoc3D(:,2),EllpFoc3D(:,3),'g','filled', 'tag', 'PFEA')
