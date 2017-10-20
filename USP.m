@@ -1,12 +1,13 @@
-function [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, varargin)
+function [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = USP(Vertices, Faces, Side, InitialRot, varargin)
 % USP An optimization algorithm for establishing a Unified Sagittal Plane.
 %     USPTFM = USP(Vertices, Faces, Side, InitialRot) returns a 3D 
 %     transform to move the distal femur from the coordinate system of the 
 %     medical imaging system into the USP-system.
 %     
-%     [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot)
-%     additionally returns the Posterior Focal Elliptic Axis (PFEA) and the
-%     Center Elliptic Axis (CEA) defined in the USP-system.
+%     [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = USP(Vertices, Faces, Side, InitialRot)
+%     additionally returns the Posterior Focal Elliptic Axis (PFEA), the
+%     Center Elliptic Axis (CEA), and the semi-minor and -major axes (MED_A, MED_B, LAT_A, LAT_B) 
+%     defined in the USP-system.
 % 
 % INPUT:
 %   - REQUIRED:
@@ -54,6 +55,10 @@ function [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, varargin)
 %            ellipses with minimum dispersion.
 %     CEA - Double [1x6]: A line fitted through the centers of the ellipses
 %           with minimum dispersion.
+%     MED_A - Semi-major axis of the medial condyle
+%     MED_B - Semi-minor axis of the medial condyle
+%     LAT_A - Semi-major axis of the lateral condyle
+%     LAT_B - Semi-minor axis of the lateral condyle
 % 
 % EXAMPLE:
 %     Run the file 'USP_Example.m'
@@ -159,6 +164,11 @@ if GD.Algorithm3.PlaneVariationRange ~= 0
     % Calculate the axes (PFEA & CEA) in the USP system
     PFEA = GD.Results.PFEA;
     CEA = GD.Results.CEA;
+    % Calculate the semi-axes in the USP system
+    MED_A = GD.Results.Ell.Med.a(1);
+    MED_B = GD.Results.Ell.Med.b(1); 
+    LAT_A = GD.Results.Ell.Lat.a(1);
+    LAT_B = GD.Results.Ell.Lat.b(1);
     
     % Check if the PFEA has 4 intersections with the bone:
     % 2 intersections with the medial condyle
@@ -179,7 +189,11 @@ elseif GD.Algorithm3.PlaneVariationRange == 0
     warning('PlaneVariationRange == 0 -> No Results!')
     USPTFM = eye(4);
     PFEA = [zeros(1,5), 1];
-    CEA = [zeros(1,5), 1];
+    CEA = [zeros(1,5), 1];    
+    MED_A = NaN;
+    MED_B = NaN;
+    LAT_A = NaN;
+    LAT_B = NaN;
 end
 
 end
