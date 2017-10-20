@@ -1,13 +1,15 @@
-function [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = USP(Vertices, Faces, Side, InitialRot, varargin)
+function [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = ...
+    USP(Vertices, Faces, Side, InitialRot, varargin)
 % USP An optimization algorithm for establishing a Unified Sagittal Plane.
 %     USPTFM = USP(Vertices, Faces, Side, InitialRot) returns a 3D 
 %     transform to move the distal femur from the coordinate system of the 
 %     medical imaging system into the USP-system.
 %     
-%     [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = USP(Vertices, Faces, Side, InitialRot)
-%     additionally returns the Posterior Focal Elliptic Axis (PFEA), the
-%     Center Elliptic Axis (CEA), and the semi-minor and -major axes (MED_A, MED_B, LAT_A, LAT_B) 
-%     defined in the USP-system.
+%     [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = ...
+%         USP(Vertices, Faces, Side, InitialRot) additionally returns the 
+%     Posterior Focal Elliptic Axis (PFEA), the Center Elliptic Axis (CEA),
+%     defined in the USP-system and the mean length of the semi-major and 
+%     -minor axes of the medial & lateral side (MED_A, MED_B, LAT_A, LAT_B)
 % 
 % INPUT:
 %   - REQUIRED:
@@ -69,8 +71,10 @@ function [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = USP(Vertices, Faces, 
 %     Annals of Biomedical Engineering, Vol. 38, No. 9, September 2010
 %     pp. 2928–2936
 % 
-% AUTHOR:
-%     MCMF
+% AUTHOR: Maximilian C. M. Fischer
+% 	mediTEC - Chair of Medical Engineering, RWTH Aachen University
+% VERSION: 1.1.1
+% DATE: 2017-10-20
 
 narginchk(5,13);
 
