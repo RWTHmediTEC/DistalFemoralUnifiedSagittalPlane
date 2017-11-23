@@ -28,7 +28,7 @@ function [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = ...
 %                   Positive |   Anterior  |   Proximal  | Medial/Lateral |
 %                   Negative |  Posterior  |    Distal   | Medial/Lateral |
 % 
-%   - ADDITIONAL
+%   - OPTIONAL:
 %     'Subject' - Char: Identification of the subject. Default is 'unnamed'.
 %     'PlaneVariationRange' - Integer [1x1]: Defines the size of the search
 %                             field of the rough iterations. Default value 
@@ -73,8 +73,9 @@ function [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = ...
 % 
 % AUTHOR: Maximilian C. M. Fischer
 % 	mediTEC - Chair of Medical Engineering, RWTH Aachen University
-% VERSION: 1.1.1
-% DATE: 2017-10-20
+% VERSION: 1.1.2
+% DATE: 2017-11-23
+% LICENSE: CC BY-SA 4.0
 
 narginchk(5,13);
 
