@@ -1,6 +1,6 @@
 clearvars; close all; opengl hardware;
-% [List.f, List.p] = matlab.codetools.requiredFilesAndProducts('USP_GUI.m');
-% List.f = List.f'; List.p = List.p';
+[List.f, List.p] = matlab.codetools.requiredFilesAndProducts('USP_GUI.m');
+List.f = List.f'; List.p = List.p';
 
 %% Select subject
 [fn,pn,~]=uigetfile('data\*.mat','Select mat file');
@@ -19,7 +19,7 @@ load([pn, fn]);
 
 %% Visualization
 figure('Units','pixels','Color','w','ToolBar','figure',...
-'WindowScrollWheelFcn',@M_CB_Zoom,'WindowButtonDownFcn',@M_CB_RotateWithLeftMouse,...
+'WindowScrollWheelFcn',@M_CB_Zoom,'WindowButtonDownFcn',@M_CB_RotateWithMouse,...
     'renderer','opengl');
 axes('Color','w'); axis on; xlabel('X [mm]'); ylabel('Y [mm]'); zlabel('Z [mm]');
 daspect([1 1 1])

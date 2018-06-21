@@ -79,12 +79,7 @@ end
 
 function GD = initialTFM(GD)
 % Move the bone to the centroid and rotate
-% Check if the surface is closed
-if isempty(surfedge(GD.Subject.Mesh.faces))
-    [~, GD.Subject.STL.Centroid, ~] = VolumeIntegrate(GD.Subject.Mesh.vertices, GD.Subject.Mesh.faces);
-else
-    GD.Subject.STL.Centroid = mean(GD.Subject.Mesh.vertices)';
-end
+GD.Subject.STL.Centroid = mean(GD.Subject.Mesh.vertices)';
 % Set Centroid of the bone as Point of Origin
 TRANS = createTranslation3d(-GD.Subject.STL.Centroid);
 % Negative sign because the following inital transformation is inverse

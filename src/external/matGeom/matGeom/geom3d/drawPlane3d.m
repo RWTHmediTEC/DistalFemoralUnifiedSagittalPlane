@@ -1,16 +1,16 @@
 function varargout = drawPlane3d(plane, varargin)
 %DRAWPLANE3D Draw a plane clipped by the current axes
 %
-%   DRAWPLANE3D(PLANE) draws a plane of the format:
+%   drawPlane3d(PLANE) draws a plane of the format:
 %       [x0 y0 z0  dx1 dy1 dz1  dx2 dy2 dz2]
 %
-%   DRAWPLANE3D(...,'PropertyName',PropertyValue,...) sets the value of the
+%   drawPlane3d(...,'PropertyName',PropertyValue,...) sets the value of the
 %   specified patch property. Multiple property values can be set with
 %   a single statement.
 %
-%   DRAWPLANE3D(AX,...) plots into AX instead of GCA.
+%   drawPlane3d(AX,...) plots into AX instead of GCA.
 %
-%   H = DRAWPLANE3D(...) returns a handle H to the patch object.
+%   H = drawPlane3d(...) returns a handle H to the patch object.
 %
 %   See also
 %   planes3d, createPlane
@@ -39,36 +39,10 @@ function varargout = drawPlane3d(plane, varargin)
 % 
 
 % Parse and check inputs
-if numel(plane) == 1 && ishandle(plane)
-    hAx = plane;
-    plane = varargin{1};
-    varargin(1) = [];
-else
-    hAx = gca;
-end
-
-p=inputParser;
-addRequired(p,'plane',@(x) size(x,1)==1 && isPlane(x))
-parse(p,plane)
-
-% parse input arguments if any
-if ~isempty(varargin)
-    if length(varargin) == 1
-        if isstruct(varargin{1})
-            % if options are specified as struct, need to convert to 
-            % parameter name-value pairs
-            varargin = [fieldnames(varargin{1}) struct2cell(varargin{1})]';
-            varargin = varargin(:)';
-        else
-            % if option is a single argument, assume it corresponds to 
-            % plane color
-            varargin = {'FaceColor', varargin{1}};
-        end
-    end
-else
-    % default face color
-    varargin = {'FaceColor', 'm'};
-end
+valFun = @(x) size(x,1)==1 && isPlane(x);
+defOpts.FaceColor='m';
+[hAx, plane, varargin]=...
+    parseDrawInput(plane, valFun, 'patch', defOpts, varargin{:});
 
 % extract axis bounds to crop plane
 lim = get(hAx, 'xlim');
@@ -80,7 +54,6 @@ ymax = lim(2);
 lim = get(hAx, 'zlim');
 zmin = lim(1);
 zmax = lim(2);
-
 
 % create lines corresponding to cube edges
 lineX00 = [xmin ymin zmin 1 0 0];
@@ -97,7 +70,6 @@ lineZ00 = [xmin ymin zmin 0 0 1];
 lineZ01 = [xmin ymax zmin 0 0 1];
 lineZ10 = [xmax ymin zmin 0 0 1];
 lineZ11 = [xmax ymax zmin 0 0 1];
-
 
 % compute intersection points with each plane
 piX00 = intersectLinePlane(lineX00, plane);
@@ -150,8 +122,10 @@ ind = convhull(u1, u2);
 ind = ind(1:end-1);
 
 % draw the patch
-h = patch(hAx, 'XData', pts(ind, 1), 'YData', pts(ind, 2), 'ZData', pts(ind, 3));
-set(h, varargin{:});
+h = patch(hAx, ...
+    'XData', pts(ind,1), ...
+    'YData', pts(ind,2), ...
+    'ZData', pts(ind,3), varargin{:});
 
 % return handle to plane if needed
 if nargout > 0

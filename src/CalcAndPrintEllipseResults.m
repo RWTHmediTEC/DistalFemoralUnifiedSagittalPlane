@@ -16,11 +16,6 @@ for s=1:2
     end; clear c
 end; clear s
 
-colh = {'Mean','Std'};
-rowh = {' a med.', ' a lat.',...
-        ' b med.', ' b lat.',...
-        ' a/b med.', ' a/b lat.'};
-
 % Calculate Mean and Std
 M(1,1) = mean(ma); M(1,2) = std(ma);
 M(2,1) = mean(la); M(2,2) = std(la);
@@ -31,15 +26,17 @@ M(4,1) = mean(lb); M(4,2) = std(lb);
 M(5,1) = mean(ma./mb); M(5,2) = std(ma./mb);
 M(6,1) = mean(la./lb); M(6,2) = std(la./lb);
 
+ellTab = table(M(:,1),M(:,2),'VariableNames',{'Mean','Std'},...
+          'RowNames',{'a med.', 'a lat.','b med.', 'b lat.','a/b med.', 'a/b lat.'});
+
 if Print == 1
-    display(...
-        [' Summary of the major and minor axis lengths, and the ratio between ' char(10) ...
-        ' the major and minor axis lengths of the best-fit ellipses for the ' char(10) ...
-        ' cross sections along the unified sagittal plane.' char(10)])
+    disp(...
+        [' Summary of the major and minor axis lengths, and the ratio between ' newline ...
+        ' the major and minor axis lengths of the best-fit ellipses for the ' newline ...
+        ' cross sections along the unified sagittal plane.' newline])
     
-    displaytable(M,colh,8,'.4f',rowh,1)
+    disp(ellTab);
     
-    display(' ');
 end
 
 end
