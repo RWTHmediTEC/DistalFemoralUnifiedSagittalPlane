@@ -35,10 +35,6 @@ else
 end
 
 if GD.Visualization == 1
-    % Close all except the main window
-    GD.Figure.Handle.HandleVisibility='Off';
-    close all
-    GD.Figure.Handle.HandleVisibility='On';
     %% Configure subplots
     set(GD.Figure.Handle, 'Name', [GD.Subject.Side ' femur of subject: ' GD.Subject.Name]);
     % Clear right subplot
@@ -78,10 +74,8 @@ if ishandle(hObject); guidata(hObject,GD); end
 end
 
 function GD = initialTFM(GD)
-% Move the bone to the centroid and rotate
-GD.Subject.STL.Centroid = mean(GD.Subject.Mesh.vertices)';
-% Set Centroid of the bone as Point of Origin
-TRANS = createTranslation3d(-GD.Subject.STL.Centroid);
+% Move the bone to the specified center or to its centroid and rotate
+TRANS = createTranslation3d(-GD.Subject.Center);
 % Negative sign because the following inital transformation is inverse
 IR = GD.Subject.InitialRot;
 % Rotate around the Z Y X axis (global basis)

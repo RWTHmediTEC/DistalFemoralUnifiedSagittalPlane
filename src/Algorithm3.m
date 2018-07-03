@@ -64,7 +64,6 @@ EllipsePlot = GD.Algorithm3.EllipsePlot;
 
 % Bone Surface
 Bone = transformPoint3d(GD.Subject.Mesh, GD.Subject.STL.TFM);
-Side = GD.Subject.Side;
 
 % Number of Planes per Cutting Box
 NoPpC = GD.Cond.NoPpC;
@@ -72,13 +71,13 @@ NoPpC = GD.Cond.NoPpC;
 % Sagittal Cuts (SC)
 % RIGHT knee: medial - neg. Z values (NZ), lateral - pos. Z values (PZ)
 %  LEFT knee: medial - pos. Z values (PZ), lateral - neg. Z values (NZ)
-switch Side
-    case 'Right'
+switch GD.Subject.Side
+    case 'r'
         SC(1).Zone = 'NZ';
         SC(2).Zone = 'PZ';
         SC(1).Color = [255,   0, 255]/255; % Medial = Magenta
         SC(2).Color = [255, 255, 102]/255; %Lateral = Lemon
-    case 'Left'
+    case 'l'
         SC(1).Zone='PZ';
         SC(2).Zone='NZ';
         SC(1).Color = [255, 255, 102]/255; %Lateral = Lemon

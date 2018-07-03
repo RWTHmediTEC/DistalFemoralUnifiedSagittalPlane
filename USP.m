@@ -30,6 +30,8 @@ function [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = ...
 % 
 %   - OPTIONAL:
 %     'Subject' - Char: Identification of the subject. Default is 'unnamed'.
+%     'Center'  - Double [1x3]: Position of the origin of the coordinate 
+%                 system. Default is 'mean(Vertices)'.
 %     'PlaneVariationRange' - Integer [1x1]: Defines the size of the search
 %                             field of the rough iterations. Default value 
 %                             is 4° resulting in a quadratic search field 
@@ -73,18 +75,19 @@ function [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = ...
 % 
 % AUTHOR: Maximilian C. M. Fischer
 % 	mediTEC - Chair of Medical Engineering, RWTH Aachen University
-% VERSION: 1.1.5
-% DATE: 2018-06-21
+% VERSION: 1.1.6
+% DATE: 2018-07-03
 % LICENSE: Modified BSD License (BSD license with non-military-use clause)
 
 narginchk(5,13);
 
 % Validate inputs
-[Subject, PlaneVariationRange, StepSize, GD.Visualization, GD.Verbose] = ...
+[Subject, Center, PlaneVariationRange, StepSize, GD.Visualization, GD.Verbose] = ...
     validateAndParseOptInputs(Vertices, Faces, Side, InitialRot, varargin{:});
 
-if sum(strcmp(Side, {'Left','Right'})) == 0
-    error('Invalid side indicator. Only ''Left'' or ''Right'' are valid.')
+Side = lower(Side(1));
+if sum(strcmp(Side, {'l','r'})) == 0
+    error('Invalid side indicator. Side indicator should start with ''l'' or ''r''.')
 end
 
 % USP path
@@ -134,6 +137,7 @@ GD.Subject.Mesh.faces = Faces;
 GD.Subject.InitialRot = InitialRot;
 GD.Subject.Side = Side; % Left or Right knee
 GD.Subject.Name = Subject; % Subject name
+GD.Subject.Center = Center; 
 % Number of cutting planes per cuting box
 GD.Cond.NoPpC = 8;
 
@@ -207,7 +211,7 @@ end
 %==========================================================================
 % Parameter validation
 %==========================================================================
-function [Subject, PlaneVariationRange, StepSize, Visualization, Verbose] = ...
+function [Subject, Center, PlaneVariationRange, StepSize, Visualization, Verbose] = ...
     validateAndParseOptInputs(Vertices, Faces, Side, InitialRot, varargin)
 
 validateattributes(Vertices, {'numeric'},{'ncols', 3});
@@ -218,6 +222,7 @@ validateattributes(InitialRot, {'numeric'},{'>=', -180, '<=', 180,'size', [1 3]}
 % Parse the input P-V pairs
 defaults = struct(...
     'Subject', 'unnamed', ...
+    'Center', mean(Vertices), ...
     'PlaneVariationRange', 4, ...
     'StepSize', 2, ...
     'Visualization', true, ...
@@ -228,6 +233,8 @@ parser.CaseSensitive = false;
 
 parser.addParameter('Subject', defaults.Subject, ...
     @(x)validateattributes(x,{'char'}, {}));
+parser.addParameter('Center', defaults.Center, ...
+    @(x)validateattributes(x,{'numeric'}, {'nonempty','size', [1 3]}));
 parser.addParameter('PlaneVariationRange', defaults.PlaneVariationRange, ...
     @(x)validateattributes(x,{'numeric'}, {'integer', 'nonempty', 'numel',1, '>=',0, '<=',16}));
 parser.addParameter('StepSize', defaults.StepSize, ...
@@ -240,6 +247,7 @@ parser.addParameter('Verbose', defaults.Verbose, ...
 parser.parse(varargin{:});
 
 Subject             = parser.Results.Subject;
+Center              = parser.Results.Center;
 PlaneVariationRange = parser.Results.PlaneVariationRange;
 StepSize            = parser.Results.StepSize;
 Visualization       = parser.Results.Visualization;
