@@ -75,8 +75,8 @@ function [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = ...
 % 
 % AUTHOR: Maximilian C. M. Fischer
 % 	mediTEC - Chair of Medical Engineering, RWTH Aachen University
-% VERSION: 1.1.6
-% DATE: 2018-07-03
+% VERSION: 1.1.7
+% DATE: 2018-07-04
 % LICENSE: Modified BSD License (BSD license with non-military-use clause)
 
 narginchk(5,13);
