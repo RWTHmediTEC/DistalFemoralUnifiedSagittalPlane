@@ -72,16 +72,18 @@ NoPpC = GD.Cond.NoPpC;
 % RIGHT knee: medial - neg. Z values (NZ), lateral - pos. Z values (PZ)
 %  LEFT knee: medial - pos. Z values (PZ), lateral - neg. Z values (NZ)
 switch GD.Subject.Side
-    case 'r'
+    case 'R'
         SC(1).Zone = 'NZ';
         SC(2).Zone = 'PZ';
         SC(1).Color = [255,   0, 255]/255; % Medial = Magenta
         SC(2).Color = [255, 255, 102]/255; %Lateral = Lemon
-    case 'l'
+    case 'L'
         SC(1).Zone='PZ';
         SC(2).Zone='NZ';
         SC(1).Color = [255, 255, 102]/255; %Lateral = Lemon
         SC(2).Color = [255,   0, 255]/255; % Medial = Magenta
+    otherwise
+        error('Wrong side indicator!')
 end
 
 % Plane variation loop counter
@@ -343,7 +345,9 @@ if sum(sum(~isnan(R.Dispersion)))>=4
         % function of alpha (a) and beta (b). The angles are varied in 
         % StepSize° increments within the defined range.
         if ~ishandle(GD.Results.AxHandle)
-            figH_Disp = figure('Name', GD.Subject.Name, 'Color', 'w');
+            figH_Disp = figure('Name', ['Dispersion plot of: ' GD.Subject.Name],...
+                'Color', 'w',...
+                'NumberTitle','off');
             axH_Disp = axes(figH_Disp);
             axis(axH_Disp,'equal','tight'); view(axH_Disp,3)
             xlabel(axH_Disp,'\alpha'); ylabel(axH_Disp,'\beta');

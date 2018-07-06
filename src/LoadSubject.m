@@ -10,7 +10,8 @@ if ishandle(hObject)
     % Read subject surface data and store
     GD.Subject.Mesh.vertices = Vertices;
     GD.Subject.Mesh.faces = Faces;
-    GD.Subject.Side = Side;
+    GD.Subject.Center = mean(Vertices);
+    GD.Subject.Side = upper(Side(1)); %#ok<NODEF>
     GD.Subject.InitialRot = InitialRot;
     
     %% Set Centroid of the bone as Point of Origin
@@ -36,7 +37,8 @@ end
 
 if GD.Visualization == 1
     %% Configure subplots
-    set(GD.Figure.Handle, 'Name', [GD.Subject.Side ' femur of subject: ' GD.Subject.Name]);
+    switch GD.Subject.Side; case 'R'; Side = 'Right'; case 'L'; Side = 'Left'; end
+    set(GD.Figure.Handle, 'Name', [Side ' femur of subject: ' GD.Subject.Name]);
     % Clear right subplot
     rSP=GD.Figure.RightSpHandle;
     cla(rSP, 'reset');

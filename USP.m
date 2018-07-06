@@ -15,7 +15,7 @@ function [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = ...
 %   - REQUIRED:
 %     Vertices - Double [Nx3]: A list of points of the mesh of the distal femur
 %     Faces - Integer [Mx3]: A list of triangle faces, indexing into the Vertices
-%     Side - Char: 'Left' or 'Right' distal femur
+%     Side - Char: 'Left' or 'Right' distal femur. Should start with L or R.
 %     InitalRot - Double [1x3]: Three Cardan angles aka Tait-Bryan angles,
 %                 given in degrees using the 'ZYX' convention (fixed basis
 %                 aka extrinsic rotations). Values between -180° and 180°
@@ -29,7 +29,7 @@ function [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = ...
 %                   Negative |  Posterior  |    Distal   | Medial/Lateral |
 % 
 %   - OPTIONAL:
-%     'Subject' - Char: Identification of the subject. Default is 'unnamed'.
+%     'Subject' - Char: Identification of the subject. Default is 'anonymous'.
 %     'Center'  - Double [1x3]: Position of the origin of the coordinate 
 %                 system. Default is 'mean(Vertices)'.
 %     'PlaneVariationRange' - Integer [1x1]: Defines the size of the search
@@ -73,22 +73,27 @@ function [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = ...
 %     Annals of Biomedical Engineering, Vol. 38, No. 9, September 2010
 %     pp. 2928–2936
 % 
+% TODO:
+%   Algorithm1: Detection of the anterior extremity point of the lateral 
+%       condyle should be improved. [Li 2010] says: The anterior lateral 
+% 		extremity B is defined as the local maximum curvature point closest
+% 		to the most anterior point of the contour.  But if the distal femur
+% 		is rotated more anterior in the initial position, the "most 
+%       anterior point of the contour" is the rim of the proximal end of 
+%       the distal femur.
+%   Algorithm3: Complete header section
+% 
 % AUTHOR: Maximilian C. M. Fischer
 % 	mediTEC - Chair of Medical Engineering, RWTH Aachen University
-% VERSION: 1.1.7
-% DATE: 2018-07-04
+% VERSION: 1.1.8
+% DATE: 2018-07-06
 % LICENSE: Modified BSD License (BSD license with non-military-use clause)
 
 narginchk(5,13);
 
 % Validate inputs
-[Subject, Center, PlaneVariationRange, StepSize, GD.Visualization, GD.Verbose] = ...
+[Side, Subject, Center, PlaneVariationRange, StepSize, GD.Visualization, GD.Verbose] = ...
     validateAndParseOptInputs(Vertices, Faces, Side, InitialRot, varargin{:});
-
-Side = lower(Side(1));
-if sum(strcmp(Side, {'l','r'})) == 0
-    error('Invalid side indicator. Side indicator should start with ''l'' or ''r''.')
-end
 
 % USP path
 GD.ToolPath = [fileparts([mfilename('fullpath'), '.m']) '\'];
@@ -108,6 +113,7 @@ if GD.Visualization == 1
     MonitorsPos = get(0,'MonitorPositions');
     GUIFigure = figure(...
         'Units','pixels',...
+        'NumberTitle','off',...
         'Color',GD.Figure.Color,...
         'ToolBar','figure',...
         'WindowScrollWheelFcn',@M_CB_Zoom,...
@@ -211,17 +217,19 @@ end
 %==========================================================================
 % Parameter validation
 %==========================================================================
-function [Subject, Center, PlaneVariationRange, StepSize, Visualization, Verbose] = ...
+function [Side, Subject, Center, PlaneVariationRange, StepSize, Visualization, Verbose] = ...
     validateAndParseOptInputs(Vertices, Faces, Side, InitialRot, varargin)
+
+Side = upper(Side(1));
 
 validateattributes(Vertices, {'numeric'},{'ncols', 3});
 validateattributes(Faces, {'numeric'},{'integer','nonnegative','nonempty','ncols', 3});
-validateattributes(Side, {'char'},{'nonempty'});
+validatestring(Side, {'R','L'});
 validateattributes(InitialRot, {'numeric'},{'>=', -180, '<=', 180,'size', [1 3]});
 
 % Parse the input P-V pairs
 defaults = struct(...
-    'Subject', 'unnamed', ...
+    'Subject', 'anonymous', ...
     'Center', mean(Vertices), ...
     'PlaneVariationRange', 4, ...
     'StepSize', 2, ...
