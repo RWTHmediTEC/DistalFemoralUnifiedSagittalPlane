@@ -1,16 +1,16 @@
 function [pExA, amExB, alExB, axH_C] = Algorithm1(Contour, sigmastart, sigmadelta, sigma, vis)
 %ALGORITHM1
 %    - A Pattern-Recognition Algorithm for Identifying the Articulating Surface
-%   
+%
 %   REFERENCE:
-%       Li et al. - Automating Analyses of the Distal Femur Articular 
+%       Li et al. - Automating Analyses of the Distal Femur Articular
 %       Geometry Basedon Three-Dimensional Surface Data
-%       Annals of Biomedical Engineering, Vol. 38, No. 9, September 2010 
-%       pp. 2928–2936                                     
+%       Annals of Biomedical Engineering, Vol. 38, No. 9, September 2010
+%       pp. 2928–2936
 %
 %   INPUT:
 %       Contour    - nx2 double: X- & Y-coordinates of the contour
-%                      	Requirements: - Sorting: counter-clockwise, 
+%                      	Requirements: - Sorting: counter-clockwise,
 %                                     - Start point: Max Y-value
 %       sigmastart - Starting sigma value (see BOMultiScaleCurvature2D_adapted)
 %       sigmadelta - Delta value of sigma (see BOMultiScaleCurvature2D_adapted)
@@ -27,23 +27,29 @@ function [pExA, amExB, alExB, axH_C] = Algorithm1(Contour, sigmastart, sigmadelt
 %       alExB(1)   - integer: anterior lateral extremity B
 %       alExB(2)   - scatter handle of alExB(1)
 %       alExB(3)   - text handle of alExB(1)
-%       axH_C      - axes handle: nan if vis == 0 
-% 
+%       axH_C      - axes handle: nan if vis == 0
+%
 %   AUTHOR: MCMF
 %
-
-%% Calculations
-% Calculate the multi-scale curvature & the curvature scale-space image
-[K,S,~,~,Xsm,Ysm,zcp] = BOMultiScaleCurvature2D_adapted(Contour,sigmastart,sigmadelta);
 
 % Boundaries of the contour
 [XMin, IXMin] = min(Contour(:,1));
 [XMax, IXMax] = max(Contour(:,1));
 [YMin, IYMin] = min(Contour(:,2));
 [YMax, IYMax] = max(Contour(:,2));
+
 % IYMax should always be 1, because the contour should start there
 if IYMax ~=1
     warning('Contour should start at the max. Y value (YMax): Algorithm1 won''t work!')
+end
+
+% Calculate the multi-scale curvature & the curvature scale-space image
+try
+    [K,S,~,~,Xsm,Ysm,zcp] = BOMultiScaleCurvature2D_adapted(Contour,sigmastart,sigmadelta);
+catch
+    % In the very rare case that the countour is almost a circle:
+    [pExA, amExB, alExB, axH_C] = circleCornerCase(Contour, IYMax, vis);
+    return
 end
 
 %% Find the posterior extremity A (pExA)
@@ -94,7 +100,7 @@ alExB = Local_Maxima_Indcs(knnsearch(Local_Maxima_Indcs, IXMax));
 
 %% Visualization
 axH_C = nan;
-if vis == 1 || vis == 2   
+if vis == 1 || vis == 2
     %% Plot: Contour
     figH_C = figure('name','Contour', 'color','w');
     axH_C = axes(figH_C);
@@ -185,4 +191,38 @@ if vis == 1 || vis == 2
     end
 end
 
+end
+
+function [pExA, amExB, alExB, axH_C]=circleCornerCase(Contour, IYMax, vis)
+
+pExA=IYMax;
+amExB=IYMax;
+alExB=IYMax;
+
+if vis == 1 || vis == 2
+    %% Plot: Contour
+    figH_C = figure('name','Contour', 'color','w');
+    axH_C = axes(figH_C);
+    title(axH_C, 'Contour');
+    plot(axH_C, Contour(:,1),Contour(:,2),'k-','LineWidth',2);
+    hold(axH_C,'on');
+    
+    %% Plot extremity points of the articulating surface
+    % Plot the posterior extremity A (pExA)
+    scatter(axH_C, Contour(pExA,1),Contour(pExA,2), 'filled');
+    text(axH_C, Contour(pExA,1),Contour(pExA,2), 'A for circle corner case', ...
+        'VerticalAlignment','top');
+    
+    % Plot the anterior medial extremity B (amExB)
+    amExB(2) = scatter(axH_C, Contour(amExB,1),Contour(amExB,2), 'filled');
+    amExB(3) = text(axH_C, Contour(amExB(1),1),Contour(amExB(1),2), 'medial B for circle corner case',...
+        'HorizontalAlignment','right');
+    
+    % Plot the anterior lateral extremity B (alExB)
+    alExB(2) = scatter(axH_C, Contour(alExB,1),Contour(alExB,2), 'filled');
+    alExB(3) = text(axH_C, Contour(alExB(1),1),Contour(alExB(1),2), 'lateral B for circle corner case',...
+        'VerticalAlignment','top','HorizontalAlignment','right');
+    
+    axis(axH_C, 'equal');
+end
 end
