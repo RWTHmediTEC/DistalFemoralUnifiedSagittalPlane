@@ -48,7 +48,7 @@ try
     [K,S,~,~,Xsm,Ysm,zcp] = BOMultiScaleCurvature2D_adapted(Contour,sigmastart,sigmadelta);
 catch
     % In the very rare case that the countour is almost a circle:
-    [pExA, amExB, alExB, axH_C] = circleCornerCase(Contour, IYMax, vis);
+    pExA=IYMax; amExB=size(Contour,1)-1; alExB=amExB; axH_C=nan;
     return
 end
 
@@ -191,38 +191,4 @@ if vis == 1 || vis == 2
     end
 end
 
-end
-
-function [pExA, amExB, alExB, axH_C]=circleCornerCase(Contour, IYMax, vis)
-
-pExA=IYMax;
-amExB=IYMax;
-alExB=IYMax;
-
-if vis == 1 || vis == 2
-    %% Plot: Contour
-    figH_C = figure('name','Contour', 'color','w');
-    axH_C = axes(figH_C);
-    title(axH_C, 'Contour');
-    plot(axH_C, Contour(:,1),Contour(:,2),'k-','LineWidth',2);
-    hold(axH_C,'on');
-    
-    %% Plot extremity points of the articulating surface
-    % Plot the posterior extremity A (pExA)
-    scatter(axH_C, Contour(pExA,1),Contour(pExA,2), 'filled');
-    text(axH_C, Contour(pExA,1),Contour(pExA,2), 'A for circle corner case', ...
-        'VerticalAlignment','top');
-    
-    % Plot the anterior medial extremity B (amExB)
-    amExB(2) = scatter(axH_C, Contour(amExB,1),Contour(amExB,2), 'filled');
-    amExB(3) = text(axH_C, Contour(amExB(1),1),Contour(amExB(1),2), 'medial B for circle corner case',...
-        'HorizontalAlignment','right');
-    
-    % Plot the anterior lateral extremity B (alExB)
-    alExB(2) = scatter(axH_C, Contour(alExB,1),Contour(alExB,2), 'filled');
-    alExB(3) = text(axH_C, Contour(alExB(1),1),Contour(alExB(1),2), 'lateral B for circle corner case',...
-        'VerticalAlignment','top','HorizontalAlignment','right');
-    
-    axis(axH_C, 'equal');
-end
 end

@@ -182,9 +182,9 @@ for I_a = 1:RangeLength_a
                 % Only the X & Y values are needed
                 Contour = SC(s).P(c).xyz(:,1:2);
                 % Get the anterior and posterior extremity points of the articulating surface
-                [ExPts.A, ExPts.mB, ExPts.lB, A1FigHandle] = ...
+                [ExPts.A, ExPts.mB, ExPts.lB, A1AxHandle] = ...
                     Algorithm1(Contour, sigmastart, sigmadelta, sigma, PlotContours);
-                SC(s).P(c).ExPts.H = A1FigHandle;
+                SC(s).P(c).ExPts.H = A1AxHandle;
                 SC(s).P(c).ExPts.A = ExPts.A;
                 switch SC(s).Zone
                     case 'NZ'
