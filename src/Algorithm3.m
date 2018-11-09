@@ -99,7 +99,7 @@ R.Dispersion = nan(RangeLength_a,RangeLength_b);
 CutVariations = cell(RangeLength_a,RangeLength_b);
 PRMs = cell(RangeLength_a,RangeLength_b);
 
-if GD.Verbose == 1
+if GD.Verbose
     % Start updated command window information
     dispstat('','init');
     dispstat('Initializing the iteration process...','keepthis','timestamp');
@@ -214,7 +214,7 @@ for I_a = 1:RangeLength_a
                 PartCont{c} = SC(s).P(c).xyz(SC(s).P(c).ExPts.A:SC(s).P(c).ExPts.B,1:2)';
             end
             % Parametric least-squares fitting and analysis of cross-sectional profiles
-            tempEll2D{s} = FitEllipseParfor(PartCont);
+            tempEll2D{s} = FitEllipseParfor(PartCont, GD.Verbose);
             for c=1:NoPpC
                 Ell2D.z = tempEll2D{s}(1:2,c);
                 Ell2D.a = tempEll2D{s}(3,c);
@@ -322,7 +322,7 @@ for I_a = 1:RangeLength_a
         
         PV_Counter=PV_Counter+1;
         
-        if GD.Verbose == 1
+        if GD.Verbose
             dispstat(['Plane variation ' num2str(PV_Counter) ' of ' ...
                 num2str(RangeLength_a*RangeLength_b) '. '...
                 char(945) ' = ' num2str(Range_a(I_a)) '° & '...
@@ -331,7 +331,7 @@ for I_a = 1:RangeLength_a
     end
 end
 
-if GD.Verbose == 1
+if GD.Verbose
     % Stop updated command window information
     dispstat('','keepprev');
 end
@@ -366,7 +366,7 @@ if sum(sum(~isnan(R.Dispersion)))>=4
     [DMin.Value, minDIdx] = min(R.Dispersion(:));
     [DMin.I_a, DMin.I_b] = ind2sub(size(R.Dispersion),minDIdx);
     DMin.a = Range_a(DMin.I_a); DMin.b = Range_b(DMin.I_b);
-    if GD.Verbose == 1
+    if GD.Verbose
         display([newline ' Minimum Dispersion: ' num2str(DMin.Value) ' for ' ...
             char(945) ' = ' num2str(DMin.a) '° & ' ...
             char(946) ' = ' num2str(DMin.b) '°.' newline])
