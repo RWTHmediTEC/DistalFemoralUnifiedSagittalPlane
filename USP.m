@@ -111,7 +111,7 @@ if GD.Visualization == 1
     %% Figure
     GD.Figure.Color = [1 1 1];
     MonitorsPos = get(0,'MonitorPositions');
-    GUIFigure = figure(...
+    FH = figure(...
         'Units','pixels',...
         'NumberTitle','off',...
         'Color',GD.Figure.Color,...
@@ -120,21 +120,39 @@ if GD.Visualization == 1
         'WindowButtonDownFcn',@M_CB_RotateWithMouse,...
         'renderer','opengl');
     if     size(MonitorsPos,1) == 1
-        set(GUIFigure,'OuterPosition',MonitorsPos(1,:));
+        set(FH,'OuterPosition',MonitorsPos(1,:));
     elseif size(MonitorsPos,1) == 2
-        set(GUIFigure,'OuterPosition',MonitorsPos(2,:));
+        set(FH,'OuterPosition',MonitorsPos(2,:));
     end
-    GD.Figure.Handle = GUIFigure;
+    FH.MenuBar = 'none';
+    FH.ToolBar = 'none';
+    FH.WindowState = 'maximized';
+    GD.Figure.Handle = FH;
     
-    %% Subject subplot
-    GD.Figure.LeftSpHandle = subplot('Position', [0.05, 0.1, 0.4, 0.8],...
-        'Visible', 'off','Color',GD.Figure.Color);
+    %% 3D view
+    LPT = uipanel('Title','3D view','FontSize',14,'BorderWidth',2,...
+        'BackgroundColor',GD.Figure.Color,'Position',[0.01 0.01 0.49 0.99]);
+    LH = axes('Parent', LPT, 'Visible','off', 'Color',GD.Figure.Color);
+    GD.Figure.LeftSpHandle = LH;
     
-    %% Calculation subplot
-    GD.Figure.RightSpHandle = subplot('Position', [0.55, 0.1, 0.4, 0.8],'Color',GD.Figure.Color);
-    axis on; axis equal; grid on; xlabel('X [mm]'); ylabel('Y [mm]');
+    %% 2D view
+    RPT = uipanel('Title','2D view','FontSize',14,'BorderWidth',2,...
+        'BackgroundColor',GD.Figure.Color,'Position',[0.51 0.51 0.48 0.49]);
+    RH = axes('Parent', RPT, 'Visible','off', 'Color',GD.Figure.Color);
+    axis(RH, 'on'); axis(RH, 'equal'); grid(RH, 'on'); xlabel(RH, 'X [mm]'); ylabel(RH, 'Y [mm]');
+    GD.Figure.RightSpHandle = RH;
     
-    drawnow
+    %% Convergence plot
+    % A convergence plot as a function of alpha (a) and beta (b).
+    RPB = uipanel('Title','Convergence progress','FontSize',14,'BorderWidth',2,...
+        'BackgroundColor',GD.Figure.Color,'Position',[0.51 0.01 0.48 0.49]);
+    IH = axes('Parent', RPB, 'Visible','off', 'Color',GD.Figure.Color);
+    axis(IH, 'equal', 'tight'); view(IH,3);
+    xlabel(IH,'\alpha [°]');
+    ylabel(IH,'\beta [°]');
+    zlabel(IH, 'Dispersion [mm]')
+    title(IH, 'Dispersion of the posterior foci as function of \alpha & \beta')
+    GD.Results.AxHandle = IH;
 end
 
 %% Load Subject

@@ -295,9 +295,9 @@ for I_a = 1:RangeLength_a
                     mpCPts.Origin(:,2),...
                     mpCPts.Origin(:,3),'g','filled');
                 % Plot the plane variation
-                title(lSP, [...
+                title(lSP, {[...
                     '\alpha = ' num2str(Range_a(I_a)) '° & ' ...
-                    '\beta = '  num2str(Range_b(I_b)) '°.'])
+                    '\beta = '  num2str(Range_b(I_b)) '°.'];' '})
             end
             
             if EllipsePlot == 1
@@ -344,17 +344,7 @@ if sum(sum(~isnan(R.Dispersion)))>=4
         % A representative plot of the dispersion of focus locations as a 
         % function of alpha (a) and beta (b). The angles are varied in 
         % StepSize° increments within the defined range.
-        if ~ishandle(GD.Results.AxHandle)
-            figH_Disp = figure('Name', ['Dispersion plot of: ' GD.Subject.Name],...
-                'Color', 'w',...
-                'NumberTitle','off');
-            axH_Disp = axes(figH_Disp);
-            axis(axH_Disp,'equal','tight'); view(axH_Disp,3)
-            xlabel(axH_Disp,'\alpha'); ylabel(axH_Disp,'\beta');
-            zlabel(axH_Disp,'Dispersion [mm]')
-            title(axH_Disp, 'Dispersion of focus locations as a function of \alpha & \beta')
-            GD.Results.AxHandle=axH_Disp;
-        end
+        GD.Results.AxHandle.Visible = 'on';
         hold(GD.Results.AxHandle,'on')
         [Surf.X, Surf.Y] = meshgrid(Range_a, Range_b);
         Surf.X = Surf.X + GD.Results.OldDMin(1);
@@ -425,7 +415,7 @@ if sum(sum(~isnan(R.Dispersion)))>=4
         
         % Plot the ellipses in 2D (Right subplot) for minimum Dispersion
         cla(rSP);
-        title(rSP, ['Minimum Dispersion of the posterior Foci: ' num2str(DMin.Value) ' mm'])
+        title(rSP, ['Min. dispersion of the posterior foci: ' num2str(DMin.Value) ' mm'])
         hold(rSP,'on')
         % Plot the ellipses in 2D
         for s=1:2
@@ -441,7 +431,7 @@ if sum(sum(~isnan(R.Dispersion)))>=4
         hold(rSP,'off')
         
         % Delete old 3D ellipses & contours, if exist
-        title(lSP, 'Line fit through the posterior Foci for minimum Dispersion')
+        title(lSP, {'Line fit through the posterior foci for min. dispersion';' '})
         hold(lSP,'on')
         % Plot contour-parts, ellipses & foci in 3D for minimum Dispersion
         for s=1:2

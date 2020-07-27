@@ -17,6 +17,10 @@ load([pn, fn]);
 % Special case: 'PlaneVariationRange', 0 -> 48 additional figures!
 % [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'PlaneVariationRange', 0, 'StepSize', 2);
 
+
+[List.f, List.p] = matlab.codetools.requiredFilesAndProducts('USP_GUI.m');
+List.f = List.f'; List.p = List.p';
+
 %% Visualization
 figure('Units','pixels','Color','w','ToolBar','figure',...
 'WindowScrollWheelFcn',@M_CB_Zoom,'WindowButtonDownFcn',@M_CB_RotateWithMouse,...

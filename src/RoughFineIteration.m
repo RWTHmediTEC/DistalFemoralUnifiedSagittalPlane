@@ -1,8 +1,6 @@
 function GD = RoughFineIteration(hObject, GD)
 if ishandle(hObject); GD = guidata(hObject); end
 
-GD.Results.AxHandle = nan;
-
 % Variable to save the rotation values during the rough iterations
 GD.Results.OldDMin(1) = 0; GD.Results.OldDMin(2) = 0;
 
