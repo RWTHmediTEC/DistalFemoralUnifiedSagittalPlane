@@ -427,9 +427,9 @@ if sum(sum(~isnan(R.Dispersion)))>=4
         end
         
         % Plot axis through the posterior foci for minimum Dispersion
-        drawLine3d(lSP, GD.Results.pFociLine, 'color','g', 'LineWidth', 2, 'tag','PFEA');
+        drawLine3d(lSP, GD.Results.pFociLine, 'color','g', 'LineWidth',2, 'tag','PFEA');
         % Plot axis through the centers for minimum Dispersion
-        drawLine3d(lSP, GD.Results.CenterLine, 'color','b', 'tag','CEA');
+        drawLine3d(lSP, GD.Results.CenterLine, 'color','b', 'LineWidth',2,'tag','CEA');
         
         % Plot foci & centers in 3D for minimum Dispersion
         scatter3(lSP, EllpFoc3D(:,1),EllpFoc3D(:,2),EllpFoc3D(:,3),'g','filled', 'tag', 'PFEA')
