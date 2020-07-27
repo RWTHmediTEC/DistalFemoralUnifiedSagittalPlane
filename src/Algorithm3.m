@@ -408,10 +408,32 @@ if sum(sum(~isnan(R.Dispersion)))>=4
     
     %% Visualization of Results
     if visu == 1
-         % Results in the main figure
-        % Plot the cutting plane with minimum Dispersion (Left subplot)
+        % Delete old 3D ellipses & contours, if exist
         ClearPlot(lSP, {'Patch','Scatter','Line'})
+        % Plot the cutting plane with minimum Dispersion (Left subplot)
         patch(lSP, transformPoint3d(Bone, GD.Results.PlaneRotMat), GD.BoneProps)
+        title(lSP, {'Line fit through the posterior foci for min. dispersion';' '})
+        hold(lSP,'on')
+        % Plot contour-parts, ellipses & foci in 3D for minimum Dispersion
+        for s=1:2
+            for c=1:NoPpC
+                switch MinSC(s).Zone
+                    case 'NZ'
+                        VisualizeContEll3D(lSP, MinSC(s).P(c), MinSC(s).Color);
+                    case 'PZ'
+                        VisualizeContEll3D(lSP, MinSC(s).P(c), MinSC(s).Color);
+                end
+            end
+        end
+        
+        % Plot axis through the posterior foci for minimum Dispersion
+        drawLine3d(lSP, GD.Results.pFociLine, 'color','g', 'LineWidth', 2, 'tag','PFEA');
+        % Plot axis through the centers for minimum Dispersion
+        drawLine3d(lSP, GD.Results.CenterLine, 'color','b', 'tag','CEA');
+        
+        % Plot foci & centers in 3D for minimum Dispersion
+        scatter3(lSP, EllpFoc3D(:,1),EllpFoc3D(:,2),EllpFoc3D(:,3),'g','filled', 'tag', 'PFEA')
+        scatter3(lSP, EllpCen3D(:,1),EllpCen3D(:,2),EllpCen3D(:,3),'b','filled', 'tag', 'CEA')
         
         % Plot the ellipses in 2D (Right subplot) for minimum Dispersion
         cla(rSP);
@@ -429,30 +451,6 @@ if sum(sum(~isnan(R.Dispersion)))>=4
             end
         end
         hold(rSP,'off')
-        
-        % Delete old 3D ellipses & contours, if exist
-        title(lSP, {'Line fit through the posterior foci for min. dispersion';' '})
-        hold(lSP,'on')
-        % Plot contour-parts, ellipses & foci in 3D for minimum Dispersion
-        for s=1:2
-            for c=1:NoPpC
-                switch MinSC(s).Zone
-                    case 'NZ'
-                        VisualizeContEll3D(lSP, MinSC(s).P(c), MinSC(s).Color);
-                    case 'PZ'
-                        VisualizeContEll3D(lSP, MinSC(s).P(c), MinSC(s).Color);
-                end
-            end
-        end
-        
-        % Plot foci & centers in 3D for minimum Dispersion
-        scatter3(lSP, EllpFoc3D(:,1),EllpFoc3D(:,2),EllpFoc3D(:,3),'g','filled', 'tag', 'PFEA')
-        scatter3(lSP, EllpCen3D(:,1),EllpCen3D(:,2),EllpCen3D(:,3),'b','filled', 'tag', 'CEA')
-        
-        % Plot axis through the posterior foci for minimum Dispersion
-        drawLine3d(lSP, GD.Results.pFociLine, 'color','g', 'tag','PFEA');
-        % Plot axis through the centers for minimum Dispersion
-        drawLine3d(lSP, GD.Results.CenterLine, 'color','b', 'tag','CEA');
         
         % Enable the Save button
         if isfield(GD.Results, 'B_H_SaveResults')
