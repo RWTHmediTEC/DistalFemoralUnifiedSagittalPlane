@@ -24,9 +24,10 @@ planeProps.FaceColor = 'k';
 GD.PlaneHandle = drawPlane3d(lSP, createPlane([0,0,0], [0,0,1]), planeProps);
 
 %% Set view to a unified camera position
-set(lSP,'CameraTarget',[0, 0, 0]);
-CamPos=[-0.65, 0.43, 0.62]*norm(get(lSP,'CameraPosition'));
-set(lSP,'CameraPosition',CamPos);
+view(lSP,3)
 set(lSP,'CameraUpVector',[0, 1, 0]);
+% set(lSP,'CameraTarget',[0, 0, 0]);
+CamPos=[-450 350 450];
+set(lSP,'CameraPosition',CamPos);
 
 end

@@ -132,7 +132,7 @@ if GD.Visualization == 1
     %% 3D view
     LPT = uipanel('Title','3D view','FontSize',14,'BorderWidth',2,...
         'BackgroundColor',GD.Figure.Color,'Position',[0.01 0.01 0.49 0.99]);
-    LH = axes('Parent', LPT, 'Visible','off', 'Color',GD.Figure.Color);
+    LH = axes('Parent', LPT, 'Visible','off', 'Color',GD.Figure.Color,'Position',[0.05 0.01 0.9 0.9]);
     GD.Figure.LeftSpHandle = LH;
     
     %% 2D view
