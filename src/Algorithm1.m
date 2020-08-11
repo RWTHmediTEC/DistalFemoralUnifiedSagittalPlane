@@ -87,6 +87,13 @@ else
 end
 
 %% Anterior extremities B (medial & lateral)
+% Sanity check for IXMax
+if IXMax == 1
+    % Use the most anterior point below pExA instead.
+    [~, tempIdx] = max(Contour(IYMin:IYMin+find(Contour(IYMin:end,2)<Contour(pExA,2),1,'last'),1));
+    IXMax = IYMin+tempIdx;
+end
+
 % Find the anterior medial extremity B (amExB) defined as:
 % - the local maximum curvature point with the largest curvature value in
 %   the region between the most anterior point and the most inferior point of the contour;
@@ -163,6 +170,11 @@ if vis == 1 || vis == 2
     alExB(2) = scatter(axH_C, Contour(alExB,1),Contour(alExB,2), 'filled');
     alExB(3) = text(axH_C, Contour(alExB(1),1),Contour(alExB(1),2), ['lateral B for \sigma = ' num2str(sigma)],...
         'VerticalAlignment','top','HorizontalAlignment','right');
+    
+    % % Plot the most anterior point X_max
+    % scatter(axH_C, Contour(IXMax,1),Contour(IXMax,2), 'filled');
+    % text(axH_C, Contour(IXMax,1),Contour(IXMax,2), 'X_{max}',...
+    %     'VerticalAlignment','top','HorizontalAlignment','right');
     
     axis(axH_C, 'equal');
     

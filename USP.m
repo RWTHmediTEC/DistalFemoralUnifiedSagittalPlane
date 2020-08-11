@@ -74,13 +74,6 @@ function [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = ...
 %     pp. 2928–2936
 % 
 % TODO:
-%   Algorithm1: Detection of the anterior extremity point of the lateral 
-%       condyle should be improved. [Li 2010] says: The anterior lateral 
-% 		extremity B is defined as the local maximum curvature point closest
-% 		to the most anterior point of the contour.  But if the distal femur
-% 		is rotated more anterior in the initial position, the "most 
-%       anterior point of the contour" is the rim of the proximal end of 
-%       the distal femur.
 %   Algorithm3: Complete header section
 % 
 % AUTHOR: Maximilian C. M. Fischer
