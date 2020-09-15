@@ -1,13 +1,10 @@
 clearvars; close all; opengl hardware;
-% [List.f, List.p] = matlab.codetools.requiredFilesAndProducts('USP_GUI.m');
-% List.f = List.f'; List.p = List.p';
 
-%% Select subject
-[fn,pn,~]=uigetfile('data\*.mat','Select mat file');
+% Select subject
+[fn,pn,~] = uigetfile('data\*.mat','Select mat file');
 load([pn, fn]); 
  
-%% Select different options by commenting 
-
+% Select different options by (un)commenting
 % Default mode
 [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'Subject', Subject);
 % Silent mode
@@ -18,8 +15,8 @@ load([pn, fn]);
 % [USPTFM, PFEA, CEA] = USP(Vertices, Faces, Side, InitialRot, 'PlaneVariationRange', 0, 'StepSize', 2);
 
 
-[List.f, List.p] = matlab.codetools.requiredFilesAndProducts('USP_GUI.m');
-List.f = List.f'; List.p = List.p';
+% [List.f, List.p] = matlab.codetools.requiredFilesAndProducts('USP_GUI.m');
+% List.f = List.f'; List.p = List.p';
 
 %% Visualization
 figure('Units','pixels','Color','w','ToolBar','figure',...
@@ -38,9 +35,9 @@ BoneProps.FaceColor = [0.882, 0.831, 0.753];
 BoneProps.FaceAlpha = 0.7;
 BoneProps.EdgeLighting = 'none';
 BoneProps.FaceLighting = 'gouraud';
-patch(Bone, BoneProps);
 
 % PFEA
+patch(Bone, BoneProps);
 PFEA_TFM = transformLine3d(PFEA, inv(USPTFM));
 drawLine3d(PFEA_TFM,'LineWidth', 3, 'LineStyle', '-', 'Color', 'g');
 % lineToVertexIndices(PFEA_TFM,Bone)
