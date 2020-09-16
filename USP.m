@@ -1,5 +1,5 @@
 function [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = ...
-    USP(Vertices, Faces, Side, InitialRot, varargin)
+    USP(distalFemur, side, initialRot, varargin)
 % USP An optimization algorithm for establishing a Unified Sagittal Plane.
 %     USPTFM = USP(Vertices, Faces, Side, InitialRot) returns a 3D 
 %     transform to move the distal femur from the coordinate system of the 
@@ -13,10 +13,10 @@ function [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = ...
 % 
 % INPUT:
 %   - REQUIRED:
-%     Vertices - Double [Nx3]: A list of points of the mesh of the distal femur
-%     Faces - Integer [Mx3]: A list of triangle faces, indexing into the Vertices
-%     Side - Char: 'Left' or 'Right' distal femur. Should start with L or R.
-%     InitalRot - Double [1x3]: Three Cardan angles aka Tait-Bryan angles,
+%     distalFemur - struct: A clean mesh of the distal femur defined by the 
+%       fields vertices (double [Nx3]) and faces (integer [Mx3]) 
+%     side - Char: Left or right distal femur. Should start with L or R.
+%     initalRot - Double [1x3]: Three Cardan angles aka Tait-Bryan angles,
 %                 given in degrees using the 'ZYX' convention (fixed basis
 %                 aka extrinsic rotations). Values between -180° and 180°
 %                 are valid.
@@ -85,8 +85,8 @@ function [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = ...
 narginchk(5,13);
 
 % Validate inputs
-[Side, Subject, Center, PlaneVariationRange, StepSize, GD.Visualization, GD.Verbose] = ...
-    validateAndParseOptInputs(Vertices, Faces, Side, InitialRot, varargin{:});
+[side, Subject, Center, PlaneVariationRange, StepSize, GD.Visualization, GD.Verbose] = ...
+    validateAndParseOptInputs(distalFemur, side, initialRot, varargin{:});
 
 % USP path
 GD.ToolPath = [fileparts([mfilename('fullpath'), '.m']) '\'];
@@ -149,10 +149,9 @@ if GD.Visualization == 1
 end
 
 %% Load Subject
-GD.Subject.Mesh.vertices = Vertices;
-GD.Subject.Mesh.faces = Faces;
-GD.Subject.InitialRot = InitialRot;
-GD.Subject.Side = Side; % Left or Right knee
+GD.Subject.Mesh = distalFemur;
+GD.Subject.InitialRot = initialRot;
+GD.Subject.Side = side; % Left or Right knee
 GD.Subject.Name = Subject; % Subject name
 GD.Subject.Center = Center; 
 % Number of cutting planes per cuting box
@@ -229,19 +228,19 @@ end
 % Parameter validation
 %==========================================================================
 function [Side, Subject, Center, PlaneVariationRange, StepSize, Visualization, Verbose] = ...
-    validateAndParseOptInputs(Vertices, Faces, Side, InitialRot, varargin)
+    validateAndParseOptInputs(femur, Side, InitialRot, varargin)
 
 Side = upper(Side(1));
 
-validateattributes(Vertices, {'numeric'},{'ncols', 3});
-validateattributes(Faces, {'numeric'},{'integer','nonnegative','nonempty','ncols', 3});
+validateattributes(femur.vertices, {'numeric'},{'ncols', 3});
+validateattributes(femur.faces, {'numeric'},{'integer','nonnegative','nonempty','ncols', 3});
 validatestring(Side, {'R','L'});
 validateattributes(InitialRot, {'numeric'},{'>=', -180, '<=', 180,'size', [1 3]});
 
 % Parse the input P-V pairs
 defaults = struct(...
     'Subject', 'anonymous', ...
-    'Center', mean(Vertices), ...
+    'Center', mean(femur.vertices), ...
     'PlaneVariationRange', 4, ...
     'StepSize', 2, ...
     'Visualization', true, ...
