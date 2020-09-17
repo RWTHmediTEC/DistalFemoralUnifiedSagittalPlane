@@ -32,17 +32,17 @@ for s=1%:size(Subjects, 1)
  
     %% Select different options by (un)commenting
     % Default mode
-    [USPTFM, PFEA, CEA] = USP(distalFemurInertia, Subjects{s,4}, uspInitialRot, 'Subject', Subjects{s,1});
+    [USPTFM, PFEA, CEA] = USP(distalFemurInertia, Subjects{s,4}, uspInitialRot, ...
+        'Subject',Subjects{s,1});
     % Silent mode
-    % [USPTFM, PFEA, CEA] = USP(distalFemurInertia, Subjects{s,4}, uspInitialRot, 'Subject', Subjects{s,1},...
-    %    'Visu', false, 'Verbose', false);
+    % [USPTFM, PFEA, CEA] = USP(distalFemurInertia, Subjects{s,4}, uspInitialRot, ...
+    %    'Subject',Subjects{s,1}, 'Visu',false, 'Verbose',false);
     % The other options
-    % [USPTFM, PFEA, CEA] = USP(distalFemurInertia, Subjects{s,4}, uspInitialRot, 'Subject', Subjects{s,1},...
-    %    'PlaneVariationRange', 12, 'StepSize', 3);
+    % [USPTFM, PFEA, CEA] = USP(distalFemurInertia, Subjects{s,4}, uspInitialRot, ...
+    %    'Subject',Subjects{s,1}, 'PlaneVariationRange',12, 'StepSize',3);
     % Special case: 'PlaneVariationRange', 0 -> 48 additional figures!
-    % [USPTFM, PFEA, CEA] = USP(distalFemurInertia, Subjects{s,4}, uspInitialRot, 'Subject', Subjects{s,1},...
-    %    'PlaneVariationRange', 0, 'StepSize', 2);
-
+    % [USPTFM, PFEA, CEA] = USP(distalFemurInertia, Subjects{s,4}, uspInitialRot, ...
+    %    'Subject',Subjects{s,1}, 'PlaneVariationRange',0, 'StepSize',2);
 end
 
 

@@ -65,7 +65,7 @@ function [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = ...
 %     LAT_B - Semi-minor axis of the lateral condyle
 % 
 % EXAMPLE:
-%     Run the file 'USP_Example.m'
+%     Run the file 'USP_example.m'
 % 
 % REFERENCE:
 %     Li et al. - Automating Analyses of the Distal Femur Articular
