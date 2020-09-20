@@ -75,15 +75,15 @@ switch GD.Subject.Side
     case 'R'
         SC(1).Zone = 'NZ';
         SC(2).Zone = 'PZ';
-        SC(1).Color = [255,   0, 255]/255; % Medial = Magenta
-        SC(2).Color = [255, 255, 102]/255; %Lateral = Lemon
+        SC(1).Color = 'm'; % Medial = magenta
+        SC(2).Color = 'c'; %Lateral = cyan
     case 'L'
         SC(1).Zone='PZ';
         SC(2).Zone='NZ';
-        SC(1).Color = [255, 255, 102]/255; %Lateral = Lemon
-        SC(2).Color = [255,   0, 255]/255; % Medial = Magenta
+        SC(1).Color = 'c'; %Lateral = cyan
+        SC(2).Color = 'm'; % Medial = magenta
     otherwise
-        error('Wrong side indicator!')
+        error('Wrong side variable!')
 end
 
 % Plane variation loop counter
@@ -412,7 +412,8 @@ if sum(sum(~isnan(R.Dispersion)))>=4
         ClearPlot(lSP, {'Patch','Scatter','Line'})
         % Plot the cutting plane with minimum Dispersion (Left subplot)
         patch(lSP, transformPoint3d(Bone, GD.Results.PlaneRotMat), GD.BoneProps)
-        title(lSP, {'Line fit through the posterior foci for min. dispersion';' '})
+        title(lSP, {'Line fit through the posterior foci for min. dispersion';' '},...
+            'FontSize',14)
         hold(lSP,'on')
         % Plot contour-parts, ellipses & foci in 3D for minimum Dispersion
         for s=1:2
@@ -437,7 +438,8 @@ if sum(sum(~isnan(R.Dispersion)))>=4
         
         % Plot the ellipses in 2D (Right subplot) for minimum Dispersion
         cla(rSP);
-        title(rSP, ['Min. dispersion of the posterior foci: ' num2str(DMin.Value) ' mm'])
+        title(rSP, ['Min. dispersion of the posterior foci: ' num2str(DMin.Value,'%.2f') ' mm'],...
+            'FontSize',14)
         hold(rSP,'on')
         % Plot the ellipses in 2D
         for s=1:2

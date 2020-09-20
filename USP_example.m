@@ -48,3 +48,7 @@ end
 
 % [List.f, List.p] = matlab.codetools.requiredFilesAndProducts('USP_GUI.m');
 % List.f = List.f'; List.p = List.p';
+
+% % For publication
+% set(gcf, 'GraphicsSmoothing','off')
+% export_fig('Figure6', '-tif', '-r300')

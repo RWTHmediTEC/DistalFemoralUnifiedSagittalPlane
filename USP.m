@@ -144,7 +144,7 @@ if GD.Visualization == 1
     xlabel(IH,'\alpha [°]');
     ylabel(IH,'\beta [°]');
     zlabel(IH, 'Dispersion [mm]')
-    title(IH, 'Dispersion of the posterior foci as function of \alpha & \beta')
+    title(IH, 'Dispersion of the posterior foci as function of \alpha & \beta','FontSize',14)
     GD.Results.AxHandle = IH;
 end
 
