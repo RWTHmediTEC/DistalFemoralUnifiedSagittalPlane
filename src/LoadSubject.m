@@ -29,7 +29,7 @@ if ishandle(hObject)
         switch choice
             case 'Yes'
                 % If exists, use transformation from a previous calculation
-                GD.Subject.STL.TFM = USPTFM;
+                GD.Subject.TFM = USPTFM;
                 disp('Data from a previous calculation is used for the initial alignment!');
             case 'No'
                 GD = initialTFM(GD);
@@ -88,6 +88,6 @@ TRANS = createTranslation3d(-GD.Subject.Center);
 IR = GD.Subject.InitialRot;
 % Rotate around the Z Y X axis (global basis)
 ROT = eulerAnglesToRotation3d(IR(1), IR(2), IR(3));
-GD.Subject.STL.TFM = ROT*TRANS;
+GD.Subject.TFM = ROT*TRANS;
 end
 

@@ -1,7 +1,6 @@
 function [vertices, faces, edges] = CreateCuboid(Origin, Size)
 % Adapted from:
-% http://www.mathworks.com/matlabcentral/fileexchange/24484-geom3d/content/...
-% geom3d/meshes3d/createCube.m
+% https://github.com/mattools/matGeom/blob/master/matGeom/meshes3d/createCube.m
 
 x0 = Origin(1); dx= Size(1)/2;
 y0 = Origin(2); dy= Size(2)/2;

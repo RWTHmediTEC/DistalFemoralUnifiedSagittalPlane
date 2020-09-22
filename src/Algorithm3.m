@@ -80,7 +80,7 @@ EllipsePlot = GD.Algorithm3.EllipsePlot;
 % An optimization algorithm for establishing a Unified Sagittal Plane (USP)
 
 % Bone Surface
-Bone = transformPoint3d(GD.Subject.Mesh, GD.Subject.STL.TFM);
+Bone = transformPoint3d(GD.Subject.Mesh, GD.Subject.TFM);
 
 % Number of Planes per Cutting Box
 NoPpC = GD.Cond.NoPpC;

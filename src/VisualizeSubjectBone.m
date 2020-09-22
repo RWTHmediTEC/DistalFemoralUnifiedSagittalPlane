@@ -19,7 +19,7 @@ GD.BoneProps.FaceAlpha = 0.7;
 GD.BoneProps.EdgeLighting = 'none';
 GD.BoneProps.FaceLighting = 'gouraud';
 GD.Subject.PatchHandle = patch(H3D, ...
-    transformPoint3d(GD.Subject.Mesh, GD.Subject.STL.TFM), GD.BoneProps);
+    transformPoint3d(GD.Subject.Mesh, GD.Subject.TFM), GD.BoneProps);
 
 %% Plot the Default Sagittal Plane (DSP)
 planeProps.FaceAlpha = 0.2;

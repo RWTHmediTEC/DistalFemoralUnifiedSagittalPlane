@@ -46,5 +46,5 @@ for s=1%:size(Subjects, 1)
 end
 
 
-% [List.f, List.p] = matlab.codetools.requiredFilesAndProducts('USP_GUI.m');
+% [List.f, List.p] = matlab.codetools.requiredFilesAndProducts(['mfilename '.m']);
 % List.f = List.f'; List.p = List.p';

@@ -22,7 +22,7 @@ if GD.Algorithm3.PlaneVariationRange >= 1
     % the search space and not on the borders.
     while GD.Iteration.Rough == 1
         GD = Algorithm3(GD);
-        GD.Subject.STL.TFM = GD.Results.PlaneRotMat*GD.Subject.STL.TFM;
+        GD.Subject.TFM = GD.Results.PlaneRotMat*GD.Subject.TFM;
         if GD.Visualization == 1
             title(GD.Figure.D3Handle, '');
             delete(GD.Subject.PatchHandle);
@@ -58,7 +58,7 @@ if GD.Algorithm3.PlaneVariationRange >= 1
     GD = Algorithm3(GD);
     % Calculate the transformation (USPTFM) from the initial bone position into the USP
     PRM = GD.Results.PlaneRotMat;
-    GD.Results.USPTFM  = PRM*GD.Subject.STL.TFM;
+    GD.Results.USPTFM  = PRM*GD.Subject.TFM;
     % Calculate the axes (PFEA & CEA) in the USP system
     GD.Results.PFEA = transformLine3d(GD.Results.pFociLine, PRM);
     GD.Results.CEA = transformLine3d(GD.Results.CenterLine, PRM);

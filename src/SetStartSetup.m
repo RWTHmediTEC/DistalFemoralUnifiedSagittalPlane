@@ -5,7 +5,7 @@ function GD = SetStartSetup(GD)
 % LICENSE: EUPL v1.2
 %
 
-tempVertices = transformPoint3d(GD.Subject.Mesh.vertices, GD.Subject.STL.TFM);
+tempVertices = transformPoint3d(GD.Subject.Mesh.vertices, GD.Subject.TFM);
 
 %% Find most posterior points of the condyles (mpCPts)
 [XminIdxNZ, XminIdxPZ] = FindMostPosteriorPts(tempVertices);

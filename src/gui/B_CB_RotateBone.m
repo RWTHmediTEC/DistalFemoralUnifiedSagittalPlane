@@ -15,7 +15,7 @@ if isfield(GD.Subject,'PatchHandle')
             TFM = eulerAnglesToRotation3d(Angle,     0,     0);
     end
     % Update transformation
-    GD.Subject.STL.TFM = TFM*GD.Subject.STL.TFM;
+    GD.Subject.TFM = TFM*GD.Subject.TFM;
     % Visualize bone
     GD = VisualizeSubjectBone(GD);
     GD = SetStartSetup(GD);
