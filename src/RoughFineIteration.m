@@ -1,4 +1,10 @@
 function GD = RoughFineIteration(hObject, GD)
+%
+% AUTHOR: Maximilian C. M. Fischer
+% COPYRIGHT (C) 2020 Maximilian C. M. Fischer
+% LICENSE: EUPL v1.2
+%
+
 if ishandle(hObject); GD = guidata(hObject); end
 
 % Variable to save the rotation values during the rough iterations
@@ -18,8 +24,7 @@ if GD.Algorithm3.PlaneVariationRange >= 1
         GD = Algorithm3(GD);
         GD.Subject.STL.TFM = GD.Results.PlaneRotMat*GD.Subject.STL.TFM;
         if GD.Visualization == 1
-            lSP = GD.Figure.LeftSpHandle;
-            title(lSP, '');
+            title(GD.Figure.D3Handle, '');
             delete(GD.Subject.PatchHandle);
             % Plot bone with newest transformation
             GD = VisualizeSubjectBone(GD);

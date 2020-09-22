@@ -1,4 +1,9 @@
 function [I_Xmin_NegZ, I_Xmin_PosZ] = FindMostPosteriorPts(Vertices)
+%
+% AUTHOR: Maximilian C. M. Fischer
+% COPYRIGHT (C) 2020 Maximilian C. M. Fischer
+% LICENSE: EUPL v1.2
+%
 
 % Find vertex with min x-value in all vertices with negative z-values
 VertNegZ = Vertices;

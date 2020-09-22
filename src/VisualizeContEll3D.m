@@ -1,4 +1,9 @@
 function VisualizeContEll3D(H, P, EllColor)
+%
+% AUTHOR: Maximilian C. M. Fischer
+% COPYRIGHT (C) 2020 Maximilian C. M. Fischer
+% LICENSE: EUPL v1.2
+%
 
 %% Contour
 % Plot contour-part in 3D

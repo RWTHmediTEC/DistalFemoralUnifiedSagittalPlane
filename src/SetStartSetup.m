@@ -1,4 +1,9 @@
 function GD = SetStartSetup(GD)
+%
+% AUTHOR: Maximilian C. M. Fischer
+% COPYRIGHT (C) 2020 Maximilian C. M. Fischer
+% LICENSE: EUPL v1.2
+%
 
 tempVertices = transformPoint3d(GD.Subject.Mesh.vertices, GD.Subject.STL.TFM);
 
@@ -20,21 +25,21 @@ Zlength = GD.Cond.NoPpC-1;
 
 %% Plotting
 if GD.Visualization == 1
-    lSP = GD.Figure.LeftSpHandle;
-    hold(lSP,'on')
+    H3D = GD.Figure.D3Handle;
+    hold(H3D,'on')
     
     % Plot the boxes
     BoxProps.FaceAlpha = 0.2;
     BoxProps.EdgeColor = 'none';
     [CNZ.vertices, CNZ.faces, ~] = CreateCuboid(OriginNZ, [Xlength, Ylength, Zlength]);
-    patch(lSP, CNZ, 'FaceColor', 'g', BoxProps);
+    patch(H3D, CNZ, 'FaceColor', 'g', BoxProps);
     [CPZ.vertices, CPZ.faces, ~] = CreateCuboid(OriginPZ, [Xlength, Ylength, Zlength]);
-    patch(lSP, CPZ, 'FaceColor', 'g', BoxProps);
+    patch(H3D, CPZ, 'FaceColor', 'g', BoxProps);
     
     % Plot most posterior points of the condyles (mpCPts)
     % Indices of the Medial & Lateral point
     mpCPIdx = [XminIdxNZ, XminIdxPZ];
-    scatter3(lSP,...
+    scatter3(H3D,...
         tempVertices(mpCPIdx,1),...
         tempVertices(mpCPIdx,2),...
         tempVertices(mpCPIdx,3),'g','filled');

@@ -1,4 +1,10 @@
 function GD = LoadSubject(hObject, GD)
+%
+% AUTHOR: Maximilian C. M. Fischer
+% COPYRIGHT (C) 2020 Maximilian C. M. Fischer
+% LICENSE: EUPL v1.2
+%
+
 if ishandle(hObject)
     GD = guidata(hObject);
     %% Load Subject Bone
@@ -40,28 +46,28 @@ if GD.Visualization == 1
     switch GD.Subject.Side; case 'R'; Side = 'Right'; case 'L'; Side = 'Left'; end
     set(GD.Figure.Handle, 'Name', [Side ' femur of subject: ' GD.Subject.Name]);
     % Clear right subplot
-    rSP=GD.Figure.RightSpHandle;
-    cla(rSP, 'reset');
-    axis(rSP,'on','equal');
-    grid(rSP,'on');
-    xlabel(rSP,'X [mm]'); ylabel(rSP,'Y [mm]');
-    set(rSP, 'Color', GD.Figure.Color);
+    H2D = GD.Figure.D2Handle;
+    cla(H2D, 'reset');
+    axis(H2D,'on','equal');
+    grid(H2D,'on');
+    xlabel(H2D,'X [mm]'); ylabel(H2D,'Y [mm]');
+    set(H2D, 'Color', GD.Figure.Color);
     
-    % Left subject subplot and properties
-    lSP=GD.Figure.LeftSpHandle;
-    cla(lSP,'reset');
-    axis(lSP,'on','equal');
-    xlabel(lSP,'X [mm]'); ylabel(lSP,'Y [mm]'); zlabel(lSP,'Z [mm]');
-    set(lSP,'Color',GD.Figure.Color);
-    light1 = light(lSP); light(lSP, 'Position', -1*(get(light1,'Position')));
-    daspect(lSP, [1 1 1])
+    % 3D subject plot and properties
+    H3D = GD.Figure.D3Handle;
+    cla(H3D,'reset');
+    axis(H3D,'on','equal');
+    xlabel(H3D,'X [mm]'); ylabel(H3D,'Y [mm]'); zlabel(H3D,'Z [mm]');
+    set(H3D,'Color',GD.Figure.Color);
+    light1 = light(H3D); light(H3D, 'Position', -1*(get(light1,'Position')));
+    daspect(H3D, [1 1 1])
     cameratoolbar('SetCoordSys','none')
     
     %% Visualize Subject Bone with the Default Sagittal Plane (DSP)
     GD = VisualizeSubjectBone(GD);
-    hold(lSP,'on')
+    hold(H3D,'on')
     % Plot a dot into the Point of Origin
-    scatter3(lSP, 0,0,0,'k','filled')
+    scatter3(H3D, 0,0,0,'k','filled')
 end
 
 %% Find most posterior points of the condyles (mpCPts) & plot the cutting boxes

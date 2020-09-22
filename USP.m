@@ -80,7 +80,9 @@ function [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = ...
 % 	mediTEC - Chair of Medical Engineering, RWTH Aachen University
 % VERSION: 1.1.10
 % DATE: 2018-11-09
-% LICENSE: Modified BSD License (BSD license with non-military-use clause)
+% COPYRIGHT (C) 2020 Maximilian C. M. Fischer
+% LICENSE: EUPL v1.2
+%
 
 narginchk(5,13);
 
@@ -126,14 +128,14 @@ if GD.Visualization == 1
     LPT = uipanel('Title','3D view','FontSize',14,'BorderWidth',2,...
         'BackgroundColor',GD.Figure.Color,'Position',[0.01 0.01 0.49 0.99]);
     LH = axes('Parent', LPT, 'Visible','off', 'Color',GD.Figure.Color,'Position',[0.05 0.01 0.9 0.9]);
-    GD.Figure.LeftSpHandle = LH;
+    GD.Figure.D3Handle = LH;
     
     %% 2D view
     RPT = uipanel('Title','2D view','FontSize',14,'BorderWidth',2,...
         'BackgroundColor',GD.Figure.Color,'Position',[0.51 0.51 0.48 0.49]);
     RH = axes('Parent', RPT, 'Visible','off', 'Color',GD.Figure.Color);
     axis(RH, 'on'); axis(RH, 'equal'); grid(RH, 'on'); xlabel(RH, 'X [mm]'); ylabel(RH, 'Y [mm]');
-    GD.Figure.RightSpHandle = RH;
+    GD.Figure.D2Handle = RH;
     
     %% Convergence plot
     % A convergence plot as a function of alpha (a) and beta (b).
@@ -145,7 +147,7 @@ if GD.Visualization == 1
     ylabel(IH,'\beta [°]');
     zlabel(IH, 'Dispersion [mm]')
     title(IH, 'Dispersion of the posterior foci as function of \alpha & \beta','FontSize',14)
-    GD.Results.AxHandle = IH;
+    GD.Figure.DispersionHandle = IH;
 end
 
 %% Load Subject

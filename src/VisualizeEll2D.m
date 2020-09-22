@@ -1,4 +1,9 @@
 function VisualizeEll2D(H, P, Color)
+%
+% AUTHOR: Maximilian C. M. Fischer
+% COPYRIGHT (C) 2020 Maximilian C. M. Fischer
+% LICENSE: EUPL v1.2
+%
 
 z = P.Ell.z;
 a = P.Ell.a;

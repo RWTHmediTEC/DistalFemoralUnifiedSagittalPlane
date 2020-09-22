@@ -1,4 +1,9 @@
 function M = CalcAndPrintEllipseResults(C, NoPpC, Print)
+%
+% AUTHOR: Maximilian C. M. Fischer
+% COPYRIGHT (C) 2020 Maximilian C. M. Fischer
+% LICENSE: EUPL v1.2
+%
 
 ma = []; la = [];
 mb = []; lb = [];

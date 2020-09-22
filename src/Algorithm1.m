@@ -29,7 +29,9 @@ function [pExA, amExB, alExB, axH_C] = Algorithm1(Contour, sigmastart, sigmadelt
 %       alExB(3)   - text handle of alExB(1)
 %       axH_C      - axes handle: nan if vis == 0
 %
-%   AUTHOR: MCMF
+% AUTHOR: Maximilian C. M. Fischer
+% COPYRIGHT (C) 2020 Maximilian C. M. Fischer
+% LICENSE: EUPL v1.2
 %
 
 % Boundaries of the contour

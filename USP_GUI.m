@@ -38,7 +38,7 @@ end
 GD.Figure.Handle = GUIFigure;
 
 %% Subject subplot
-GD.Figure.LeftSpHandle = subplot('Position', [0.05, 0.1, 0.4, 0.8],...
+GD.Figure.D3Handle = subplot('Position', [0.05, 0.1, 0.4, 0.8],...
     'Visible', 'off','Color',GD.Figure.Color);
 
 %% Get Subjects
@@ -50,7 +50,7 @@ MATFiles = MATFiles(1,:);
 Subjects = Subjects';
 
 %% Calculation subplot
-GD.Figure.RightSpHandle = subplot('Position', [0.55, 0.1, 0.4, 0.8],'Color',GD.Figure.Color);
+GD.Figure.D2Handle = subplot('Position', [0.55, 0.1, 0.4, 0.8],'Color',GD.Figure.Color);
 axis on; axis equal; grid on; xlabel('X [mm]'); ylabel('Y [mm]');
 
 %% GUI
