@@ -1,15 +1,25 @@
 function GD = B_CB_SaveResults(hObject, GD)
-if ishandle(hObject); GD = guidata(hObject); end
+%
+% AUTHOR: Maximilian C. M. Fischer
+% COPYRIGHT (C) 2020 Maximilian C. M. Fischer
+% LICENSE: EUPL v1.2
+%
+
+if ishandle(hObject)
+    GD = guidata(hObject);
+end
 
 if isfield(GD.Results, 'PlaneRotMat')
-    load(GD.Subject.PathMAT)
     
     USPTFM  = GD.Results.USPTFM;
     PFEA = GD.Results.PFEA;
     CEA = GD.Results.CEA;
     
-    save(GD.Subject.PathMAT, 'USPTFM', 'PFEA', 'CEA', '-append')
-
+    if ~isfolder([GD.ToolPath 'results\'])
+        mkdir([GD.ToolPath 'results\'])
+    end
+    save([GD.ToolPath 'results\' GD.Subject.Name '.mat'], 'USPTFM', 'PFEA', 'CEA')
+    
     disp('Results saved.')
 else
     uiwait(errordlg('There are no results to save'));

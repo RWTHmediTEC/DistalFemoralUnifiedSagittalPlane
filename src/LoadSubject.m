@@ -8,20 +8,19 @@ function GD = LoadSubject(hObject, GD)
 if ishandle(hObject)
     GD = guidata(hObject);
     %% Load Subject Bone
-    % Subject STL path
-    GD.Subject.PathMAT = [GD.ToolPath GD.Subject.DataPath, GD.Subject.Name '.mat'];
-    
-    load(GD.Subject.PathMAT)
+    for p=1:length(GD.Subject.DataPath)
+        load([GD.ToolPath GD.Subject.DataPath{p}, GD.Subject.Name '.mat']) %#ok<LOAD>
+    end
+    femurInertia = transformPoint3d(B(ismember({B.name}, ['Femur_' GD.Subject.Side])).mesh, inertiaTFM);
+    distalFemurInertia = cutMeshByPlane(femurInertia, distalCutPlaneInertia);
     
     % Read subject surface data and store
-    GD.Subject.Mesh.vertices = Vertices;
-    GD.Subject.Mesh.faces = Faces;
-    GD.Subject.Center = mean(Vertices);
-    GD.Subject.Side = upper(Side(1)); %#ok<NODEF>
-    GD.Subject.InitialRot = InitialRot;
+    GD.Subject.Mesh = distalFemurInertia;
+    GD.Subject.Center = mean(GD.Subject.Mesh.vertices);
+    GD.Subject.InitialRot = uspInitialRot;
     
     %% Set Centroid of the bone as Point of Origin
-    if exist('USPTFM','var')
+    if exist([GD.ToolPath 'results\' GD.Subject.Name '.mat'],'file')
         % Construct a questdlg with three options
         choice = questdlg({'Data from a previous calculation was found.', 'Load data?'}, ...
             'Data from a previous calculation was found.Load data?', 'Yes', 'No', 'Yes');
@@ -29,6 +28,7 @@ if ishandle(hObject)
         switch choice
             case 'Yes'
                 % If exists, use transformation from a previous calculation
+                load([GD.ToolPath 'results\' GD.Subject.Name '.mat'],'USPTFM')
                 GD.Subject.TFM = USPTFM;
                 disp('Data from a previous calculation is used for the initial alignment!');
             case 'No'

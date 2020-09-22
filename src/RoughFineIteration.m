@@ -5,7 +5,11 @@ function GD = RoughFineIteration(hObject, GD)
 % LICENSE: EUPL v1.2
 %
 
-if ishandle(hObject); GD = guidata(hObject); end
+if ishandle(hObject)
+    GD = guidata(hObject);
+    ClearPlot(GD.Figure.DispersionHandle, {'Surf'})
+    GD.Figure.DispersionHandle.Visible = 'off';
+end
 
 % Variable to save the rotation values during the rough iterations
 GD.Results.OldDMin(1) = 0; GD.Results.OldDMin(2) = 0;

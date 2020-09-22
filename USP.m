@@ -138,7 +138,7 @@ if GD.Visualization == 1
     GD.Figure.D2Handle = RH;
     
     %% Convergence plot
-    % A convergence plot as a function of alpha (a) and beta (b).
+    % A convergence plot as a function of alpha and beta.
     RPB = uipanel('Title','Convergence progress','FontSize',14,'BorderWidth',2,...
         'BackgroundColor',GD.Figure.Color,'Position',[0.51 0.01 0.48 0.49]);
     IH = axes('Parent', RPB, 'Visible','off', 'Color',GD.Figure.Color);
