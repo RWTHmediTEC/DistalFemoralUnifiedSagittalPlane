@@ -18,7 +18,7 @@ GD.Results.OldDMin(1) = 0; GD.Results.OldDMin(2) = 0;
 % and only execute Algorithm 3 once.
 if GD.Algorithm3.PlaneVariationRange >= 1
     %% Rough Iteration
-    if GD.Verbose == 1
+    if GD.Verbose
         disp('----- Starting Rough Iteration -----------------------------------');
     end
     GD.Iteration.Rough = 1;
@@ -27,7 +27,7 @@ if GD.Algorithm3.PlaneVariationRange >= 1
     while GD.Iteration.Rough == 1
         GD = Algorithm3(GD);
         GD.Subject.TFM = GD.Results.PlaneRotMat*GD.Subject.TFM;
-        if GD.Visualization == 1
+        if GD.Visualization
             title(GD.Figure.D3Handle, '');
             delete(GD.Subject.PatchHandle);
             % Plot bone with newest transformation
@@ -35,13 +35,13 @@ if GD.Algorithm3.PlaneVariationRange >= 1
             drawnow;
         end
     end
-    if GD.Verbose == 1
+    if GD.Verbose
         disp('----- Finished Rough Iteration -----------------------------------');
         disp(' ');
     end
     
     %% Fine Iteration
-    if GD.Verbose == 1
+    if GD.Verbose
         disp('----- Starting Fine Iteration ------------------------------------');
     end
     % Save the GUI values of Plane Variation Range & Step Size
@@ -74,7 +74,7 @@ if GD.Algorithm3.PlaneVariationRange >= 1
         GD.Results.CEA, inv(GD.Results.USPTFM)), GD.Subject.Mesh);
     assert(isequal(GD.Results.CenterLineIdx, CEA_Idx))
     
-    if GD.Verbose == 1
+    if GD.Verbose
         disp('----- Finished Fine Iteration ------------------------------------');
         disp(' ');
     end

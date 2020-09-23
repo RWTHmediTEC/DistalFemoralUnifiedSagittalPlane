@@ -26,6 +26,7 @@ function GD = Algorithm3(GD)
 %           GD.Algorithm1.PlotContours
 %           GD.Algorithm3.EllipsePlot
 %           GD.Verbose
+%
 %   OUTPUT:
 %       ToDo
 %
@@ -35,8 +36,9 @@ function GD = Algorithm3(GD)
 %
 
 visu = GD.Visualization;
+verbose = GD.Verbose;
 
-if visu == 1
+if visu
     % Subplot axes handles
     H3D = GD.Figure.D3Handle;
     H2D = GD.Figure.D2Handle;
@@ -104,7 +106,9 @@ switch GD.Subject.Side
 end
 
 % Plane variation loop counter
-PV_Counter = 0;
+if verbose
+    PV_Counter = 0;
+end
 
 RangeLength_a = length(Range_a);
 RangeLength_b = length(Range_b);
@@ -116,7 +120,7 @@ R.Dispersion = nan(RangeLength_a, RangeLength_b);
 CutVariations = cell(RangeLength_a, RangeLength_b);
 PRMs = cell(RangeLength_a, RangeLength_b);
 
-if GD.Verbose
+if verbose
     % Start updated command window information
     dispstat('','init');
     dispstat('Initializing the iteration process...','keepthis','timestamp');
@@ -231,7 +235,7 @@ for I_a = 1:RangeLength_a
                 PartCont{c} = SC(s).P(c).xyz(SC(s).P(c).ExPts.A:SC(s).P(c).ExPts.B,1:2)';
             end
             % Parametric least-squares fitting and analysis of cross-sectional profiles
-            tempEll2D{s} = FitEllipseParfor(PartCont, GD.Verbose);
+            tempEll2D{s} = FitEllipseParfor(PartCont, verbose);
             for c=1:NoPpC
                 Ell2D.z = tempEll2D{s}(1:2,c);
                 Ell2D.a = tempEll2D{s}(3,c);
@@ -280,9 +284,9 @@ for I_a = 1:RangeLength_a
         % Save the dispersion together with the plane variation info
         R.Dispersion(I_a,I_b) = Dispersion;
         
-        if visu == 1
+        if visu
             %% Visualization during Iteration
-            % RIGHT subplot: Plot the ellipses in 2D in the XY-plane
+            % Right 2D plot: Plot the ellipses in 2D in the XY-plane
             if EllipsePlot == 1
                 % Clear right subplot
                 cla(H2D)
@@ -301,17 +305,15 @@ for I_a = 1:RangeLength_a
                 hold(H2D,'off');
             end
             
-            % LEFT Subplot: Plot most posterior Points (mpCPts), plane
+            % Left 3D plot: Plot most posterior Points (mpCPts), plane
             % variation, contour-parts, ellipses in 3D
             ClearPlot(H3D, {'Patch','Scatter','Line'})
             if PlotPlaneVariation == 1
                 % Draw bone transformed by PRM
                 patch(H3D, tempBone, GD.BoneProps)
                 % Plot the mpCPts
-                scatter3(H3D,...
-                    mpCPts.Origin(:,1),...
-                    mpCPts.Origin(:,2),...
-                    mpCPts.Origin(:,3),'g','filled');
+                scatter3(H3D, mpCPts.Origin(:,1),mpCPts.Origin(:,2),mpCPts.Origin(:,3),...
+                    'k','filled');
                 % Plot the plane variation
                 title(H3D, {[...
                     '\alpha = ' num2str(Range_a(I_a)) '° & ' ...
@@ -336,11 +338,10 @@ for I_a = 1:RangeLength_a
         % Save the calculations in one big cell array
         CutVariations{I_a,I_b} = SC;
         % Save the PRMs in one big cell array
-        PRMs{I_a,I_b}=PRM;
+        PRMs{I_a,I_b} = PRM;
         
-        PV_Counter=PV_Counter+1;
-        
-        if GD.Verbose
+        if verbose
+            PV_Counter = PV_Counter+1;
             dispstat(['Plane variation ' num2str(PV_Counter) ' of ' ...
                 num2str(RangeLength_a*RangeLength_b) '. '...
                 char(945) ' = ' num2str(Range_a(I_a)) '° & '...
@@ -349,7 +350,7 @@ for I_a = 1:RangeLength_a
     end
 end
 
-if GD.Verbose
+if verbose
     % Stop updated command window information
     dispstat('','keepprev');
 end
@@ -357,7 +358,7 @@ end
 
 %% Results
 if sum(sum(~isnan(R.Dispersion)))>=4
-    if visu == 1
+    if visu
         %% Dispersion plot
         % A representative plot of the dispersion of focus locations as a 
         % function of alpha (a) and beta (b). The angles are varied in 
@@ -374,7 +375,7 @@ if sum(sum(~isnan(R.Dispersion)))>=4
     [DMin.Value, minDIdx] = min(R.Dispersion(:));
     [DMin.I_a, DMin.I_b] = ind2sub(size(R.Dispersion),minDIdx);
     DMin.a = Range_a(DMin.I_a); DMin.b = Range_b(DMin.I_b);
-    if GD.Verbose
+    if verbose
         display([newline ' Minimum Dispersion: ' num2str(DMin.Value) ' for ' ...
             char(945) ' = ' num2str(DMin.a) '° & ' ...
             char(946) ' = ' num2str(DMin.b) '°.' newline])
@@ -418,14 +419,14 @@ if sum(sum(~isnan(R.Dispersion)))>=4
     GD.Results.CenterLineIdx = lineToVertexIndices(GD.Results.CenterLine,Bone);
     
     % Display info about the ellipses in the command window
-    EllResults = CalcAndPrintEllipseResults(MinSC, NoPpC, GD.Verbose);
+    EllResults = CalcAndPrintEllipseResults(MinSC, NoPpC, verbose);
     GD.Results.Ell.Med.a = EllResults(1,:);
     GD.Results.Ell.Med.b = EllResults(3,:);
     GD.Results.Ell.Lat.a = EllResults(2,:);
     GD.Results.Ell.Lat.b = EllResults(4,:);
     
     %% Visualization of Results
-    if visu == 1
+    if visu
         % Delete old 3D ellipses & contours, if exist
         ClearPlot(H3D, {'Patch','Scatter','Line'})
         % Plot the cutting plane with minimum Dispersion (Left subplot)

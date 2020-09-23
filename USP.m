@@ -87,8 +87,12 @@ function [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = ...
 narginchk(5,13);
 
 % Validate inputs
-[side, Subject, Center, PlaneVariationRange, StepSize, GD.Visualization, GD.Verbose] = ...
+[GD.Subject.Side, GD.Subject.Name, GD.Subject.Center, ...
+    GD.Algorithm3.PlaneVariationRange, GD.Algorithm3.StepSize, ...
+    GD.Visualization, GD.Verbose] = ...
     validateAndParseOptInputs(distalFemur, side, initialRot, varargin{:});
+GD.Subject.Mesh = distalFemur;
+GD.Subject.InitialRot = initialRot;
 
 % USP path
 GD.ToolPath = [fileparts([mfilename('fullpath'), '.m']) '\'];
@@ -103,7 +107,7 @@ if ~exist([mexPath '\IntersectPlaneTriangle.mexw64'],'file')
 end
 
 if GD.Visualization == 1
-    %% Figure
+    % Figure
     GD.Figure.Color = [1 1 1];
     MonitorsPos = get(0,'MonitorPositions');
     FH = figure(...
@@ -124,20 +128,19 @@ if GD.Visualization == 1
     FH.WindowState = 'maximized';
     GD.Figure.Handle = FH;
     
-    %% 3D view
+    % 3D view
     LPT = uipanel('Title','3D view','FontSize',14,'BorderWidth',2,...
         'BackgroundColor',GD.Figure.Color,'Position',[0.01 0.01 0.49 0.99]);
     LH = axes('Parent', LPT, 'Visible','off', 'Color',GD.Figure.Color,'Position',[0.05 0.01 0.9 0.9]);
     GD.Figure.D3Handle = LH;
     
-    %% 2D view
+    % 2D view
     RPT = uipanel('Title','2D view','FontSize',14,'BorderWidth',2,...
         'BackgroundColor',GD.Figure.Color,'Position',[0.51 0.51 0.48 0.49]);
     RH = axes('Parent', RPT, 'Visible','off', 'Color',GD.Figure.Color);
     axis(RH, 'on'); axis(RH, 'equal'); grid(RH, 'on'); xlabel(RH, 'X [mm]'); ylabel(RH, 'Y [mm]');
     GD.Figure.D2Handle = RH;
     
-    %% Convergence plot
     % A convergence plot as a function of alpha and beta.
     RPB = uipanel('Title','Convergence progress','FontSize',14,'BorderWidth',2,...
         'BackgroundColor',GD.Figure.Color,'Position',[0.51 0.01 0.48 0.49]);
@@ -150,21 +153,11 @@ if GD.Visualization == 1
     GD.Figure.DispersionHandle = IH;
 end
 
-%% Load Subject
-GD.Subject.Mesh = distalFemur;
-GD.Subject.InitialRot = initialRot;
-GD.Subject.Side = side; % Left or Right knee
-GD.Subject.Name = Subject; % Subject name
-GD.Subject.Center = Center; 
-% Number of cutting planes per cuting box
+% Number of cutting planes per cutting box
 GD.Cond.NoPpC = 8;
 
+% Load Subject
 GD = LoadSubject('no handle', GD);
-
-%% Settings for the framework
-% Iteration settings
-GD.Algorithm3.PlaneVariationRange = PlaneVariationRange;
-GD.Algorithm3.StepSize = StepSize;
 
 % Visualization settings
 if GD.Visualization == 1
@@ -226,23 +219,21 @@ end
 end
 
 
-%==========================================================================
-% Parameter validation
-%==========================================================================
+%% Input parameter validation
 function [Side, Subject, Center, PlaneVariationRange, StepSize, Visualization, Verbose] = ...
-    validateAndParseOptInputs(femur, Side, InitialRot, varargin)
+    validateAndParseOptInputs(Femur, Side, InitialRot, varargin)
 
 Side = upper(Side(1));
 
-validateattributes(femur.vertices, {'numeric'},{'ncols', 3});
-validateattributes(femur.faces, {'numeric'},{'integer','nonnegative','nonempty','ncols', 3});
+validateattributes(Femur.vertices, {'numeric'},{'ncols', 3});
+validateattributes(Femur.faces, {'numeric'},{'integer','nonnegative','nonempty','ncols', 3});
 validatestring(Side, {'R','L'});
 validateattributes(InitialRot, {'numeric'},{'>=', -180, '<=', 180,'size', [1 3]});
 
 % Parse the input P-V pairs
 defaults = struct(...
     'Subject', 'anonymous', ...
-    'Center', mean(femur.vertices), ...
+    'Center', mean(Femur.vertices), ...
     'PlaneVariationRange', 4, ...
     'StepSize', 2, ...
     'Visualization', true, ...

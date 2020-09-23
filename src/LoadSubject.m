@@ -41,11 +41,16 @@ else
     GD = initialTFM(GD);
 end
 
-if GD.Visualization == 1
-    %% Configure subplots
-    switch GD.Subject.Side; case 'R'; Side = 'Right'; case 'L'; Side = 'Left'; end
-    set(GD.Figure.Handle, 'Name', [Side ' femur of subject: ' GD.Subject.Name]);
-    % Clear right subplot
+if GD.Visualization
+
+    switch GD.Subject.Side; case 'R'; side = 'Right'; case 'L'; side = 'Left'; end
+    GD.Figure.Handle.Name = [side ' femur of subject: ' GD.Subject.Name];
+    
+    % Clear dispersion plot
+    ClearPlot(GD.Figure.DispersionHandle, {'Surf'})
+    GD.Figure.DispersionHandle.Visible = 'off';
+    
+    % Clear right 2D plot
     H2D = GD.Figure.D2Handle;
     cla(H2D, 'reset');
     axis(H2D,'on','equal');
@@ -63,7 +68,7 @@ if GD.Visualization == 1
     daspect(H3D, [1 1 1])
     cameratoolbar('SetCoordSys','none')
     
-    %% Visualize Subject Bone with the Default Sagittal Plane (DSP)
+    % Visualize Subject Bone with the Default Sagittal Plane (DSP)
     GD = VisualizeSubjectBone(GD);
     hold(H3D,'on')
     % Plot a dot into the Point of Origin
@@ -73,7 +78,7 @@ end
 %% Find most posterior points of the condyles (mpCPts) & plot the cutting boxes
 GD = SetStartSetup(GD);
 
-if GD.Verbose == 1
+if GD.Verbose
     disp(['Subject ' GD.Subject.Name ' loaded.']);
 end
 
@@ -84,7 +89,6 @@ end
 function GD = initialTFM(GD)
 % Move the bone to the specified center or to its centroid and rotate
 TRANS = createTranslation3d(-GD.Subject.Center);
-% Negative sign because the following inital transformation is inverse
 IR = GD.Subject.InitialRot;
 % Rotate around the Z Y X axis (global basis)
 ROT = eulerAnglesToRotation3d(IR(1), IR(2), IR(3));

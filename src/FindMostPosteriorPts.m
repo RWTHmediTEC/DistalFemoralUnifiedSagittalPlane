@@ -25,5 +25,4 @@ VertPosZ((Vertices(:,3) < 0),:) = nan;
 % % Alternative: Find vertex with min x-value in all vertices with positive z-values
 % I_Xmin_PosZ = find(ismember(Vertices(:,1),min(Vertices((Vertices(:,3) > 0),1))));
 
-
-
+end
