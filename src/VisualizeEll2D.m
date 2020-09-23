@@ -1,4 +1,4 @@
-function VisualizeEll2D(H, P, Color)
+function VisualizeEll2D(axH, P, Color)
 %
 % AUTHOR: Maximilian C. M. Fischer
 % COPYRIGHT (C) 2020 Maximilian C. M. Fischer
@@ -13,10 +13,9 @@ f = P.Ell.pf;
 AB = P.Ell.AB;
 
 % Plot ellipses & foci in 2D
-scatter(H, z(1),z(2),'MarkerEdgeColor', [0,0,0], 'MarkerFaceColor',Color);
-ellProps.Color = Color;
-plotellipse(H, z, a, b, alpha, ellProps);
-quiver(H, repmat(z(1),2,1),repmat(z(2),2,1),AB(:,1),AB(:,2),...
+scatter(axH, z(1),z(2),'MarkerEdgeColor', [0,0,0], 'MarkerFaceColor',Color);
+drawEllipse(axH, z(1), z(2), a, b, rad2deg(alpha), 'Color',Color,'LineStyle','-')
+quiver(axH, repmat(z(1),2,1),repmat(z(2),2,1),AB(:,1),AB(:,2),...
     ':k','Autoscale','off','ShowArrowHead','off');
-scatter(H, f(:,1),f(:,2),'MarkerEdgeColor', [0,0,0], 'MarkerFaceColor',Color);
+scatter(axH, f(:,1),f(:,2),'MarkerEdgeColor', [0,0,0], 'MarkerFaceColor',Color);
 end

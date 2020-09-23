@@ -42,9 +42,9 @@ for s=1%:size(Subjects, 1)
     %    'Subject',Subjects{s,1}, 'PlaneVariationRange',12, 'StepSize',3);
     % Special case: 'PlaneVariationRange', 0 -> 48 additional figures!
     % [USPTFM, PFEA, CEA] = USP(distalFemurInertia, Subjects{s,4}, uspInitialRot, ...
-    %    'Subject',Subjects{s,1}, 'PlaneVariationRange',0, 'StepSize',2);
+    %   'Subject',Subjects{s,1}, 'PlaneVariationRange',0, 'StepSize',2);
 end
 
 
-% [List.f, List.p] = matlab.codetools.requiredFilesAndProducts(['mfilename '.m']);
+% [List.f, List.p] = matlab.codetools.requiredFilesAndProducts([mfilename '.m']);
 % List.f = List.f'; List.p = List.p';

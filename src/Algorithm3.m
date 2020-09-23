@@ -251,8 +251,9 @@ for I_a = 1:RangeLength_a
                 end
                 % If a contour figure exists, plot the ellipse
                     if ishandle(SC(s).P(c).ExPts.H)
-                        plotellipse(SC(s).P(c).ExPts.H,...
-                            Ell2D.z, Ell2D.a, Ell2D.b, Ell2D.g)
+                        drawEllipse(SC(s).P(c).ExPts.H,...
+                            Ell2D.z(1), Ell2D.z(2) , Ell2D.a, Ell2D.b, rad2deg(Ell2D.g),...
+                            'Color', SC(s).Color)
                     end
             end
         end
