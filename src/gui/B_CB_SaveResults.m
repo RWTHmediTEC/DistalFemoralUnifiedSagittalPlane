@@ -5,9 +5,7 @@ function GD = B_CB_SaveResults(hObject, GD)
 % LICENSE: EUPL v1.2
 %
 
-if ishandle(hObject)
-    GD = guidata(hObject);
-end
+if ishandle(hObject); GD = guidata(hObject); end
 
 if isfield(GD.Results, 'PlaneRotMat')
     
