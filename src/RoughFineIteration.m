@@ -7,6 +7,7 @@ function GD = RoughFineIteration(hObject, GD)
 
 if ishandle(hObject)
     GD = guidata(hObject);
+    % Clear convergence plot
     ClearPlot(GD.Figure.DispersionHandle, {'Surf'})
     GD.Figure.DispersionHandle.Visible = 'off';
 end

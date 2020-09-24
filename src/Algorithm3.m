@@ -28,7 +28,15 @@ function GD = Algorithm3(GD)
 %           GD.Verbose
 %
 %   OUTPUT:
-%       ToDo
+%         RESULTS:
+%           GD.Results.PlaneRotMat
+%           GD.Results.pFociLine & GD.Results.pFociLineIdx
+%           GD.Results.CenterLine & GD.Results.CenterLineIdx
+%           GD.Results.Ell
+%         ITERATION:
+%           GD.Iteration.Rough
+%           GD.Iteration.OldDMin
+%
 %
 % AUTHOR: Maximilian C. M. Fischer
 % COPYRIGHT (C) 2020 Maximilian C. M. Fischer
@@ -39,7 +47,7 @@ visu = GD.Visualization;
 verbose = GD.Verbose;
 
 if visu
-    % Subplot axes handles
+    % Axes handles
     H3D = GD.Figure.D3Handle;
     H2D = GD.Figure.D2Handle;
     
