@@ -23,7 +23,7 @@ Scale = 1.2;
 BBox = boundingBox3d(vertices);
 Xlength = (abs(BBox(1))+BBox(2))*Scale;
 Ylength = (abs(BBox(3))+BBox(4))*Scale;
-Zlength = GD.Cond.NoPpC-1;
+Zlength = GD.Algorithm3.NoCuttingPlanes-1;
 
 %% Plotting
 if GD.Visualization

@@ -23,8 +23,8 @@ else
     uiwait(errordlg('There are no results to save'));
 end
 
-if isfield(GD.Results, 'B_H_SaveResults')
-    set(GD.Results.B_H_SaveResults,'Enable','off')
+if isfield(GD.Figure, 'SaveResultsHandle')
+    GD.Figure.SaveResultsHandle.Enable = 'off';
 end
 
 if ishandle(hObject); guidata(hObject,GD); end

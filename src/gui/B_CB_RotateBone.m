@@ -6,7 +6,7 @@ function B_CB_RotateBone(hObject, ~, Axis, Angle)
 %
 
 GD = guidata(hObject);
-if isfield(GD.Subject,'PatchHandle')
+if isfield(GD.Figure,'MeshHandle')
     
     ClearPlot(GD.Figure.D3Handle, {'Patch','Scatter','Line'})
     

@@ -6,6 +6,6 @@ function CB_CB_PlaneVariation(hObject, ~)
 %
 
 GD = guidata(hObject);
-GD.Algorithm3.PlaneVariaton = get(hObject,'Value');
+GD.Algorithm3.PlotPlaneVariation = get(hObject,'Value');
 guidata(hObject,GD);
 end

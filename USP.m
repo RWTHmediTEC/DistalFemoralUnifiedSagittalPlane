@@ -108,7 +108,7 @@ end
 
 if GD.Visualization == 1
     % Figure
-    GD.Figure.Color = [1 1 1];
+    GD.Figure.Color = 'w';
     MonitorsPos = get(0,'MonitorPositions');
     FH = figure(...
         'Units','pixels',...
@@ -154,14 +154,14 @@ if GD.Visualization == 1
 end
 
 % Number of cutting planes per cutting box
-GD.Cond.NoPpC = 8;
+GD.Algorithm3.NoCuttingPlanes = 8;
 
 % Load Subject
 GD = LoadSubject('no handle', GD);
 
 % Visualization settings
 if GD.Visualization == 1
-    GD.Algorithm3.PlaneVariaton = 1;
+    GD.Algorithm3.PlotPlaneVariation = 1;
     GD.Algorithm3.EllipsePlot = 1;
     if GD.Algorithm3.PlaneVariationRange == 0
         GD.Algorithm1.PlotContours = 1;
@@ -169,7 +169,7 @@ if GD.Visualization == 1
         GD.Algorithm1.PlotContours = 0;
     end
 elseif GD.Visualization == 0
-    GD.Algorithm3.PlaneVariaton = 0;
+    GD.Algorithm3.PlotPlaneVariation = 0;
     GD.Algorithm3.EllipsePlot = 0;
     GD.Algorithm1.PlotContours = 0;
 end

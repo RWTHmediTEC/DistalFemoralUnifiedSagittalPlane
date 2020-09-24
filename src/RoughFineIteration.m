@@ -12,7 +12,7 @@ if ishandle(hObject)
 end
 
 % Variable to save the rotation values during the rough iterations
-GD.Results.OldDMin(1) = 0; GD.Results.OldDMin(2) = 0;
+GD.Iteration.OldDMin(1) = 0; GD.Iteration.OldDMin(2) = 0;
 
 % If the PlaneVariationRange is below 0, do not start the iteration process
 % and only execute Algorithm 3 once.
@@ -29,7 +29,7 @@ if GD.Algorithm3.PlaneVariationRange >= 1
         GD.Subject.TFM = GD.Results.PlaneRotMat*GD.Subject.TFM;
         if GD.Visualization
             title(GD.Figure.D3Handle, '');
-            delete(GD.Subject.PatchHandle);
+            delete(GD.Figure.MeshHandle);
             % Plot bone with newest transformation
             GD = VisualizeSubjectBone(GD);
             drawnow;

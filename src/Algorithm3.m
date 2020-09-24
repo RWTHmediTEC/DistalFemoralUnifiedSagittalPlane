@@ -16,13 +16,13 @@ function GD = Algorithm3(GD)
 %         ALGORITHM SETTINGS:
 %           GD.Algorithm3.PlaneVariationRange
 %           GD.Algorithm3.StepSize
-%           GD.Cond.NoPpC
+%           GD.Algorithm3.NoCuttingPlanes
 %         VISUALIZATION SETTINGS
 %           GD.Figure.D2Handle
 %           GD.Figure.D3Handle
 %           GD.Figure.DispersionHandle
-%           GD.BoneProps
-%           GD.Algorithm3.PlaneVariaton
+%           GD.Figure.BoneProps
+%           GD.Algorithm3.PlotPlaneVariation
 %           GD.Algorithm1.PlotContours
 %           GD.Algorithm3.EllipsePlot
 %           GD.Verbose
@@ -60,7 +60,7 @@ Range_a = -PVR:StepSize:PVR;
 Range_b = -PVR:StepSize:PVR;
 
 % Plot Plane Variation
-PlotPlaneVariation = GD.Algorithm3.PlaneVariaton;
+PlotPlaneVariation = GD.Algorithm3.PlotPlaneVariation;
 
 % Algorithm 1
 % Plot the contours with extremity point detection: 
@@ -85,7 +85,7 @@ EllipsePlot = GD.Algorithm3.EllipsePlot;
 Bone = transformPoint3d(GD.Subject.Mesh, GD.Subject.TFM);
 
 % Number of Planes per Cutting Box
-NoPpC = GD.Cond.NoPpC;
+NoPpC = GD.Algorithm3.NoCuttingPlanes;
 
 % Sagittal Cuts (SC)
 % RIGHT knee: medial - neg. Z values (NZ), lateral - pos. Z values (PZ)
@@ -310,7 +310,7 @@ for I_a = 1:RangeLength_a
             ClearPlot(H3D, {'Patch','Scatter','Line'})
             if PlotPlaneVariation == 1
                 % Draw bone transformed by PRM
-                patch(H3D, tempBone, GD.BoneProps)
+                patch(H3D, tempBone, GD.Figure.BoneProps)
                 % Plot the mpCPts
                 scatter3(H3D, mpCPts.Origin(:,1),mpCPts.Origin(:,2),mpCPts.Origin(:,3),...
                     'k','filled');
@@ -366,8 +366,8 @@ if sum(sum(~isnan(R.Dispersion)))>=4
         GD.Figure.DispersionHandle.Visible = 'on';
         hold(GD.Figure.DispersionHandle,'on')
         [Surf.X, Surf.Y] = meshgrid(Range_a, Range_b);
-        Surf.X = Surf.X + GD.Results.OldDMin(1);
-        Surf.Y = Surf.Y + GD.Results.OldDMin(2);
+        Surf.X = Surf.X + GD.Iteration.OldDMin(1);
+        Surf.Y = Surf.Y + GD.Iteration.OldDMin(2);
         surf(GD.Figure.DispersionHandle, Surf.X', Surf.Y', R.Dispersion)
     end
     
@@ -381,8 +381,8 @@ if sum(sum(~isnan(R.Dispersion)))>=4
             char(946) ' = ' num2str(DMin.b) '°.' newline])
     end
     
-    GD.Results.OldDMin(1) = GD.Results.OldDMin(1)+DMin.a;
-    GD.Results.OldDMin(2) = GD.Results.OldDMin(2)+DMin.b;
+    GD.Iteration.OldDMin(1) = GD.Iteration.OldDMin(1)+DMin.a;
+    GD.Iteration.OldDMin(2) = GD.Iteration.OldDMin(2)+DMin.b;
     
     % Stop the Rough Iteration if the minimum dispersion lies inside the
     % search space and not on the borders.
@@ -430,7 +430,7 @@ if sum(sum(~isnan(R.Dispersion)))>=4
         % Delete old 3D ellipses & contours, if exist
         ClearPlot(H3D, {'Patch','Scatter','Line'})
         % Plot the cutting plane with minimum Dispersion (Left subplot)
-        patch(H3D, transformPoint3d(Bone, GD.Results.PlaneRotMat), GD.BoneProps)
+        patch(H3D, transformPoint3d(Bone, GD.Results.PlaneRotMat), GD.Figure.BoneProps)
         title(H3D, {'Line fit through the posterior foci for min. dispersion';' '},...
             'FontSize',14)
         hold(H3D,'on')
@@ -474,8 +474,8 @@ if sum(sum(~isnan(R.Dispersion)))>=4
         hold(H2D,'off')
         
         % Enable the Save button
-        if isfield(GD.Results, 'B_H_SaveResults')
-            set(GD.Results.B_H_SaveResults,'Enable','on')
+        if isfield(GD.Figure, 'SaveResultsHandle')
+            GD.Figure.SaveResultsHandle.Enable = 'on';
         end
     end
 end
