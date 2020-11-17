@@ -18,31 +18,32 @@ if ~exist('VSD', 'dir')
 end
 
 %% Load subject names
-load('VSD\MATLAB\res\VSD_Subjects.mat', 'Subjects')
-Subjects = table2cell(Subjects);
-Subjects(1:2:20,4) = {'L'}; Subjects(2:2:20,4) = {'R'};
+Subjects = dir('data\*.mat');
+Subjects = strrep({Subjects.name}','.mat','');
+Subjects(1:2:20,2) = {'L'}; Subjects(2:2:20,2) = {'R'};
 
 for s=1%:size(Subjects, 1)
+    name = Subjects{s,1};
+    side = Subjects{s,2};
 
     % Prepare distal femur
-    load(['VSD\Bones\' Subjects{s,1} '.mat'], 'B');
-    load(['data\' Subjects{s,1} '.mat'],'inertiaTFM','uspInitialRot','distalCutPlaneInertia');
-    femurInertia = transformPoint3d(B(ismember({B.name}, ['Femur_' Subjects{s,4}])).mesh, inertiaTFM);
+    load(['VSD\Bones\' name '.mat'], 'B');
+    load(['data\' name '.mat'],'inertiaTFM','uspInitialRot','distalCutPlaneInertia');
+    femurInertia = transformPoint3d(B(ismember({B.name}, ['Femur_' side])).mesh, inertiaTFM);
     distalFemurInertia = cutMeshByPlane(femurInertia, distalCutPlaneInertia);
  
     %% Select different options by (un)commenting
     % Default mode
-    [USPTFM, PFEA, CEA] = USP(distalFemurInertia, Subjects{s,4}, uspInitialRot, ...
-        'Subject',Subjects{s,1});
+    [USPTFM, PFEA, CEA] = USP(distalFemurInertia, side, uspInitialRot, 'Subject',name);
     % Silent mode
-    % [USPTFM, PFEA, CEA] = USP(distalFemurInertia, Subjects{s,4}, uspInitialRot, ...
-    %    'Subject',Subjects{s,1}, 'Visu',false, 'Verbose',false);
+    % [USPTFM, PFEA, CEA] = USP(distalFemurInertia, side, uspInitialRot, 'Subject',name,...
+    %    'Visu',false, 'Verbose',false);
     % The other options
-    % [USPTFM, PFEA, CEA] = USP(distalFemurInertia, Subjects{s,4}, uspInitialRot, ...
-    %    'Subject',Subjects{s,1}, 'PlaneVariationRange',12, 'StepSize',3);
+    % [USPTFM, PFEA, CEA] = USP(distalFemurInertia, side, uspInitialRot, 'Subject',name,...
+    %    'PlaneVariationRange',12, 'StepSize',3);
     % Special case: 'PlaneVariationRange', 0 -> 48 additional figures!
-    % [USPTFM, PFEA, CEA] = USP(distalFemurInertia, Subjects{s,4}, uspInitialRot, ...
-    %   'Subject',Subjects{s,1}, 'PlaneVariationRange',0, 'StepSize',2);
+    % [USPTFM, PFEA, CEA] = USP(distalFemurInertia, side, uspInitialRot, 'Subject',name,...
+    %   'PlaneVariationRange',0, 'StepSize',2);
 end
 
 

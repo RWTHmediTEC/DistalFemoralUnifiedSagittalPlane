@@ -74,7 +74,6 @@ function [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = ...
 %     pp. 2928–2936
 % 
 % TODO:
-%   Algorithm3: Complete header section
 % 
 % AUTHOR: Maximilian C. M. Fischer
 % 	mediTEC - Chair of Medical Engineering, RWTH Aachen University
@@ -84,7 +83,7 @@ function [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = ...
 % LICENSE: EUPL v1.2
 %
 
-narginchk(5,13);
+narginchk(5,15);
 
 % Validate inputs
 [GD.Subject.Side, GD.Subject.Name, GD.Subject.Center, ...
