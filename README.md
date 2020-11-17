@@ -15,7 +15,7 @@ EUPL v1.2
 ## Usage 
 Clone and run *USP_example.m* in MATLAB to test the main function *USP.m*. Comment the different calls of the USP function to test several options. Type *help USP* to get a detailed description of the options.<br/>
 The distal femur is moved from the coordinate system of the medical imaging system to its centroid. The distal femur has to be aligned according to Table 1 to guarantee a working calculation.
-This initial transformation depends on the medical imaging system and is stored in the MAT-file as a vector of three Euler angles*. In addition, the side ('L'eft or 'R'ight knee) has to be defined.<br/>
+This initial transformation depends on the medical imaging system and is stored in the MAT-file as a vector of three Euler angles*. In addition, the side has to be defined: 'L'eft or 'R'ight knee.<br/>
 
 **<sub>Table 1: Required initial orientation of the distal femur</sub>**
 |   Axes   | X         | Y        | Z                                      |
@@ -30,7 +30,7 @@ But all rotations occur about the axes of the fixed coordinate system. Values be
 ### USP GUI
 As an alternative *USP_GUI.m* can be used and a distal femur can be loaded. The bone with the grey default sagittal plane (DSP) can be adjusted with the six rotate buttons bellow the bone (Figure 1). 
 If a MAT-file of the subject exists in the folder "results", the USP was already calculated and the USPTFM from the previous calculation can be used for the initial transformation of the bone.
-![USP_InitialOrientation](https://user-images.githubusercontent.com/43516130/99388704-47581780-28d6-11eb-8f5c-da91db4396ca.png)
+![USP_InitialOrientation](https://user-images.githubusercontent.com/43516130/99388704-47581780-28d6-11eb-8f5c-da91db4396ca.png)<br/>
 **<sub>Figure 1: Required initial orientation of the distal femur</sub>**
 
 #### The rough/fine iteration method
@@ -41,7 +41,7 @@ Once the minimum dispersion lies inside the search field a finer search with a s
 The *-/+ Plane Variation* is set to the step size of the rough search minus the step size of the fine search (2° - 0.5° = 1.5°) resulting in a quadratic search field of ((1.5° x 2 / 0.5°) + 1)² = 49 plane variations.
 - The results can be saved after the calculation is finished.
 After each calculation a table with results for the minimum dispersion is printed in the MATLAB command window.
-![USP_DispersionPlot](https://user-images.githubusercontent.com/43516130/99388735-52ab4300-28d6-11eb-8829-a7868a9383e9.png)
+![USP_DispersionPlot](https://user-images.githubusercontent.com/43516130/99388735-52ab4300-28d6-11eb-8829-a7868a9383e9.png)<br/>
 **<sub>Figure 2: Rough iterations and the final fine iteration</sub>**
 
 ## USP method
