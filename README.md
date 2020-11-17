@@ -1,5 +1,5 @@
 # DistalFemoralUnifiedSagittalPlane
-An optimization algorithm for establishing a unified sagittal plane (USP) of the distal femur using 3D surface models.
+An optimization algorithm for establishing a unified sagittal plane (USP) of the distal femur using a 3D surface model.
 
 ## Reference
 Please cite the following papers:<br/>
