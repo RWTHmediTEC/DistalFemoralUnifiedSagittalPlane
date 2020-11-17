@@ -1,5 +1,5 @@
 # DistalFemoralUnifiedSagittalPlane
-An optimization algorithm for establishing a unified sagittal plane (USP) of the distal femur.
+An optimization algorithm for establishing a unified sagittal plane (USP) of the distal femur using 3D surface models.
 
 ## Reference
 Please cite the following papers:<br/>
@@ -13,11 +13,12 @@ none
 EUPL v1.2
 
 ## Usage 
-Clone and run USP_example.m in MATLAB to test the main function "USP.m". Comment the different calls of the USP function to test several options. Type "help USP" to get a detailed description of the options.<br/>
+Clone and run USP_example.m in MATLAB to test the main function *USP.m*. Comment the different calls of the USP function to test several options. Type *help USP* to get a detailed description of the options.<br/>
 The distal femur is moved from the coordinate system of the medical imaging system into its centroid. The distal femur has to be positioned according to Table 1 to guarantee a working calculation.
 This initial transformation depends on the medical imaging system and is stored in the MAT-file as a vector of three Euler angles*. In addition, the side ('L'eft or 'R'ight knee) has to be defined.<br/>
 
-**Table 1: Required initial orientation of the distal femur**
+**<sub>Table 1: Required initial orientation of the distal femur</sub>**
+**<sub>Table 1: Required initial orientation of the distal femur</sub>**
 |   Axes   | X         | Y        | Z                                      |
 |:--------:|-----------|----------|----------------------------------------|
 | Negative | Posterior | Distal   | Right knee: Medial, Left knee: Lateral |
@@ -28,7 +29,7 @@ This means a rotation around the Z-axis is followed by a rotation around the Y-a
 But all rotations occur about the axes of the fixed coordinate system. Values between -180° and 180° are valid.</sub>
 
 ### USP GUI
-As an alternative "USP_GUI.m" can be used and a distal femur can be loaded. The bone with the grey default sagittal plane (DSP) can be adjusted with the six rotate buttons bellow the bone. 
+As an alternative *USP_GUI.m* can be used and a distal femur can be loaded. The bone with the grey default sagittal plane (DSP) can be adjusted with the six rotate buttons bellow the bone. 
 If a MAT-file of the subject exists in the folder "results", the USP was already calculated and the USPTFM from the previous calculation can be used for the initial transformation of the bone.
 ![USP_InitialOrientation](https://user-images.githubusercontent.com/43516130/99388704-47581780-28d6-11eb-8f5c-da91db4396ca.png)
 
