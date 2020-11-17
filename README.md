@@ -3,14 +3,11 @@ An optimization algorithm for establishing a unified sagittal plane (USP) of the
 
 ## Reference
 Please cite the following papers:<br/>
-- [Li 2010] Li et al. - Automating Analyses of the Distal Femur Articular Geometry Based on Three-Dimensional Surface Data. Annals of Biomedical Engineering (2010)
-- [Fischer 2020] Fischer et al. - A robust method for automatic identification of femoral landmarks, axes, planes and bone coordinate systems using surface models. Scientific Reports (2020)
+- Li et al. - Automating Analyses of the Distal Femur Articular Geometry Based on Three-Dimensional Surface Data. Annals of Biomedical Engineering (2010)
+- Fischer et al. - A robust method for automatic identification of femoral landmarks, axes, planes and bone coordinate systems using surface models. Scientific Reports (2020)
 
 ## Releases
 none
-
-## License
-EUPL v1.2
 
 ## Usage 
 Clone and run *USP_example.m* in MATLAB to test the main function *USP.m*. Comment the different calls of the USP function to test several options. Type *help USP* to get a detailed description of the options.<br/>
@@ -60,3 +57,6 @@ Improvements have been made to the iteration process of Algorithm 3. First the p
 Subsequently, a fine search with a plane variation of 0.5° is performed around the dispersion minimum of the rough search to improve the position of the USP. 
 For a "-/+ Plane Variation" of 8° the method of Li requires 33² = 1089 plane variations. The rough/fine iteration method requires two initial rough searches and one subsequent fine search, 25 + 25 + 49 = 99 plane variations. 
 The number of iterations is reduced about one-tenth compared with the method of Li et al. In addition parallel computing was implemented for the computationally-intensive parts of the framework to reduce computing time.
+
+## License
+EUPL v1.2
