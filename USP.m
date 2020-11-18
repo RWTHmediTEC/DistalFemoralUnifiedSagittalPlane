@@ -77,8 +77,8 @@ function [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = ...
 % 
 % AUTHOR: Maximilian C. M. Fischer
 % 	mediTEC - Chair of Medical Engineering, RWTH Aachen University
-% VERSION: 1.1.10
-% DATE: 2018-11-09
+% VERSION: 2.0.0
+% DATE: 2020-11-18
 % COPYRIGHT (C) 2020 Maximilian C. M. Fischer
 % LICENSE: EUPL v1.2
 %
