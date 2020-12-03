@@ -3,8 +3,8 @@ An optimization algorithm for establishing a unified sagittal plane (USP) of the
 
 ## Reference
 Please cite the following papers:<br/>
-- Li et al. - Automating Analyses of the Distal Femur Articular Geometry Based on Three-Dimensional Surface Data. Annals of Biomedical Engineering (2010)
-- Fischer et al. - A robust method for automatic identification of femoral landmarks, axes, planes and bone coordinate systems using surface models. Scientific Reports (2020)
+- Li et al. - Automating Analyses of the Distal Femur Articular Geometry Based on Three-Dimensional Surface Data. Annals of Biomedical Engineering, https://doi.org/10.1007/s10439-010-0064-9 (2010)
+- Fischer et al. - A robust method for automatic identification of femoral landmarks, axes, planes and bone coordinate systems using surface models. Scientific Reports, https://doi.org/10.1038/s41598-020-77479-z (2020)
 
 ## Releases
 none
