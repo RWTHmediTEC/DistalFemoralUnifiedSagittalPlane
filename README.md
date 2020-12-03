@@ -3,11 +3,11 @@ An optimization algorithm for establishing a unified sagittal plane (USP) of the
 
 ## Reference
 Please cite the following papers:<br/>
-- Li et al. - Automating Analyses of the Distal Femur Articular Geometry Based on Three-Dimensional Surface Data. Annals of Biomedical Engineering, https://doi.org/10.1007/s10439-010-0064-9 (2010)
-- Fischer et al. - A robust method for automatic identification of femoral landmarks, axes, planes and bone coordinate systems using surface models. Scientific Reports, https://doi.org/10.1038/s41598-020-77479-z (2020)
+- [Li 2010] Li et al. - Automating Analyses of the Distal Femur Articular Geometry Based on Three-Dimensional Surface Data. Annals of Biomedical Engineering, https://doi.org/10.1007/s10439-010-0064-9 (2010)
+- [Fischer 2020] Fischer et al. - A robust method for automatic identification of femoral landmarks, axes, planes and bone coordinate systems using surface models. Scientific Reports, https://doi.org/10.1038/s41598-020-77479-z (2020)
 
 ## Releases
-none
+- v2.0.0 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4280935.svg)](https://doi.org/10.5281/zenodo.4280935) was used in [Fischer 2020]. 
 
 ## Usage 
 Clone and run *USP_example.m* in MATLAB to test the main function *USP.m*. Comment the different calls of the USP function to test several options. Type *help USP* to get a detailed description of the options.<br/>
@@ -42,7 +42,7 @@ After each calculation a table with results for the minimum dispersion is printe
 **<sub>Figure 2: Rough iterations and the final fine iteration</sub>**
 
 ## USP method
-The framework is based on the paper: 2010 - Li et al. - Automating Analyses of the Distal Femur Articular Geometry Based on Three-Dimensional Surface Data.<br/>
+The framework is based on the paper by Li et al. [Li 2010].<br/>
 
 The input consists of a triangulated surface model of the distal femur, the side of the femur and an initial transformation from the coordinate system of the medical imaging system into the DSP (see Table 1). 
 The XY-plane is the DSP due to the initial transformation of the bone surface into its centroid.<br/>
