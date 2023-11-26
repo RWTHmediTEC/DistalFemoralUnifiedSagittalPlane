@@ -99,10 +99,13 @@ GD.ToolPath = [fileparts([mfilename('fullpath'), '.m']) '\'];
 % Add src path
 addpath(genpath([GD.ToolPath 'src']));
 
-% Compile mex file if not exist
-mexPath = [GD.ToolPath 'src\external\intersectPlaneSurf'];
-if ~exist([mexPath '\IntersectPlaneTriangle.mexw64'],'file')
-    mex([mexPath '\IntersectPlaneTriangle.cpp'],'-v','-outdir', mexPath);
+% Compile mex file if it does not exist
+mexPath = [GD.ToolPath(1:end-1), filesep, 'src', filesep, 'external', ...
+    filesep, 'intersectPlaneSurf'];
+if ~exist([mexPath, filesep, 'IntersectPlaneTriangle.mexw64'],'file') && ~isunix
+    mex([mexPath, filesep, 'IntersectPlaneTriangle.cpp'],'-v','-outdir', mexPath);
+elseif ~exist([mexPath, filesep, 'IntersectPlaneTriangle.mexa64'],'file') && isunix
+    mex([mexPath, filesep, 'IntersectPlaneTriangle.cpp'],'-v','-outdir', mexPath);
 end
 
 if GD.Visualization == 1
@@ -194,7 +197,7 @@ if GD.Algorithm3.PlaneVariationRange ~= 0
     [~, ~, I_IntPFEABone] = intersectLineMesh3d(PFEA, ...
         transformPoint3d(GD.Subject.Mesh.vertices, GD.Subject.TFM),...
         GD.Subject.Mesh.faces);
-    if numel(I_IntPFEABone)~=4
+    if numel(I_IntPFEABone) ~= 4
         warning(['Posterior focal elliptic axis (PFEA) should have 4 intersection points with the bone surface', ...
             'But number of intersection points is: ' num2str(numel(I_IntPFEABone)) '!']);
     end
@@ -263,4 +266,3 @@ Visualization       = parser.Results.Visualization;
 Verbose             = parser.Results.Verbose;
 
 end
-
