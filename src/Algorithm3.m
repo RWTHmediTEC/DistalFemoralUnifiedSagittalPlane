@@ -396,6 +396,15 @@ if sum(sum(~isnan(R.Dispersion)))>=4
     % search space and not on the borders.
     if DMin.a == -PVR || DMin.a == PVR || DMin.b == -PVR || DMin.b == PVR
         GD.Iteration.Rough = 1;
+    elseif DMin.Value > 2
+        if verbose
+            disp([...
+                ' The minmum dispersion lies inside the search space but is unusual ' newline ...
+                ' high. Normaly, the minimum dispersion should be < 2. The search space ' newline ...
+                ' of the rough iteration is increased to 6° to avoid a local minimum!' newline])
+        end
+        GD.Algorithm3.PlaneVariationRange = 6;
+        GD.Iteration.Rough = 1;
     else
         GD.Iteration.Rough = 0;
     end

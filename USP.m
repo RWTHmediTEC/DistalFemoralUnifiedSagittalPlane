@@ -33,8 +33,8 @@ function [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = ...
 %     'Center'  - Double [1x3]: Position of the origin of the coordinate 
 %                 system. Default is 'mean(Vertices)'.
 %     'PlaneVariationRange' - Integer [1x1]: Defines the size of the search
-%                             field of the rough iterations. Default value 
-%                             is 4° resulting in a quadratic search field 
+%                             space of the rough iterations. Default value 
+%                             is 4° resulting in a quadratic search space
 %                             of -/+ 4°. Values between 0° and 16° are 
 %                             valid. 4° seems to be a proper value for the 
 %                             tested meshes. Higher values increase the 
@@ -46,7 +46,7 @@ function [USPTFM, PFEA, CEA, MED_A, MED_B, LAT_A, LAT_B] = ...
 %     'StepSize' - Integer [1x1]: Defines the step size during the rough
 %                  iterations. Default value is 2°. Values between 1° and 
 %                  4° are valid. E.g. with a PlaneVariationRange of 4° it
-%                  results in a search field of:
+%                  results in a search space of:
 %                  ((4° x 2 / 2°) + 1)² = 25 plane variations
 %     'Visualization' - Logical: Figure output. Default is true.
 %     'Verbose' - Logical: Command window output. Default is true.
@@ -115,8 +115,7 @@ if GD.Visualization == 1
         'Color',GD.Figure.Color,...
         'ToolBar','figure',...
         'WindowScrollWheelFcn',@M_CB_Zoom,...
-        'WindowButtonDownFcn',@M_CB_RotateWithMouse,...
-        'renderer','opengl');
+        'WindowButtonDownFcn',@M_CB_RotateWithMouse);
     if     size(MonitorsPos,1) == 1
         set(FH,'OuterPosition',MonitorsPos(1,:));
     elseif size(MonitorsPos,1) == 2

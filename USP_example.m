@@ -1,4 +1,4 @@
-clearvars; close all; opengl hardware
+clearvars; close all
 
 % Add src path
 addpath(genpath([fileparts([mfilename('fullpath'), '.m']) '\src']));
@@ -6,11 +6,11 @@ addpath(genpath([fileparts([mfilename('fullpath'), '.m']) '\src']));
 %% Clone example data
 if ~exist('VSD', 'dir')
     try
-        !git clone https://github.com/RWTHmediTEC/VSDFullBodyBoneModels VSD
+        !git clone https://github.com/MCM-Fischer/VSDFullBodyBoneModels VSD
         rmdir('VSD/.git', 's')
     catch
         warning([newline 'Clone (or copy) the example data from: ' ...
-            'https://github.com/RWTHmediTEC/VSDFullBodyBoneModels' newline 'to: ' ...
+            'https://github.com/MCM-Fischer/VSDFullBodyBoneModels' newline 'to: ' ...
             fileparts([mfilename('fullpath'), '.m']) '\VSD' ...
             ' and try again!' newline])
         return
@@ -18,20 +18,29 @@ if ~exist('VSD', 'dir')
 end
 
 %% Load subject names
-Subjects = dir('data\*.mat');
-Subjects = strrep({Subjects.name}','.mat','');
-Subjects(1:2:20,2) = {'L'}; Subjects(2:2:20,2) = {'R'};
+subjectXLSX = 'VSD\MATLAB\res\VSD_Subjects.xlsx';
+Subjects = readtable(subjectXLSX);
+Subjects{2:2:height(Subjects),7} = 'L';
+Subjects{1:2:height(Subjects),7} = 'R'; 
 
 for s=1%:size(Subjects, 1)
-    name = Subjects{s,1};
-    side = Subjects{s,2};
+    name = Subjects{s,1}{1};
+    side = Subjects{s,7};
 
     % Prepare distal femur
     load(['VSD\Bones\' name '.mat'], 'B');
-    load(['data\' name '.mat'],'inertiaTFM','uspInitialRot','distalCutPlaneInertia');
+    load(['data\' name '.mat'],'inertiaTFM','uspPreTFM','distalCutPlaneInertia');
     femurInertia = transformPoint3d(B(ismember({B.name}, ['Femur_' side])).mesh, inertiaTFM);
+    femurInertia = splitMesh(femurInertia, 'mostVertices');
+    if strcmp(side, 'L')
+        xReflection = eye(4);
+        xReflection(1,1) = -1;
+        distalCutPlaneInertia = reversePlane(distalCutPlaneInertia);
+        uspPreTFM = createRotationOy(pi)*createRotationOz(pi)*uspPreTFM;
+        distalCutPlaneInertia = transformPlane3d(distalCutPlaneInertia, xReflection);
+    end
     distalFemurInertia = cutMeshByPlane(femurInertia, distalCutPlaneInertia);
- 
+    uspInitialRot = rotation3dToEulerAngles(uspPreTFM(1:3,1:3), 'ZYX');
     %% Select different options by (un)commenting
     % Default mode
     [USPTFM, PFEA, CEA] = USP(distalFemurInertia, side, uspInitialRot, 'Subject',name);

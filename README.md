@@ -1,13 +1,13 @@
 # DistalFemoralUnifiedSagittalPlane
 An optimization algorithm for establishing a unified sagittal plane (USP) of the distal femur using a 3D surface model.
 
-## Reference
-Please cite the following papers:<br/>
-- [Li 2010] Li et al. - Automating Analyses of the Distal Femur Articular Geometry Based on Three-Dimensional Surface Data. Annals of Biomedical Engineering, https://doi.org/10.1007/s10439-010-0064-9 (2010)
-- [Fischer 2020] Fischer et al. - A robust method for automatic identification of femoral landmarks, axes, planes and bone coordinate systems using surface models. Scientific Reports, https://doi.org/10.1038/s41598-020-77479-z (2020)
+## How to cite
+### Publications
+- Fischer, M. C. M. *et al.* A robust method for automatic identification of femoral landmarks, axes, planes and bone coordinate systems using surface models. *Sci. Rep.* **10**, 20859; [![10.1038/s41598-020-77479-z](https://img.shields.io/badge/DOI-10.1038/s41598--020--77479--z-green.svg)](https://doi.org/10.1038/s41598-020-77479-z) (2020).
+- Li, K. *et al.* Automating Analyses of the Distal Femur Articular Geometry Based on Three-Dimensional Surface Data. *Ann. Biomed. Eng.* **38**, 2928–2936; [![10.1007/s10439-010-0064-9](https://img.shields.io/badge/DOI-10.1007/s10439--010--0064--9-green.svg)](https://doi.org/10.1007/s10439-010-0064-9) (2010).
 
-## Releases
-- v2.0.0 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4280935.svg)](https://doi.org/10.5281/zenodo.4280935) was used in [Fischer 2020]. 
+### Releases
+- v2.0.0 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4280935.svg)](https://doi.org/10.5281/zenodo.4280935) was used in [![10.1038/s41598-020-77479-z](https://img.shields.io/badge/DOI-10.1038/s41598--020--77479--z-green.svg)](https://doi.org/10.1038/s41598-020-77479-z). 
 
 ## Usage 
 Clone and run *USP_example.m* in MATLAB to test the main function *USP.m*. Comment the different calls of the USP function to test several options. Type *help USP* to get a detailed description of the options.<br/>
@@ -15,10 +15,10 @@ The distal femur is moved from the coordinate system of the medical imaging syst
 This initial transformation depends on the medical imaging system and is stored in the MAT-file as a vector of three Euler angles*. In addition, the side has to be defined: 'L'eft or 'R'ight knee.<br/>
 
 **<sub>Table 1: Required initial orientation of the distal femur</sub>**
-|   Axes   | X         | Y        | Z                                      |
-|:--------:|-----------|----------|----------------------------------------|
-| Negative | Posterior | Distal   | Right knee: Medial, Left knee: Lateral |
-| Positive | Anterior  | Proximal | Right knee: Lateral, Left knee: Medial |
+|     Axes     | X         | Y        | Z                                      |
+|:------------:|-----------|----------|----------------------------------------|
+| Negative (-) | Posterior | Distal   | Right knee: Medial, Left knee: Lateral |
+| Positive (+) | Anterior  | Proximal | Right knee: Lateral, Left knee: Medial |
 
 <sub>*Three Cardan angles aka Tait-Bryan angles given in degrees using the 'ZYX' convention (global basis aka extrinsic rotations). 
 This means a rotation around the Z-axis is followed by a rotation around the Y-axis is followed by a rotation around the X-axis.
@@ -27,6 +27,7 @@ But all rotations occur about the axes of the fixed coordinate system. Values be
 ### USP GUI
 As an alternative *USP_GUI.m* can be used and a distal femur can be loaded. The bone with the grey default sagittal plane (DSP) can be adjusted with the six rotate buttons bellow the bone (Figure 1). 
 If a MAT-file of the subject exists in the folder "results", the USP was already calculated and the USPTFM from the previous calculation can be used for the initial transformation of the bone.
+
 ![USP_InitialOrientation](https://user-images.githubusercontent.com/43516130/99388704-47581780-28d6-11eb-8f5c-da91db4396ca.png)<br/>
 **<sub>Figure 1: Required initial orientation of the distal femur</sub>**
 
@@ -38,11 +39,12 @@ Once the minimum dispersion lies inside the search field a finer search with a s
 The *-/+ Plane Variation* is set to the step size of the rough search minus the step size of the fine search (2° - 0.5° = 1.5°) resulting in a quadratic search field of ((1.5° x 2 / 0.5°) + 1)² = 49 plane variations.
 - The results can be saved after the calculation is finished.
 After each calculation a table with results for the minimum dispersion is printed in the MATLAB command window.
+
 ![USP_DispersionPlot](https://user-images.githubusercontent.com/43516130/99388735-52ab4300-28d6-11eb-8829-a7868a9383e9.png)<br/>
 **<sub>Figure 2: Rough iterations and the final fine iteration</sub>**
 
 ## USP method
-The framework is based on the paper by Li et al. [Li 2010].<br/>
+The framework is based on the paper by Li et al. [![10.1007/s10439-010-0064-9](https://img.shields.io/badge/DOI-10.1007/s10439--010--0064--9-green.svg)](https://doi.org/10.1007/s10439-010-0064-9).<br/>
 
 The input consists of a triangulated surface model of the distal femur, the side of the femur and an initial transformation from the coordinate system of the medical imaging system into the DSP (see Table 1). 
 The XY-plane is the DSP due to the initial transformation of the bone surface into its centroid.<br/>
@@ -59,4 +61,4 @@ For a "-/+ Plane Variation" of 8° the method of Li requires 33² = 1089 plane var
 The number of iterations is reduced about one-tenth compared with the method of Li et al. In addition parallel computing was implemented for the computationally-intensive parts of the framework to reduce computing time.
 
 ## License
-EUPL v1.2
+[![License: EUPL v1.2](https://img.shields.io/badge/License-EUPL_v1.2-orange.svg)](https://eupl.eu/1.2/en/)
