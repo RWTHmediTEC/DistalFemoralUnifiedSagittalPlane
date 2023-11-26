@@ -11,8 +11,18 @@ if ishandle(hObject)
     for p=1:length(GD.Subject.DataPath)
         load([GD.ToolPath GD.Subject.DataPath{p}, GD.Subject.Name '.mat']) %#ok<LOAD>
     end
+
     femurInertia = transformPoint3d(B(ismember({B.name}, ['Femur_' GD.Subject.Side])).mesh, inertiaTFM);
+    femurInertia = splitMesh(femurInertia, 'mostVertices');
+    if strcmp(GD.Subject.Side, 'L')
+        xReflection = eye(4);
+        xReflection(1,1) = -1;
+        distalCutPlaneInertia = reversePlane(distalCutPlaneInertia);
+        uspPreTFM = createRotationOy(pi)*createRotationOz(pi)*uspPreTFM;
+        distalCutPlaneInertia = transformPlane3d(distalCutPlaneInertia, xReflection);
+    end
     distalFemurInertia = cutMeshByPlane(femurInertia, distalCutPlaneInertia);
+    uspInitialRot = rotation3dToEulerAngles(uspPreTFM(1:3,1:3), 'ZYX');
     
     % Read subject surface data and store
     GD.Subject.Mesh = distalFemurInertia;

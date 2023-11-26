@@ -1,6 +1,4 @@
-clearvars; close all; opengl hardware;
-% [List.f, List.p] = matlab.codetools.requiredFilesAndProducts('USP_GUI.m');
-% List.f = List.f'; List.p = List.p';
+clearvars; close all
 
 % USP path
 GD.ToolPath = [fileparts([mfilename('fullpath'), '.m']) '\'];
@@ -16,9 +14,10 @@ end
 
 %% Get Subjects
 GD.Subject.DataPath = {'VSD\Bones\','data\'};
-Subjects = dir('data\*.mat');
-Subjects = strrep({Subjects.name}','.mat','');
-Subjects(1:2:20,2) = {'L'}; Subjects(2:2:20,2) = {'R'};
+subjectXLSX = 'VSD\MATLAB\res\VSD_Subjects.xlsx';
+Subjects = readtable(subjectXLSX);
+Subjects{2:2:height(Subjects),7} = 'L';
+Subjects{1:2:height(Subjects),7} = 'R'; 
 
 %% Number of cutting planes per cuting box
 GD.Algorithm3.NoCuttingPlanes = 8;
@@ -34,8 +33,7 @@ FH = figure(...
     'Color',GD.Figure.Color,...
     'ToolBar','figure',...
     'WindowScrollWheelFcn',@M_CB_Zoom,...
-    'WindowButtonDownFcn',@M_CB_RotateWithMouse,...
-    'renderer','opengl');
+    'WindowButtonDownFcn',@M_CB_RotateWithMouse);
 if     size(MonitorsPos,1) == 1
     set(FH,'OuterPosition',MonitorsPos(1,:));
 elseif size(MonitorsPos,1) == 2
@@ -84,13 +82,13 @@ FontPropsB.FontSize = 0.5;
 
 %% Controls on the Top of the GUI - LEFT SIDE
 % Entries of the dropdown menue as string
-GD.Subject.Name = Subjects{1,1};
-GD.Subject.Side = Subjects{1,2};
+GD.Subject.Name = Subjects{1,1}{1};
+GD.Subject.Side = Subjects{1,7};
 % Subject static text
 uicontrol('Style','text','String','Subject: ','HorizontalAlignment','Right','BackgroundColor',GD.Figure.Color,...
     'Units','normalized','Position',      [0.13-BSX 0.97 BSX/2 BSY],FontPropsA)
 % Subject dropdown menue
-uicontrol('Style', 'popup', 'String',Subjects(:,1),...
+uicontrol('Style', 'popup', 'String',Subjects.ID,...
     'Units','normalized','Position',      [0.13-BSX*1/2 0.97 BSX BSY],FontPropsB,...
     'Callback', {@DD_CB_Subject, Subjects});
 % Load button
@@ -146,3 +144,6 @@ uicontrol('Units','normalized','Position',[0.75-BSX*1/2 0.01 BSX BSY],FontPropsA
 
 %% Guidata to share data among callbacks
 guidata(FH, GD);
+
+% [List.f, List.p] = matlab.codetools.requiredFilesAndProducts('USP_GUI.m');
+% List.f = List.f'; List.p = List.p';
