@@ -396,7 +396,7 @@ if sum(sum(~isnan(R.Dispersion)))>=4
     % search space and not on the borders.
     if DMin.a == -PVR || DMin.a == PVR || DMin.b == -PVR || DMin.b == PVR
         GD.Iteration.Rough = 1;
-    elseif DMin.Value > 2
+    elseif DMin.Value > 3
         if verbose
             disp([...
                 ' The minmum dispersion lies inside the search space but is unusual ' newline ...
