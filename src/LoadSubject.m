@@ -1,7 +1,7 @@
 function GD = LoadSubject(hObject, GD)
 %
 % AUTHOR: Maximilian C. M. Fischer
-% COPYRIGHT (C) 2020 Maximilian C. M. Fischer
+% COPYRIGHT (C) 2020-2023 Maximilian C. M. Fischer
 % LICENSE: EUPL v1.2
 %
 
@@ -30,7 +30,7 @@ if ishandle(hObject)
     GD.Subject.InitialRot = uspInitialRot;
     
     %% Set Centroid of the bone as Point of Origin
-    if exist([GD.ToolPath 'results\' GD.Subject.Name '.mat'],'file')
+    if exist(fullfile(GD.ToolPath, 'results', [GD.Subject.Name '.mat']),'file')
         % Construct a questdlg with three options
         choice = questdlg({'Data from a previous calculation was found.', 'Load data?'}, ...
             'Data from a previous calculation was found.Load data?', 'Yes', 'No', 'Yes');
@@ -38,7 +38,7 @@ if ishandle(hObject)
         switch choice
             case 'Yes'
                 % If exists, use transformation from a previous calculation
-                load([GD.ToolPath 'results\' GD.Subject.Name '.mat'],'USPTFM')
+                load(fullfile(GD.ToolPath, 'results', [GD.Subject.Name '.mat']),'USPTFM')
                 GD.Subject.TFM = USPTFM;
                 disp('Data from a previous calculation is used for the initial alignment!');
             case 'No'

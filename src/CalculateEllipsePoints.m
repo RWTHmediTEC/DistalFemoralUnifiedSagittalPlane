@@ -1,7 +1,7 @@
 function points = CalculateEllipsePoints(z, a, b, alpha, npts)
 %
 % AUTHOR: Maximilian C. M. Fischer
-% COPYRIGHT (C) 2020 Maximilian C. M. Fischer
+% COPYRIGHT (C) 2020-2023 Maximilian C. M. Fischer
 % LICENSE: EUPL v1.2
 %
 
@@ -11,4 +11,5 @@ t = linspace(0, 2*pi, npts);
 Q = [cos(alpha), -sin(alpha); sin(alpha) cos(alpha)];
 % Ellipse points
 points = (Q * [a * cos(t); b * sin(t)] + repmat(z, 1, npts))';
+
 end

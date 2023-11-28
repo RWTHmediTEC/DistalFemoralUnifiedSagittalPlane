@@ -1,7 +1,7 @@
 function GD = B_CB_SaveResults(hObject, GD)
 %
 % AUTHOR: Maximilian C. M. Fischer
-% COPYRIGHT (C) 2020 Maximilian C. M. Fischer
+% COPYRIGHT (C) 2020-2023 Maximilian C. M. Fischer
 % LICENSE: EUPL v1.2
 %
 
@@ -13,8 +13,8 @@ if isfield(GD.Results, 'PlaneRotMat')
     PFEA = GD.Results.PFEA;
     CEA = GD.Results.CEA;
     
-    if ~isfolder([GD.ToolPath 'results\'])
-        mkdir([GD.ToolPath 'results\'])
+    if ~isfolder(fullfile(GD.ToolPath, 'results'))
+        mkdir(fullfile(GD.ToolPath, 'results'))
     end
     save(fullfile(GD.ToolPath, 'results', [GD.Subject.Name '.mat']), 'USPTFM', 'PFEA', 'CEA')
     
@@ -28,4 +28,5 @@ if isfield(GD.Figure, 'SaveResultsHandle')
 end
 
 if ishandle(hObject); guidata(hObject,GD); end
+
 end

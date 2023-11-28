@@ -1,7 +1,7 @@
 function VisualizeContEll3D(H, P, EllColor)
 %
 % AUTHOR: Maximilian C. M. Fischer
-% COPYRIGHT (C) 2020 Maximilian C. M. Fischer
+% COPYRIGHT (C) 2020-2023 Maximilian C. M. Fischer
 % LICENSE: EUPL v1.2
 %
 
@@ -16,4 +16,5 @@ E3D(:,1:2) = CalculateEllipsePoints(P.Ell.z', P.Ell.a, P.Ell.b, P.Ell.g, 100);
 E3D(:,3) = P.xyz(1,3);
 % Plot ellipses in 3D
 plot3(H, E3D(:,1), E3D(:,2), E3D(:,3),'Color', EllColor,'Linewidth',1);
+
 end

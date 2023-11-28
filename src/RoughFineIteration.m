@@ -1,7 +1,7 @@
 function GD = RoughFineIteration(hObject, GD)
 %
 % AUTHOR: Maximilian C. M. Fischer
-% COPYRIGHT (C) 2020 Maximilian C. M. Fischer
+% COPYRIGHT (C) 2020-2023 Maximilian C. M. Fischer
 % LICENSE: EUPL v1.2
 %
 
@@ -89,4 +89,5 @@ else
 end
 
 if ishandle(hObject); guidata(hObject,GD); end
+
 end

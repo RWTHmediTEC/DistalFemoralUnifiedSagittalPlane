@@ -1,7 +1,7 @@
 function VisualizeEll2D(axH, P, Color)
 %
 % AUTHOR: Maximilian C. M. Fischer
-% COPYRIGHT (C) 2020 Maximilian C. M. Fischer
+% COPYRIGHT (C) 2020-2023 Maximilian C. M. Fischer
 % LICENSE: EUPL v1.2
 %
 
@@ -18,4 +18,5 @@ drawEllipse(axH, z(1), z(2), a, b, rad2deg(alpha), 'Color',Color,'LineStyle','-'
 quiver(axH, repmat(z(1),2,1),repmat(z(2),2,1),AB(:,1),AB(:,2),...
     ':k','Autoscale','off','ShowArrowHead','off');
 scatter(axH, f(:,1),f(:,2),'MarkerEdgeColor', [0,0,0], 'MarkerFaceColor',Color);
+
 end
