@@ -1,24 +1,24 @@
 clearvars; close all
 
 % Add src path
-addpath(genpath([fileparts([mfilename('fullpath'), '.m']) '\src']));
+addpath(genpath(fullfile(fileparts([mfilename('fullpath'), '.m']), 'src')));
 
 %% Clone example data
 if ~exist('VSD', 'dir')
     try
-        !git clone https://github.com/MCM-Fischer/VSDFullBodyBoneModels VSD
-        rmdir('VSD/.git', 's')
+        !git clone --depth 1 https://github.com/MCM-Fischer/VSDFullBodyBoneModels VSD
+        rmdir(fullfile('VSD','.git'), 's')
     catch
         warning([newline 'Clone (or copy) the example data from: ' ...
             'https://github.com/MCM-Fischer/VSDFullBodyBoneModels' newline 'to: ' ...
-            fileparts([mfilename('fullpath'), '.m']) '\VSD' ...
+            fullfile(fileparts([mfilename('fullpath'), '.m']), 'VSD') ...
             ' and try again!' newline])
         return
     end
 end
 
 %% Load subject names
-subjectXLSX = 'VSD\MATLAB\res\VSD_Subjects.xlsx';
+subjectXLSX = fullfile('VSD', 'MATLAB', 'res', 'VSD_Subjects.xlsx');
 Subjects = readtable(subjectXLSX);
 Subjects{2:2:height(Subjects),7} = 'L';
 Subjects{1:2:height(Subjects),7} = 'R'; 
@@ -28,8 +28,8 @@ for s=1%:size(Subjects, 1)
     side = Subjects{s,7};
 
     % Prepare distal femur
-    load(['VSD\Bones\' name '.mat'], 'B');
-    load(['data\' name '.mat'],'inertiaTFM','uspPreTFM','distalCutPlaneInertia');
+    load(fullfile('VSD', 'Bones', [name '.mat']), 'B');
+    load(fullfile('data', [name '.mat']), 'inertiaTFM', 'uspPreTFM', 'distalCutPlaneInertia');
     femurInertia = transformPoint3d(B(ismember({B.name}, ['Femur_' side])).mesh, inertiaTFM);
     femurInertia = splitMesh(femurInertia, 'mostVertices');
     if strcmp(side, 'L')

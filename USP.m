@@ -94,18 +94,17 @@ GD.Subject.Mesh = distalFemur;
 GD.Subject.InitialRot = initialRot;
 
 % USP path
-GD.ToolPath = [fileparts([mfilename('fullpath'), '.m']) '\'];
+GD.ToolPath = fileparts([mfilename('fullpath'), '.m']);
 
 % Add src path
-addpath(genpath([GD.ToolPath 'src']));
+addpath(genpath(fullfile(GD.ToolPath, 'src')));
 
 % Compile mex file if it does not exist
-mexPath = [GD.ToolPath(1:end-1), filesep, 'src', filesep, 'external', ...
-    filesep, 'intersectPlaneSurf'];
-if ~exist([mexPath, filesep, 'IntersectPlaneTriangle.mexw64'],'file') && ~isunix
-    mex([mexPath, filesep, 'IntersectPlaneTriangle.cpp'],'-v','-outdir', mexPath);
-elseif ~exist([mexPath, filesep, 'IntersectPlaneTriangle.mexa64'],'file') && isunix
-    mex([mexPath, filesep, 'IntersectPlaneTriangle.cpp'],'-v','-outdir', mexPath);
+mexPath = fullfile(GD.ToolPath, 'src', 'external', 'intersectPlaneSurf');
+if ~exist(fullfile(mexPath, 'IntersectPlaneTriangle.mexw64'),'file') && ~isunix
+    mex(fullfile(mexPath, 'IntersectPlaneTriangle.cpp'),'-v','-outdir', mexPath);
+elseif ~exist(fullfile(mexPath, 'IntersectPlaneTriangle.mexa64'),'file') && isunix
+    mex(fullfile(mexPath, 'IntersectPlaneTriangle.cpp'),'-v','-outdir', mexPath);
 end
 
 if GD.Visualization == 1

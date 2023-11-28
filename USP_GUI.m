@@ -1,20 +1,22 @@
 clearvars; close all
 
 % USP path
-GD.ToolPath = [fileparts([mfilename('fullpath'), '.m']) '\'];
+GD.ToolPath = fileparts([mfilename('fullpath'), '.m']);
 
-% Add src path
-addpath(genpath([GD.ToolPath 'src']));
+% Add path
+addpath(genpath(fullfile(GD.ToolPath, 'src')));
 
 % Compile mex file if not exist
-mexPath = [GD.ToolPath 'src\external\intersectPlaneSurf'];
-if ~exist([mexPath '\IntersectPlaneTriangle.mexw64'],'file')
-    mex([mexPath '\IntersectPlaneTriangle.cpp'],'-v','-outdir', mexPath);
+mexPath = fullfile(GD.ToolPath, 'src', 'external', 'intersectPlaneSurf');
+if ~exist(fullfile(mexPath, 'IntersectPlaneTriangle.mexw64'),'file') && ~isunix
+    mex(fullfile(mexPath, 'IntersectPlaneTriangle.cpp'),'-v','-outdir', mexPath);
+elseif ~exist(fullfile(mexPath, 'IntersectPlaneTriangle.mexa64'),'file') && isunix
+    mex(fullfile(mexPath, 'IntersectPlaneTriangle.cpp'),'-v','-outdir', mexPath);
 end
 
 %% Get Subjects
-GD.Subject.DataPath = {'VSD\Bones\','data\'};
-subjectXLSX = 'VSD\MATLAB\res\VSD_Subjects.xlsx';
+GD.Subject.DataPath = {fullfile('VSD', 'Bones'),'data'};
+subjectXLSX = fullfile('VSD', 'MATLAB', 'res', 'VSD_Subjects.xlsx');
 Subjects = readtable(subjectXLSX);
 Subjects{2:2:height(Subjects),7} = 'L';
 Subjects{1:2:height(Subjects),7} = 'R'; 

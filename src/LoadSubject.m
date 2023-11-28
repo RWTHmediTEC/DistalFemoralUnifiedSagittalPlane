@@ -9,7 +9,7 @@ if ishandle(hObject)
     GD = guidata(hObject);
     %% Load Subject Bone
     for p=1:length(GD.Subject.DataPath)
-        load([GD.ToolPath GD.Subject.DataPath{p}, GD.Subject.Name '.mat']) %#ok<LOAD>
+        load(fullfile(GD.ToolPath, GD.Subject.DataPath{p}, [GD.Subject.Name '.mat'])) %#ok<LOAD>
     end
 
     femurInertia = transformPoint3d(B(ismember({B.name}, ['Femur_' GD.Subject.Side])).mesh, inertiaTFM);

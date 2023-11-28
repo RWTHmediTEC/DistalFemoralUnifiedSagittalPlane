@@ -16,7 +16,7 @@ if isfield(GD.Results, 'PlaneRotMat')
     if ~isfolder([GD.ToolPath 'results\'])
         mkdir([GD.ToolPath 'results\'])
     end
-    save([GD.ToolPath 'results\' GD.Subject.Name '.mat'], 'USPTFM', 'PFEA', 'CEA')
+    save(fullfile(GD.ToolPath, 'results', [GD.Subject.Name '.mat']), 'USPTFM', 'PFEA', 'CEA')
     
     disp('Results saved.')
 else
