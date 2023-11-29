@@ -392,11 +392,14 @@ if sum(sum(~isnan(R.Dispersion)))>=4
     GD.Iteration.OldDMin(1) = GD.Iteration.OldDMin(1)+DMin.a;
     GD.Iteration.OldDMin(2) = GD.Iteration.OldDMin(2)+DMin.b;
     
+    if ~isfield(GD.Algorithm3, 'MinimumDispersion')
+        GD.Algorithm3.MinimumDispersion = inf;
+    end
     % Stop the Rough Iteration if the minimum dispersion lies inside the
     % search space and not on the borders.
     if DMin.a == -PVR || DMin.a == PVR || DMin.b == -PVR || DMin.b == PVR
         GD.Iteration.Rough = 1;
-    elseif DMin.Value > 3
+    elseif DMin.Value > 2 && DMin.Value < GD.Algorithm3.MinimumDispersion
         if verbose
             disp([...
                 ' The minmum dispersion lies inside the search space but is unusual ' newline ...
@@ -410,6 +413,9 @@ if sum(sum(~isnan(R.Dispersion)))>=4
     end
     
     MinSC = CutVariations{DMin.I_a,DMin.I_b};
+
+    % Save the minimum dispersion value
+    GD.Algorithm3.MinimumDispersion = DMin.Value;
     
     % The rotation matrix for the plane variation with minimum Dispersion
     GD.Results.PlaneRotMat = PRMs{DMin.I_a,DMin.I_b};
